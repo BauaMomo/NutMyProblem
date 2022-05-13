@@ -6,8 +6,9 @@ TagManager:
   tags:
   - Floor
   - Enemy
-  - WeaponCollider
   - PlayerTrigger
+  - WeaponTrigger
+  - WeaponCollider
   layers:
   - Default
   - TransparentFX

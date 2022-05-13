@@ -26,11 +26,8 @@ public class playerController : MonoBehaviour
 
     /* TODO:
      * 
-     * - flip sprite depending player direction
-     * - sword attack
-     *      create hitbox when attacking
-     *      damage enemies in hitbox
      * - different weapons
+     *      (classes HandWeapon and ShootWeapon inherit from Weapon)
      * - Animation integration
      * 
      * 
@@ -41,6 +38,7 @@ public class playerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         weapons = GetComponent<Weapons>();
+        
 
         iPlayerWalkSpeed = 4;
         iPlayerSprintSpeed = 6;
@@ -51,10 +49,10 @@ public class playerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.LeftShift)) iPlayerSpeed = iPlayerSprintSpeed;      //runs faster if sprinting
+        if (Input.GetKey(KeyCode.LeftShift)) iPlayerSpeed = iPlayerSprintSpeed;      //sprinting
         else iPlayerSpeed = iPlayerWalkSpeed;
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D))                                                //walking
         {
             playerDirection = direction.right;
             if (rb.velocity.y < 0)
@@ -99,7 +97,7 @@ public class playerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Debug.Log("mouse left pressed");
-            weapons.Attack(playerDirection);
+            weapons.Sword.Attack(playerDirection);
         }
 
         switch (playerDirection)
@@ -128,9 +126,9 @@ public class playerController : MonoBehaviour
         else return false;
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other)      
     {
-        fCollExitTime = Time.fixedUnscaledTime;
+
     }
 
 

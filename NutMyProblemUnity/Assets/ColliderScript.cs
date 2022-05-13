@@ -18,9 +18,10 @@ public class ColliderScript : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)             //checks what which trigger collides with
+                                                                    //TODO: change to nested switches
     {
-        if (tag == "WeaponCollider" && collision.tag == "Enemy")
+        if (tag == "WeaponTrigger" && collision.tag == "Enemy")
         {
             collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().Sword.iDamage, parent.gameObject);
             Debug.Log("enemy hit");
@@ -29,7 +30,7 @@ public class ColliderScript : MonoBehaviour
         if (tag == "PlayerTrigger" && collision.tag == "Floor") parent.GetComponent<playerController>().isGrounded = true;
         if (tag == "PlayerTrigger" && collision.tag == "Enemy")
         {
-            Debug.Log("colloding with enemy");
+            //Debug.Log("colloding with enemy");
             Vector2 directionToEnemy = (parent.position - collision.gameObject.transform.position).normalized;
             parent.GetComponent<Rigidbody2D>().AddForce(directionToEnemy * 1500);
         }

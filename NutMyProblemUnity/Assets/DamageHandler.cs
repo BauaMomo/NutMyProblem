@@ -20,10 +20,10 @@ public class DamageHandler : MonoBehaviour
         if(iHealth <= 0) Destroy(this.gameObject);
     }
 
-    public void HandleDamage(int _damage, GameObject _damageFrom)
+    public void HandleDamage(int _damage, GameObject _other)
     {
         iHealth -= _damage;
-        Vector2 directionToPlayer = (_damageFrom.transform.position - this.transform.position).normalized;
-        rb.AddForce(new Vector2(-directionToPlayer.x * 200, 100));
+        Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
+        rb.AddForce(new Vector2(-directionToOther.x * 200, 100));
     }
 }
