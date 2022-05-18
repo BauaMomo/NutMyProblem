@@ -5,7 +5,11 @@ using UnityEngine;
 public class playerController : MonoBehaviour
 {
     Rigidbody2D rb;
+    Animator animator;
     Weapons weapons;
+
+    public enum State { idle, walking, running, crouching, airborne};
+    public State playerState { get; protected set; }
 
     [SerializeField] int iPlayerWalkSpeed;
     [SerializeField] int iPlayerSprintSpeed;
@@ -37,6 +41,7 @@ public class playerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         weapons = GetComponent<Weapons>();
         
 
@@ -55,6 +60,7 @@ public class playerController : MonoBehaviour
         if (Input.GetKey(KeyCode.D))                                                //walking
         {
             playerDirection = direction.right;
+            animator.Play("Player_Lauf_Ersatzanimation");
             if (rb.velocity.y < 0)
                 rb.velocity = new Vector2(iPlayerSpeed / 1.3f, rb.velocity.y);
             else rb.velocity = new Vector2(iPlayerSpeed, rb.velocity.y);
@@ -74,6 +80,7 @@ public class playerController : MonoBehaviour
             //Debug.Log("jump start");
             isGrounded = false;
             fJumpStartTime = Time.fixedUnscaledTime;
+            animator.Play("Player_Sprung_Ersatzanimation");
             rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
         }
 
@@ -97,6 +104,7 @@ public class playerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Debug.Log("mouse left pressed");
+            animator.Play("Player_Angriff_Ersatzanimation");
             weapons.Sword.Attack(playerDirection);
         }
 
