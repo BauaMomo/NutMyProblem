@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7716982155159702636}
   - component: {fileID: 7716982155159702638}
   - component: {fileID: 7716982155159702633}
-  - component: {fileID: 2662628182782509652}
+  - component: {fileID: 2778803986105360812}
   - component: {fileID: 7716982155159702632}
   - component: {fileID: 6457930957619613973}
   - component: {fileID: 2980618693862892793}
@@ -212,7 +212,7 @@ MonoBehaviour:
   iFallSpeed: 0
   leftRay: 0
   rightRay: 0
---- !u!114 &2662628182782509652
+--- !u!114 &2778803986105360812
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
