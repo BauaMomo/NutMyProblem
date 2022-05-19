@@ -75,7 +75,7 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
     // Update is called once per frame
     void Update()
     {
-        if (Sword.fColliderSpawnTime < Time.fixedUnscaledTime - 0.1f) Destroy(Sword.weaponTrigger);
+        if (Sword.fColliderSpawnTime < Time.fixedUnscaledTime - 0.2f) Destroy(Sword.weaponTrigger);
     }
 
     void SpawnCollider()
