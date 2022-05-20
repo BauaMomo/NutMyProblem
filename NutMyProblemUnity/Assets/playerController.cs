@@ -7,6 +7,9 @@ public class playerController : MonoBehaviour
     Rigidbody2D rb;
     Weapons weapons;
 
+    public enum State { idle, walking, running, crouching, airborne};
+    public State playerState { get; protected set; }
+
     [SerializeField] int iPlayerWalkSpeed;
     [SerializeField] int iPlayerSprintSpeed;
     int iPlayerSpeed;
