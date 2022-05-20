@@ -22,7 +22,7 @@ public class playerAnimationController : MonoBehaviour
         animator = GetComponent<Animator>();
         rb2D = GetComponent<Rigidbody2D>();
 
-        playerAnimations.Add(State.idle, "");
+        playerAnimations.Add(State.idle, "Player_Idle_Substitute_Animation");
         playerAnimations.Add(State.walking, "Player_Lauf_Ersatzanimation");
         playerAnimations.Add(State.running, "Player_Lauf_Ersatzanimation");
         playerAnimations.Add(State.airborne, "Player_Sprung_Ersatzanimation");
