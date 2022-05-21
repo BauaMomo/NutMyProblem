@@ -39,6 +39,16 @@ public class playerAnimationController : MonoBehaviour
 
         switchAnimation(playerState);
 
+        switch (playerController.playerDirection)
+        {
+            case playerController.direction.left:
+                GetComponent<SpriteRenderer>().flipX = true;
+                break;
+            case playerController.direction.right:
+                GetComponent<SpriteRenderer>().flipX = false;
+                break;
+        }
+
     }
 
     private void FixedUpdate()
@@ -51,12 +61,14 @@ public class playerAnimationController : MonoBehaviour
         if (playerController.isGrounded)
         {
             if (rb2D.velocity.x == 0) playerState = State.idle;
-            else if (Input.GetKey(KeyCode.LeftShift)) playerState = State.running;
+            else if (playerController.isSprinting) playerState = State.running;
             else playerState = State.walking;
         }
         else playerState = State.airborne;
 
         if (transform.Find("WeaponTrigger(Clone)") != null) playerState = State.attacking;
+
+
     }
 
     void switchAnimation(State _newState)
@@ -65,6 +77,9 @@ public class playerAnimationController : MonoBehaviour
 
         animator.Play(playerAnimations[_newState]);
         currentAnimationState = _newState;
+
+        //Debug.Log(currentAnimationState);
+        //Debug.Log(rb2D.velocity.x);
     }
 }
 
