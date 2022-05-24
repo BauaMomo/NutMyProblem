@@ -4,44 +4,51 @@ using UnityEngine;
 
 public class Weapons : MonoBehaviour            //this whole class is kinda hacky and needs a rework
 {
-    public Weapon Sword;
+    Weapon sword;
+    Weapon bow;
+    public Weapon currentWeapon;
+    List<Weapon> availableWeapons = new List<Weapon>();
+
     public abstract class Weapon
     {
+        //constructor that every weapon type inherits
+        public Weapon(float _iRange, int _iAttack, float _iAttackSpeed)
+        {
+            iDamage = _iAttack;
+            iRange = _iRange;
+            iAttackSpeed = _iAttackSpeed;
+        }
+
         public playerController playerController;
+        public GameObject player;
+
         public float fColliderSpawnTime;
         public GameObject weaponTrigger;
 
         public int iDamage { get; protected set; }
-
         public float iAttackSpeed { get; protected set; }
-        public int iRange { get; protected set; }
+        public float iRange { get; protected set; }
 
         public abstract void Attack(playerController.direction direction);
 
-
-        public class MeleeWeapon : Weapon            //class for swords, spears, boxing gloves...
+        public class Sword : Weapon
         {
 
-            public MeleeWeapon(int _iRange, int _iAttack, float _iAttackSpeed)
-            {
-                iDamage = _iAttack;
-                iRange = _iRange;
-                iAttackSpeed = _iAttackSpeed;
-            }
+            public Sword(float _iRange, int _iAttack, float _iAttackSpeed) : base(_iRange, _iAttack, _iAttackSpeed)   {}
 
             public override void Attack(playerController.direction _direction)
             {
                 if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
-                {           //spawns the collider to damage enemies
-                            //TODO: Make it work for different weapons (currentWeapon variable?)
+                {           
+                    //spawns the collider to damage enemies
                     fColliderSpawnTime = Time.fixedUnscaledTime;
 
-                    weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, playerController.transform);     //accessing the playercontroller for the transform probably isnt good
-                    weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);   //problem: scales from the center, overlaps with the player for bigger ranges
+                    weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
+                    weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
 
-                    float fColliderXOffset = 1f;
+                    float fColliderXOffset = 0.5f + iRange / 2;
 
-                    switch (_direction)
+                    switch (_direction)     //decide on which side of the player the collider will be
                     {
                         case playerController.direction.right:
                             break;
@@ -49,13 +56,16 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
                             fColliderXOffset *= -1;
                             break;
                     }
-                    weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.2f, 0);
+                    weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
+
+                    Destroy(weaponTrigger, 0.2f);       //Destroy the collider after x seconds
                 }
             }
         }
 
-        public class RangedWeapon : Weapon
+        public class Bow : Weapon
         {
+            public Bow(float _iRange, int _iAttack, float _iAttackSpeed) : base(_iRange, _iAttack, _iAttackSpeed) { }
             public override void Attack(playerController.direction direction)
             {
                 throw new System.NotImplementedException();
@@ -67,20 +77,26 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
     // Start is called before the first frame update
     void Start()
     {
-        Sword = new Weapon.MeleeWeapon(1, 20, 4);
+        sword = new Weapon.Sword(1.5f, 20, 4);
+        bow = new Weapon.Bow(1, 20, 2);
 
-        Sword.playerController = GetComponent<playerController>();  //getting this by acessing the sword probably isnt good
+        availableWeapons.Add(sword);
+        availableWeapons.Add(bow);
+
+        currentWeapon = availableWeapons[0];
+
+        currentWeapon.playerController = GetComponent<playerController>();  
+        currentWeapon.player = currentWeapon.playerController.gameObject;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SwitchWeapon()
     {
-        if (Sword.fColliderSpawnTime < Time.fixedUnscaledTime - 0.2f) Destroy(Sword.weaponTrigger);
+        //gets the index of currentWeapon, switches to the next Weapon in the List or to the first one if the index is the last in the list
+
+        int currentWeaponIndex = availableWeapons.FindIndex(weapon => weapon == currentWeapon);
+        if(currentWeaponIndex < availableWeapons.Count-1) currentWeapon = availableWeapons[currentWeaponIndex+1];
+        else currentWeapon = availableWeapons[0];
+
+        //Debug.Log(currentWeapon);
     }
-
-    void SpawnCollider()
-    {
-
-    }
-
 }

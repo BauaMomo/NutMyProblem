@@ -12,29 +12,27 @@ public class ColliderScript : MonoBehaviour
         parent = this.transform.parent;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)             //checks what which trigger collides with
-                                                                    //TODO: change to nested switches
     {
-        if (tag == "WeaponTrigger" && collision.tag == "Enemy")
+        switch (tag)
         {
-            collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().Sword.iDamage, parent.gameObject);
-            Debug.Log("enemy hit");
+            case "WeaponTrigger":
+                switch (collision.tag)
+                {
+                    case "Enemy":
+                        collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
+                        Debug.Log("enemy hit");
+                        break;
+                }
+                break;
+            case "GroundedTrigger":
+                switch (collision.tag)
+                {
+                    case "Floor":
+                        parent.GetComponent<playerController>().isGrounded = true;
+                        break;
+                }
+                break;
         }
-
-        if (tag == "PlayerTrigger" && collision.tag == "Floor") parent.GetComponent<playerController>().isGrounded = true;
-        if (tag == "PlayerTrigger" && collision.tag == "Enemy")
-        {
-            //Debug.Log("colloding with enemy");
-            Vector2 directionToEnemy = (parent.position - collision.gameObject.transform.position).normalized;
-            parent.GetComponent<Rigidbody2D>().AddForce(directionToEnemy * 1500);
-        }
-
-
     }
 }
