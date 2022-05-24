@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7716982154739780501}
   - component: {fileID: 7716982154739780458}
   - component: {fileID: 7716982154739780456}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7716982154739780457}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 2, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 6457930957619613973}
   - component: {fileID: 6888263051683871752}
   - component: {fileID: -8020600968341638703}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 70e9782264208a745891368fb1849a3a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -400,6 +400,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: bc0aca1f-d65a-4ce9-965d-e3a37b7f7d7d
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7716982155159702633}
+        m_TargetAssemblyTypeName: playerController, Assembly-CSharp
+        m_MethodName: OnWeaponChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 36b439be-3943-4daa-8c36-b5f988a51d96
+    m_ActionName: Player/changeWeapon[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -495,6 +511,14 @@ PrefabInstance:
     - target: {fileID: 6874161663245076682, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}
       propertyPath: m_Name
       value: PlayerTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6874161663245076682, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6874161663245076682, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}
+      propertyPath: m_TagString
+      value: GroundedTrigger
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}

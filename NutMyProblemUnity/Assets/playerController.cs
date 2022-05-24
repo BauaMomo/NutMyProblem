@@ -85,7 +85,7 @@ public class playerController : MonoBehaviour
         if (context.started)
         {
             //Debug.Log("mouse left pressed");
-            weapons.Sword.Attack(playerDirection);
+            weapons.currentWeapon.Attack(playerDirection);
         }
     }
 
@@ -93,6 +93,11 @@ public class playerController : MonoBehaviour
     {
         if (context.started) isSprinting = true;
         if (context.canceled) isSprinting = false;
+    }
+
+    public void OnWeaponChange(InputAction.CallbackContext context)
+    {
+        if(context.started) weapons.SwitchWeapon();
     }
 
     bool IsOnPlatformEdge()
