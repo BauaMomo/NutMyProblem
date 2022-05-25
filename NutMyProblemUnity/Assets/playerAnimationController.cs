@@ -35,7 +35,6 @@ public class playerAnimationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switchPlayerState();
 
         switchAnimation(playerState);
 
@@ -53,7 +52,8 @@ public class playerAnimationController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+
+        switchPlayerState();
     }
 
     void switchPlayerState()
