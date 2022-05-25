@@ -42,7 +42,7 @@ public class playerController : MonoBehaviour
         iPlayerWalkSpeed = 4;
         iPlayerSprintSpeed = 6;
         iJumpSpeed = 10;
-        iFallSpeed = 13;
+        iFallSpeed = 13;        
     }
 
     // Update is called once per frame
@@ -56,7 +56,11 @@ public class playerController : MonoBehaviour
         if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                       //higher than standard fall speed
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - 50 * Time.deltaTime);
 
-        if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25) rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);    //higher jump when jump button is held
+        if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);    //higher jump if jump button is held down
+        }
+
     }
 
     public void OnMove(InputAction.CallbackContext context)
