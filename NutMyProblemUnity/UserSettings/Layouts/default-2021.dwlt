@@ -48,7 +48,11 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
+<<<<<<< HEAD
   controlID: 81
+=======
+  controlID: 66
+>>>>>>> NUT-39-Gegneranimationen
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -68,9 +72,15 @@ MonoBehaviour:
     y: 0
     width: 403.33325
     height: 819.3333
+<<<<<<< HEAD
   m_MinSize: {x: 276, y: 71}
   m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 14}
+=======
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 13}
+>>>>>>> NUT-39-Gegneranimationen
   m_Panes:
   - {fileID: 14}
   m_Selected: 0
@@ -224,7 +234,11 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
+<<<<<<< HEAD
   controlID: 82
+=======
+  controlID: 67
+>>>>>>> NUT-39-Gegneranimationen
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -249,7 +263,11 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
+<<<<<<< HEAD
   controlID: 83
+=======
+  controlID: 68
+>>>>>>> NUT-39-Gegneranimationen
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -362,9 +380,15 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
     m_SelectedIDs: da620000
     m_LastClickedID: 25306
     m_ExpandedIDs: 000000002462000026620000286200002a6200002c620000ffffff7f
+=======
+    m_SelectedIDs: d25f0000
+    m_LastClickedID: 24530
+    m_ExpandedIDs: 00000000be5f0000c05f0000c25f0000c45f0000c65f0000ffffff7f
+>>>>>>> NUT-39-Gegneranimationen
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -392,7 +416,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
+<<<<<<< HEAD
     m_ExpandedIDs: 000000002462000026620000286200002a6200002c620000
+=======
+    m_ExpandedIDs: 00000000be5f0000c05f0000c25f0000c45f0000c65f0000
+>>>>>>> NUT-39-Gegneranimationen
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -520,9 +548,15 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
       m_SelectedIDs: f8760000
       m_LastClickedID: 0
       m_ExpandedIDs: bef7ffff32f9ffff2afbffff
+=======
+      m_SelectedIDs: d05f0000
+      m_LastClickedID: 0
+      m_ExpandedIDs: fcfaffff
+>>>>>>> NUT-39-Gegneranimationen
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -907,7 +941,11 @@ MonoBehaviour:
   m_ShowGizmos: 1
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
+<<<<<<< HEAD
   m_TargetSize: {x: 3840, y: 2160}
+=======
+  m_TargetSize: {x: 978.66675, y: 444}
+>>>>>>> NUT-39-Gegneranimationen
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -922,10 +960,17 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
+<<<<<<< HEAD
     m_HBaseRangeMin: -1280
     m_HBaseRangeMax: 1280
     m_VBaseRangeMin: -720
     m_VBaseRangeMax: 720
+=======
+    m_HBaseRangeMin: -326.22226
+    m_HBaseRangeMax: 326.22226
+    m_VBaseRangeMin: -148
+    m_VBaseRangeMax: 148
+>>>>>>> NUT-39-Gegneranimationen
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -945,7 +990,11 @@ MonoBehaviour:
       y: 21
       width: 978.66675
       height: 444
+<<<<<<< HEAD
     m_Scale: {x: 0.30833334, y: 0.30833334}
+=======
+    m_Scale: {x: 1, y: 1}
+>>>>>>> NUT-39-Gegneranimationen
     m_Translation: {x: 489.33337, y: 222}
     m_MarginLeft: 0
     m_MarginRight: 0
@@ -953,12 +1002,21 @@ MonoBehaviour:
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
+<<<<<<< HEAD
       x: -1587.0271
       y: -720
       width: 3174.0542
       height: 1440
     m_MinimalGUI: 1
   m_defaultScale: 0.30833334
+=======
+      x: -489.33337
+      y: -222
+      width: 978.66675
+      height: 444
+    m_MinimalGUI: 1
+  m_defaultScale: 1
+>>>>>>> NUT-39-Gegneranimationen
   m_LastWindowPixelSize: {x: 1468.0001, y: 697.5}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
