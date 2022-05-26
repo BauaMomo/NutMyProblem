@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapons : MonoBehaviour            //this whole class is kinda hacky and needs a rework
+public class Weapons : MonoBehaviour
 {
-    Weapon sword;
-    Weapon bow;
-    public Weapon currentWeapon;
+    public Weapon sword { get; protected set; }
+    public Weapon bow { get; protected set; }
+    public Weapon currentWeapon { get; protected set; }
     List<Weapon> availableWeapons = new List<Weapon>();
 
     public abstract class Weapon
@@ -18,6 +18,9 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
             iRange = _iRange;
             iAttackSpeed = _iAttackSpeed;
         }
+
+        public enum Type { Sword, Bow, Gloves };
+        public Type WeaponType;
 
         public playerController playerController;
         public GameObject player;
@@ -34,12 +37,15 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
         public class Sword : Weapon
         {
 
-            public Sword(float _iRange, int _iAttack, float _iAttackSpeed) : base(_iRange, _iAttack, _iAttackSpeed)   {}
+            public Sword(float _iRange, int _iAttack, float _iAttackSpeed) : base(_iRange, _iAttack, _iAttackSpeed)
+            {
+                WeaponType = Type.Sword;
+            }
 
             public override void Attack(playerController.direction _direction)
             {
                 if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
-                {           
+                {
                     //spawns the collider to damage enemies
                     fColliderSpawnTime = Time.fixedUnscaledTime;
 
@@ -65,7 +71,21 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
 
         public class Bow : Weapon
         {
-            public Bow(float _iRange, int _iAttack, float _iAttackSpeed) : base(_iRange, _iAttack, _iAttackSpeed) { }
+            public Bow(float _iRange, int _iAttack, float _iAttackSpeed) : base(_iRange, _iAttack, _iAttackSpeed)
+            {
+                WeaponType = Type.Bow;
+            }
+            public override void Attack(playerController.direction direction)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+        public class Gloves : Weapon
+        {
+            public Gloves(float _iRange, int _iAttack, float _iAttackSpeed) : base(_iRange, _iAttack, _iAttackSpeed)
+            {
+                WeaponType = Type.Gloves;
+            }
             public override void Attack(playerController.direction direction)
             {
                 throw new System.NotImplementedException();
@@ -85,7 +105,7 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
 
         currentWeapon = availableWeapons[0];
 
-        currentWeapon.playerController = GetComponent<playerController>();  
+        currentWeapon.playerController = GetComponent<playerController>();
         currentWeapon.player = currentWeapon.playerController.gameObject;
     }
 
@@ -94,7 +114,7 @@ public class Weapons : MonoBehaviour            //this whole class is kinda hack
         //gets the index of currentWeapon, switches to the next Weapon in the List or to the first one if the index is the last in the list
 
         int currentWeaponIndex = availableWeapons.FindIndex(weapon => weapon == currentWeapon);
-        if(currentWeaponIndex < availableWeapons.Count-1) currentWeapon = availableWeapons[currentWeaponIndex+1];
+        if (currentWeaponIndex < availableWeapons.Count - 1) currentWeapon = availableWeapons[currentWeaponIndex + 1];
         else currentWeapon = availableWeapons[0];
 
         //Debug.Log(currentWeapon);
