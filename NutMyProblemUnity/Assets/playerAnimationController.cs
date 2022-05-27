@@ -9,11 +9,14 @@ public class playerAnimationController : MonoBehaviour
 
     public State currentAnimationState;
 
-    public Dictionary<State, string> playerAnimations = new Dictionary<State, string>();
+    public Dictionary<State, string> SwordAnimations = new Dictionary<State, string>();
+    public Dictionary<State, string> GloveAnimations = new Dictionary<State, string>();
+    public Dictionary<State, string> BowAnimations = new Dictionary<State, string>();
 
     playerController playerController;
     Animator animator;
     Rigidbody2D rb2D;
+    Weapons weapons;
 
     // Start is called before the first frame update
     void Start()
@@ -21,13 +24,28 @@ public class playerAnimationController : MonoBehaviour
         playerController = GetComponent<playerController>();
         animator = GetComponent<Animator>();
         rb2D = GetComponent<Rigidbody2D>();
+        weapons = GetComponent<Weapons>();
 
-        playerAnimations.Add(State.idle, "Player_Idle_Substitute_Animation");
-        playerAnimations.Add(State.walking, "Player_Lauf_Ersatzanimation");
-        playerAnimations.Add(State.running, "Player_Lauf_Ersatzanimation");
-        playerAnimations.Add(State.airborne, "Player_Sprung_Ersatzanimation");
-        playerAnimations.Add(State.attacking, "Player_Angriff_Ersatzanimation");
-        playerAnimations.Add(State.crouching, "");
+        SwordAnimations.Add(State.idle, "Player_Idle_Substitute_Animation");
+        SwordAnimations.Add(State.walking, "Player_Lauf_Ersatzanimation");
+        SwordAnimations.Add(State.running, "Player_Lauf_Ersatzanimation");
+        SwordAnimations.Add(State.airborne, "Player_Sprung_Ersatzanimation");
+        SwordAnimations.Add(State.attacking, "Player_Angriff_Ersatzanimation");
+        SwordAnimations.Add(State.crouching, "");
+
+        GloveAnimations.Add(State.idle, "");
+        GloveAnimations.Add(State.walking, "");
+        GloveAnimations.Add(State.running, "");
+        GloveAnimations.Add(State.airborne, "");
+        GloveAnimations.Add(State.attacking, "");
+        GloveAnimations.Add(State.crouching, "");
+
+        BowAnimations.Add(State.idle, "");
+        BowAnimations.Add(State.walking, "");
+        BowAnimations.Add(State.running, "");
+        BowAnimations.Add(State.airborne, "");
+        BowAnimations.Add(State.attacking, "");
+        BowAnimations.Add(State.crouching, "");
 
         playerState = State.idle;
     }
@@ -52,7 +70,6 @@ public class playerAnimationController : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         switchPlayerState();
     }
 
@@ -75,11 +92,21 @@ public class playerAnimationController : MonoBehaviour
     {
         if (currentAnimationState == _newState) return;
 
-        animator.Play(playerAnimations[_newState]);
-        currentAnimationState = _newState;
+        Weapons.Weapon currentWeapon = weapons.currentWeapon;
 
-        //Debug.Log(currentAnimationState);
-        //Debug.Log(rb2D.velocity.x);
+        switch (currentWeapon.WeaponType)
+        {
+            case Weapons.Weapon.Type.Sword:
+                animator.Play(SwordAnimations[_newState]);
+                break;
+            case Weapons.Weapon.Type.Gloves:
+                animator.Play(GloveAnimations[_newState]);
+                break;
+            case Weapons.Weapon.Type.Bow:
+                animator.Play(BowAnimations[_newState]);
+                break;
+        }
+        currentAnimationState = _newState;
     }
 }
 
