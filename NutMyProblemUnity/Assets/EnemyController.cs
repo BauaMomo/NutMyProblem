@@ -35,7 +35,6 @@ public class EnemyController : MonoBehaviour
 
 
 
-        Target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
         fEnemyPathEndPoint = fEnemyPathStartPoint + fEnemyPathLength;
         Enemydirection = directions.right;
@@ -51,7 +50,7 @@ public class EnemyController : MonoBehaviour
 
         TarggetPlayer();
         EnemyMovement();
-        SwitchMovementmode();
+        SwitchMovementMode();
         FlipEnemy();
 
     }
@@ -147,6 +146,7 @@ public class EnemyController : MonoBehaviour
         {
             if (hit.collider.gameObject.CompareTag("Player"))
             {
+                Target = hit.collider.transform;
                 return true;
             }
 
@@ -159,7 +159,7 @@ public class EnemyController : MonoBehaviour
         return false;
     }
 
-    void SwitchMovementmode()
+    void SwitchMovementMode()
     {
 
         if (TarggetPlayer() == true)

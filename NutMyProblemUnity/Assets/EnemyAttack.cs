@@ -6,9 +6,9 @@ using UnityEditor.SceneManagement;
 public class EnemyAttack : MonoBehaviour
 {
 
-    public enum EnemyType { commonknught }
+    public enum Type { commonKnught }
 
-    public EnemyType typeofenemy;
+    public Type EnemyType;
 
     [SerializeField] GameObject Player;
     [SerializeField] GameObject AttackRangeRight;
@@ -31,7 +31,7 @@ public class EnemyAttack : MonoBehaviour
         AttackRangeRight.SetActive(false);
         AttackRangeLeft.SetActive(false);
 
-        TPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame
@@ -71,9 +71,9 @@ public class EnemyAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            switch (typeofenemy)
+            switch (EnemyType)
             {
-                case EnemyType.commonknught:
+                case Type.commonKnught:
                     if (bEnemyAttackCooldown == false)
                         SwordAttack(iSwordDamage);
                     break;
