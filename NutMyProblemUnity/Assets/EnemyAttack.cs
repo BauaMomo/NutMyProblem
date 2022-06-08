@@ -25,7 +25,7 @@ public class EnemyAttack : MonoBehaviour
     void Start()
     {
         iSwordDamage = 20;
-        iDamageTimer = 30;
+        iDamageTimer = 120;
         iDamageTime = 0;
         bEnemyAttackCooldown = false;
         AttackRangeRight.SetActive(false);
@@ -86,6 +86,6 @@ public class EnemyAttack : MonoBehaviour
     void SwordAttack(int AttackDamage)
     {
         bEnemyAttackCooldown = true;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<DamageHandler>().iHealth -= AttackDamage;
+        TPlayer.GetComponent<DamageHandler>().HandleDamage(AttackDamage, this.gameObject);
     }
 }
