@@ -18,6 +18,8 @@ public class playerAnimationController : MonoBehaviour
     Rigidbody2D rb2D;
     Weapons weapons;
 
+    Weapons.Weapon.Type oldWeaponType;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +27,7 @@ public class playerAnimationController : MonoBehaviour
         animator = GetComponent<Animator>();
         rb2D = GetComponent<Rigidbody2D>();
         weapons = GetComponent<Weapons>();
+        //oldWeaponType = weapons.currentWeapon.WeaponType;
 
         SwordAnimations.Add(State.idle, "Player_Idle_Substitute_Animation");
         SwordAnimations.Add(State.walking, "Player_Lauf_Ersatzanimation");
@@ -33,11 +36,11 @@ public class playerAnimationController : MonoBehaviour
         SwordAnimations.Add(State.attacking, "Player_Angriff_Ersatzanimation");
         SwordAnimations.Add(State.crouching, "");
 
-        GloveAnimations.Add(State.idle, "");
-        GloveAnimations.Add(State.walking, "");
-        GloveAnimations.Add(State.running, "");
-        GloveAnimations.Add(State.airborne, "");
-        GloveAnimations.Add(State.attacking, "");
+        GloveAnimations.Add(State.idle, "Player_Gloves_Idle_Animation");
+        GloveAnimations.Add(State.walking, "Player_Gloves_Run_Substitute_Animation");
+        GloveAnimations.Add(State.running, "Player_Gloves_Run_Substitute_Animation");
+        GloveAnimations.Add(State.airborne, "Player_Gloves_Jump_Substitute_Animation");
+        GloveAnimations.Add(State.attacking, "Player_Gloves_Attack_Substitute_Animation");
         GloveAnimations.Add(State.crouching, "");
 
         BowAnimations.Add(State.idle, "");
@@ -66,6 +69,7 @@ public class playerAnimationController : MonoBehaviour
                 break;
         }
 
+        oldWeaponType = weapons.currentWeapon.WeaponType;
     }
 
     private void FixedUpdate()
@@ -90,9 +94,10 @@ public class playerAnimationController : MonoBehaviour
 
     void switchAnimation(State _newState)
     {
-        if (currentAnimationState == _newState) return;
-
         Weapons.Weapon currentWeapon = weapons.currentWeapon;
+
+        if (currentAnimationState == _newState
+            && !WeaponHasChanged(currentWeapon.WeaponType)) return;
 
         switch (currentWeapon.WeaponType)
         {
@@ -107,6 +112,11 @@ public class playerAnimationController : MonoBehaviour
                 break;
         }
         currentAnimationState = _newState;
+    }
+
+    bool WeaponHasChanged(Weapons.Weapon.Type _newWeaponType)
+    {
+        return !(_newWeaponType == oldWeaponType);
     }
 }
 
