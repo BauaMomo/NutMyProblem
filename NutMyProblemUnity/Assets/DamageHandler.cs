@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DamageHandler : MonoBehaviour
 {
-    [SerializeField] int iHealth = 100;
+    [SerializeField]public int iHealth = 100;
     Rigidbody2D rb;
 
 
