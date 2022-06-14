@@ -44,9 +44,9 @@ public class Weapons : MonoBehaviour
         protected GameObject weaponTrigger;
 
         public int iDamage { get; protected set; }
-        public float iAttackSpeed { get; protected set; }
+        public float iAttackSpeed { get; protected set; }       //Attack speed in hits per second
         public float iRange { get; protected set; }
-        public Vector2 KnockbackVector { get; protected set; }
+        public Vector2 KnockbackVector { get; protected set; }      //The direction and strength the enemy gets pushed in when hit
 
         public virtual void Attack(playerController.direction direction) 
         {
@@ -157,8 +157,8 @@ public class Weapons : MonoBehaviour
         private void Start()
         {
             WeaponType = Type.Fists;
-            iDamage = 20;
-            iAttackSpeed = 4;
+            iDamage = 10;
+            iAttackSpeed = 3;
             iRange = 1.5f;
             KnockbackVector = new Vector2(30, 10);
             SetUniversalVars(this);
@@ -187,7 +187,7 @@ public class Weapons : MonoBehaviour
                 }
                 weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
 
-                Destroy(weaponTrigger, 0.2f);       //Destroy the collider after x seconds
+                Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
             }
         }
     }
