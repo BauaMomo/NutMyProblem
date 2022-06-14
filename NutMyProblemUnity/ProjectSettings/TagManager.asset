@@ -10,6 +10,7 @@ TagManager:
   - GroundedTrigger
   - GroudedTrigger
   - PlayerTrigger
+  - WeaponDrop
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Enemy
   - Player
   - Commonkught
-  - 
+  - WeaponDrop
   - 
   - 
   - 
