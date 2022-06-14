@@ -34,13 +34,20 @@ public class Weapons : MonoBehaviour
         else currentWeapon = availableWeapons[0];
     }
 
-    void SwitchToWeapon(Weapon _findThisWeapon)
+    void SwitchToWeapon(Weapon _switchToThis)
     {
-        if(_findThisWeapon == null) return;
-        if(availableWeapons.Find(weapon => weapon == _findThisWeapon) == null) return;      //returns if the player doesn't have the weapon _findThisWeapon
+        if (_switchToThis == null)
+        {
+            Debug.LogWarning("The weapon you're trying to switch to is null!");
+            return;
+        }
+        if (availableWeapons.Find(weapon => weapon == _switchToThis) == null)
+        {
+            Debug.LogWarning("The weapon you're trying to switch to is not in availableWeapons!");
+            return;      //returns if the player doesn't have the weapon _findThisWeapon
+        }
 
-        int switchIndex = availableWeapons.FindIndex(weapon => weapon == _findThisWeapon);  //finds the index of _findThisWeapon
-        currentWeapon = availableWeapons[switchIndex];
+        currentWeapon = _switchToThis;
     }
 
     public void AddWeaponFromDrop(GameObject _drop)
