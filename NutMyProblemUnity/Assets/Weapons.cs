@@ -9,6 +9,7 @@ public class Weapons : MonoBehaviour
     public Weapon gloves { get; protected set; }
     public Weapon fists { get; protected set; }
     public Weapon currentWeapon { get; protected set; }
+    List<Weapon> allWeapons;
     List<Weapon> availableWeapons;
 
     // Start is called before the first frame update
@@ -18,9 +19,10 @@ public class Weapons : MonoBehaviour
         gloves = gameObject.AddComponent<Gloves>();
         fists = gameObject.AddComponent<Fists>();
 
-        availableWeapons = new List<Weapon> { sword, gloves, fists };
+        allWeapons = new List<Weapon> { sword, gloves, fists };     //all weapons the player could pick up
+        availableWeapons = new List<Weapon> {fists, sword };               //all weapons the player currently has
 
-        currentWeapon = availableWeapons[0];
+        currentWeapon = availableWeapons[0];                        //the weapon the player has equipped
     }
 
     public void SwitchWeapon()
@@ -30,6 +32,30 @@ public class Weapons : MonoBehaviour
         int currentWeaponIndex = availableWeapons.FindIndex(weapon => weapon == currentWeapon);
         if (currentWeaponIndex < availableWeapons.Count - 1) currentWeapon = availableWeapons[currentWeaponIndex + 1];
         else currentWeapon = availableWeapons[0];
+    }
+
+    void SwitchToWeapon(Weapon _findThisWeapon)
+    {
+        if(_findThisWeapon == null) return;
+        if(availableWeapons.Find(weapon => weapon == _findThisWeapon) == null) return;      //returns if the player doesn't have the weapon _findThisWeapon
+
+        int switchIndex = availableWeapons.FindIndex(weapon => weapon == _findThisWeapon);  //finds the index of _findThisWeapon
+        currentWeapon = availableWeapons[switchIndex];
+    }
+
+    public void AddWeaponFromDrop(GameObject _drop)
+    {
+        Weapon weaponToAdd = allWeapons.Find(weapon => weapon.WeaponType == _drop.GetComponent<WeaponDropManager>().WeaponType);    //finds the weapon that should be added to the player's inventory based on the weaponType of the drop
+
+        foreach(Weapon weapon in availableWeapons)      //returns if the player already has that weapon
+        {
+            if (weapon == weaponToAdd) return;
+        }
+
+        availableWeapons.Add(weaponToAdd);
+        if (availableWeapons.Find(weapon => weapon == fists) != null) availableWeapons.Remove(fists);   //if the player has the fists, remove them.
+
+        SwitchToWeapon(weaponToAdd);
     }
 
     public class Weapon : MonoBehaviour
