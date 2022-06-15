@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
 
         enemy = Instantiate(Resources.Load("prefabs/commonkught") as GameObject);
         enemy.transform.position = new Vector2(4,0);
+
+        GameObject testDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
+        testDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Gloves);
     }
 
     // Update is called once per frame

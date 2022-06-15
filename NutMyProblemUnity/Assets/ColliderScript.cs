@@ -24,7 +24,7 @@ public class ColliderScript : MonoBehaviour
                         {
                             case "Enemy":
                                 collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
-                                Debug.Log("enemy hit");
+                                //Debug.Log("enemy hit");
                                 break;
                         }
                         break;

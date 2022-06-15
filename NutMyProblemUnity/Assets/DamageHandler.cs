@@ -26,7 +26,8 @@ public class DamageHandler : MonoBehaviour
         if (this.tag == "Enemy")
         {
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
-            rb.AddForce(new Vector2(-directionToOther.x * 200, 100));
+            Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
+            rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 4);
         }
     }
 }

@@ -9,6 +9,7 @@ public class Weapons : MonoBehaviour
     public Weapon gloves { get; protected set; }
     public Weapon fists { get; protected set; }
     public Weapon currentWeapon { get; protected set; }
+    List<Weapon> allWeapons;
     List<Weapon> availableWeapons;
 
     // Start is called before the first frame update
@@ -18,9 +19,10 @@ public class Weapons : MonoBehaviour
         gloves = gameObject.AddComponent<Gloves>();
         fists = gameObject.AddComponent<Fists>();
 
-        availableWeapons = new List<Weapon> { sword, gloves, fists };
+        allWeapons = new List<Weapon> { sword, gloves, fists };     //all weapons the player could pick up
+        availableWeapons = new List<Weapon> {fists, sword };               //all weapons the player currently has
 
-        currentWeapon = availableWeapons[0];
+        currentWeapon = availableWeapons[0];                        //the weapon the player has equipped
     }
 
     public void SwitchWeapon()
@@ -30,6 +32,37 @@ public class Weapons : MonoBehaviour
         int currentWeaponIndex = availableWeapons.FindIndex(weapon => weapon == currentWeapon);
         if (currentWeaponIndex < availableWeapons.Count - 1) currentWeapon = availableWeapons[currentWeaponIndex + 1];
         else currentWeapon = availableWeapons[0];
+    }
+
+    void SwitchToWeapon(Weapon _switchToThis)
+    {
+        if (_switchToThis == null)
+        {
+            Debug.LogWarning("The weapon you're trying to switch to is null!");
+            return;
+        }
+        if (availableWeapons.Find(weapon => weapon == _switchToThis) == null)
+        {
+            Debug.LogWarning("The weapon you're trying to switch to is not in availableWeapons!");
+            return;      //returns if the player doesn't have the weapon _findThisWeapon
+        }
+
+        currentWeapon = _switchToThis;
+    }
+
+    public void AddWeaponFromDrop(GameObject _drop)
+    {
+        Weapon weaponToAdd = allWeapons.Find(weapon => weapon.WeaponType == _drop.GetComponent<WeaponDropManager>().WeaponType);    //finds the weapon that should be added to the player's inventory based on the weaponType of the drop
+
+        foreach(Weapon weapon in availableWeapons)      //returns if the player already has that weapon
+        {
+            if (weapon == weaponToAdd) return;
+        }
+
+        availableWeapons.Add(weaponToAdd);
+        if (availableWeapons.Find(weapon => weapon == fists) != null) availableWeapons.Remove(fists);   //if the player has the fists, remove them.
+
+        SwitchToWeapon(weaponToAdd);
     }
 
     public class Weapon : MonoBehaviour
@@ -44,8 +77,9 @@ public class Weapons : MonoBehaviour
         protected GameObject weaponTrigger;
 
         public int iDamage { get; protected set; }
-        public float iAttackSpeed { get; protected set; }
+        public float iAttackSpeed { get; protected set; }       //Attack speed in hits per second
         public float iRange { get; protected set; }
+        public Vector2 KnockbackVector { get; protected set; }      //The direction and strength the enemy gets pushed in when hit
 
         public virtual void Attack(playerController.direction direction) 
         {
@@ -65,8 +99,9 @@ public class Weapons : MonoBehaviour
         {
             WeaponType = Type.Sword;
             iDamage = 20;
-            iAttackSpeed = 4;
+            iAttackSpeed = 6;
             iRange = 1.5f;
+            KnockbackVector = new Vector2(50, 20);
             SetUniversalVars(this);
         }
 
@@ -92,7 +127,7 @@ public class Weapons : MonoBehaviour
                 }
                 weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
 
-                Destroy(weaponTrigger, 0.2f);       //Destroy the collider after x seconds
+                Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
             }
         }
     }
@@ -116,7 +151,8 @@ public class Weapons : MonoBehaviour
             WeaponType = Type.Gloves;
             iDamage = 40;
             iAttackSpeed = 1;
-            iRange = 1.5f;
+            iRange = 3f;
+            KnockbackVector = new Vector2(130, 50);
             SetUniversalVars(this);
         }
 
@@ -144,7 +180,7 @@ public class Weapons : MonoBehaviour
                 }
                 weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
 
-                Destroy(weaponTrigger, 0.2f);       //Destroy the collider after x seconds
+                Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
             }
         }
     }
@@ -154,9 +190,10 @@ public class Weapons : MonoBehaviour
         private void Start()
         {
             WeaponType = Type.Fists;
-            iDamage = 20;
-            iAttackSpeed = 4;
+            iDamage = 10;
+            iAttackSpeed = 3;
             iRange = 1.5f;
+            KnockbackVector = new Vector2(30, 10);
             SetUniversalVars(this);
         }
         public override void Attack(playerController.direction _direction)
@@ -183,7 +220,7 @@ public class Weapons : MonoBehaviour
                 }
                 weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
 
-                Destroy(weaponTrigger, 0.2f);       //Destroy the collider after x seconds
+                Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
             }
         }
     }

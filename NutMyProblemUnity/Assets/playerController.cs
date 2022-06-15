@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 public class playerController : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class playerController : MonoBehaviour
         iPlayerWalkSpeed = 4;
         iPlayerSprintSpeed = 6;
         iJumpSpeed = 10;
-        iFallSpeed = 13;        
+        iFallSpeed = 13;
     }
 
     // Update is called once per frame
@@ -101,7 +102,34 @@ public class playerController : MonoBehaviour
 
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
-        if(context.started) weapons.SwitchWeapon();
+        if (context.started) weapons.SwitchWeapon();
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Collider2D[] searchColliders = Physics2D.OverlapCircleAll(this.transform.position, 2);      //creates an array of colliders within a certain radius
+
+            List<GameObject> WeaponDropObjects = new List<GameObject>();
+            List<float> WeaponDropDistances = new List<float>();
+
+            foreach (Collider2D collider in searchColliders)        //adds all WeaponDrop GameObjects to their List
+            {
+                if (collider.gameObject.tag == "WeaponDrop")
+                {
+                    WeaponDropObjects.Add(collider.gameObject);
+                    WeaponDropDistances.Add(Vector3.Distance(this.transform.position, collider.transform.position));
+                }
+            }
+
+            GameObject DropToPickUp = WeaponDropObjects.Find(x => Vector3.Distance(x.transform.position, this.transform.position) == WeaponDropDistances.Min());    //Finds the WeaponDrop with the smallest distance
+
+            weapons.AddWeaponFromDrop(DropToPickUp);
+            
+            Destroy(DropToPickUp);
+
+        }
     }
 
     bool IsOnPlatformEdge()
@@ -117,6 +145,6 @@ public class playerController : MonoBehaviour
             new Vector3(0, -1, 0), 3f);
 
         return ((leftRay ^ rightRay) && isGrounded);     //if one of the rays hits a collider and the player is on the ground return true
-        
+
     }
 }
