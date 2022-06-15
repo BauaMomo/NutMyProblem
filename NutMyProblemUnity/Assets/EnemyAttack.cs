@@ -25,7 +25,7 @@ public class EnemyAttack : MonoBehaviour
     void Start()
     {
         iSwordDamage = 20;
-        iAttackSpeed = 2;
+        iAttackSpeed = 1;
         iRange = 1.5f;
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
@@ -34,11 +34,8 @@ public class EnemyAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameObject.FindGameObjectWithTag("Player").GetComponent<DamageHandler>().iHealth <= 0)
-        { EditorSceneManager.LoadScene("SampleScene"); }
-
         if (Vector3.Distance(transform.position, TPlayer.position) < 1)
-            SwordAttack(GetComponent<EnemyController>().Enemydirection);
+            SwordAttack(GetComponent<EnemyController>().EnemyDirection);
     }
 
     public void SwordAttack(EnemyController.directions _directions)
@@ -63,7 +60,7 @@ public class EnemyAttack : MonoBehaviour
             }
             weaponTrigger.transform.position = Enemy.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
 
-            Destroy(weaponTrigger, 0.2f);
+            Destroy(weaponTrigger, 0.1f);
         }
     }
 }
