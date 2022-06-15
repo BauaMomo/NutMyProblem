@@ -7,7 +7,7 @@ public class EnemyController : MonoBehaviour
     public enum directions { right, left };
     enum AIMode { follow, patrol };
 
-    public directions Enemydirection;
+    public directions EnemyDirection;
     AIMode mode;
 
     Rigidbody2D rb;
@@ -37,7 +37,7 @@ public class EnemyController : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         fEnemyPathEndPoint = fEnemyPathStartPoint + fEnemyPathLength;
-        Enemydirection = directions.right;
+        EnemyDirection = directions.right;
         mode = AIMode.patrol;
 
     }
@@ -63,36 +63,36 @@ public class EnemyController : MonoBehaviour
                 if (transform.position.x < startPosition.x)
                 {
                     transform.position = Vector2.MoveTowards(transform.position, startPosition, fEnemySpeed * Time.deltaTime);
-                    Enemydirection = directions.right;
+                    EnemyDirection = directions.right;
                     FlipEnemy();
                 }
 
                 if (transform.position.x > endPosition.x)
                 {
                     transform.position = Vector2.MoveTowards(transform.position, endPosition, fEnemySpeed * Time.deltaTime);
-                    Enemydirection = directions.left;
+                    EnemyDirection = directions.left;
                     FlipEnemy();
                 }
 
 
 
 
-                if (transform.position.x >= startPosition.x && Enemydirection == directions.right)
+                if (transform.position.x >= startPosition.x && EnemyDirection == directions.right)
                 {
                     transform.position = Vector2.MoveTowards(transform.position, endPosition, fEnemySpeed * Time.deltaTime);
                     if (transform.position.x == endPosition.x)
                     {
-                        Enemydirection = directions.left; 
+                        EnemyDirection = directions.left;
                         FlipEnemy();
                     }
                 }
 
-                if (transform.position.x <= endPosition.x && Enemydirection == directions.left)
+                if (transform.position.x <= endPosition.x && EnemyDirection == directions.left)
                 {
                     transform.position = Vector2.MoveTowards(transform.position, startPosition, fEnemySpeed * Time.deltaTime);
                     if (transform.position.x == fEnemyPathStartPoint)
                     {
-                        Enemydirection = directions.right;
+                        EnemyDirection = directions.right;
                         FlipEnemy();
                     }
                 }
@@ -108,7 +108,7 @@ public class EnemyController : MonoBehaviour
     void FlipEnemy()
     {
         // Spriteflip im patrol mode
-        switch (Enemydirection)
+        switch (EnemyDirection)
         {
             case directions.right:
                 GetComponent<SpriteRenderer>().flipX = false;
@@ -120,19 +120,19 @@ public class EnemyController : MonoBehaviour
                 CastPointDirection = CastPoint.position + -Vector3.right * 5;
                 break;
         }
-        
 
-            //Spriteflip im follow mode
-            if (mode == AIMode.follow && transform.position.x < Target.position.x)
+
+        //Spriteflip im follow mode
+        if (mode == AIMode.follow && transform.position.x < Target.position.x)
         {
-            GetComponent<SpriteRenderer>().flipX = false; 
-            Enemydirection = directions.right;
+            GetComponent<SpriteRenderer>().flipX = false;
+            EnemyDirection = directions.right;
             CastPointDirection = CastPoint.position + Vector3.right * 5;
         }
         if (mode == AIMode.follow && transform.position.x > Target.position.x)
         {
             GetComponent<SpriteRenderer>().flipX = true;
-            Enemydirection = directions.left;
+            EnemyDirection = directions.left;
             CastPointDirection = CastPoint.position + -Vector3.right * 5;
         }
 
@@ -151,7 +151,7 @@ public class EnemyController : MonoBehaviour
             }
 
             else
-            { 
+            {
                 return false;
             }
 

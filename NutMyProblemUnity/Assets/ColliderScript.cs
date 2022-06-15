@@ -14,25 +14,43 @@ public class ColliderScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)             //checks what which trigger collides with
     {
-        switch (tag)
+        switch (parent.tag)
         {
-            case "WeaponTrigger":
-                switch (collision.tag)
+            case "Player":
+                switch (tag)
                 {
-                    case "Enemy":
-                        collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
-                        //Debug.Log("enemy hit");
+                    case "WeaponTrigger":
+                        switch (collision.tag)
+                        {
+                            case "Enemy":
+                                collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
+                                //Debug.Log("enemy hit");
+                                break;
+                        }
+                        break;
+                    case "GroundedTrigger":
+                        switch (collision.tag)
+                        {
+                            case "Floor":
+                                parent.GetComponent<playerController>().isGrounded = true;
+                                break;
+                        }
                         break;
                 }
                 break;
-            case "GroundedTrigger":
+
+
+            case "Enemy":
                 switch (collision.tag)
                 {
-                    case "Floor":
-                        parent.GetComponent<playerController>().isGrounded = true;
+                    case "Player":
+                        parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iSwordDamage, this.gameObject);
                         break;
                 }
                 break;
+
+
         }
+
     }
 }
