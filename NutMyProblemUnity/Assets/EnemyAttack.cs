@@ -5,31 +5,28 @@ using UnityEditor.SceneManagement;
 
 public class EnemyAttack : MonoBehaviour
 {
-
     public enum Type { commonKnught }
 
     public Type EnemyType;
 
     [SerializeField] GameObject Player;
-    [SerializeField] GameObject AttackRangeRight;
-    [SerializeField] GameObject AttackRangeLeft;
-    [SerializeField] Transform TPlayer;
+    [SerializeField] GameObject Enemy;
+    GameObject weaponTrigger;
 
-    int iSwordDamage;
-    int iDamageTimer;
-    [SerializeField] int iDamageTime;
+    public Transform TPlayer;
 
-    [SerializeField] bool bEnemyAttackCooldown;
+    public int iSwordDamage;
+
+    float fColliderSpawnTime;
+    public float iAttackSpeed { get; protected set; }
+    public float iRange { get; protected set; }
 
     // Start is called before the first frame update
     void Start()
     {
         iSwordDamage = 20;
-        iDamageTimer = 120;
-        iDamageTime = 0;
-        bEnemyAttackCooldown = false;
-        AttackRangeRight.SetActive(false);
-        AttackRangeLeft.SetActive(false);
+        iAttackSpeed = 2;
+        iRange = 1.5f;
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
     }
@@ -37,55 +34,36 @@ public class EnemyAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (GameObject.FindGameObjectWithTag("Player").GetComponent<DamageHandler>().iHealth <= 0)
         { EditorSceneManager.LoadScene("SampleScene"); }
 
-        if (bEnemyAttackCooldown == true)
-        {
-            iDamageTime++;
-            if (iDamageTime >= iDamageTimer)
-            {
-                bEnemyAttackCooldown = false;
-            }
-        }
-        if (iDamageTime >= iDamageTimer)
-               iDamageTime = 0;
-
-        if (Vector3.Distance(transform.position, TPlayer.position) < 2 && GetComponent<EnemyController>().Enemydirection == EnemyController.directions.right)
-            AttackRangeRight.SetActive(true);
-
-
-        if (Vector3.Distance(transform.position, TPlayer.position) < 2 && GetComponent<EnemyController>().Enemydirection == EnemyController.directions.left)
-            AttackRangeLeft.SetActive(true);
-
-        if (Vector3.Distance(transform.position, TPlayer.position) > 1)
-        {
-            AttackRangeRight.SetActive(false);
-            AttackRangeLeft.SetActive(false);
-        }
-
-
+        if (Vector3.Distance(transform.position, TPlayer.position) < 1)
+            SwordAttack(GetComponent<EnemyController>().Enemydirection);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    public void SwordAttack(EnemyController.directions _directions)
     {
-        if (collision.gameObject.CompareTag("Player"))
+
+        if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
         {
-            switch (EnemyType)
+            fColliderSpawnTime = Time.fixedUnscaledTime;
+
+            weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, Enemy.transform);
+            weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
+
+            float fColliderXOffset = 0.5f + iRange / 2;
+
+            switch (_directions)     
             {
-                case Type.commonKnught:
-                    if (bEnemyAttackCooldown == false)
-                        SwordAttack(iSwordDamage);
+                case EnemyController.directions.right:
+                    break;
+                case EnemyController.directions.left:
+                    fColliderXOffset *= -1;
                     break;
             }
+            weaponTrigger.transform.position = Enemy.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
+
+            Destroy(weaponTrigger, 0.2f);
         }
-
-
-
-    }
-    void SwordAttack(int AttackDamage)
-    {
-        bEnemyAttackCooldown = true;
-        TPlayer.GetComponent<DamageHandler>().HandleDamage(AttackDamage, this.gameObject);
     }
 }

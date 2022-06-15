@@ -23,7 +23,10 @@ public class DamageHandler : MonoBehaviour
     public void HandleDamage(int _damage, GameObject _other)
     {
         iHealth -= _damage;
-        Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
-        rb.AddForce(new Vector2(-directionToOther.x * 200, 100));
+        if (this.tag == "Enemy")
+        {
+            Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
+            rb.AddForce(new Vector2(-directionToOther.x * 200, 100));
+        }
     }
 }

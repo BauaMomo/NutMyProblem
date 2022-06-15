@@ -266,7 +266,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5062893802021047509}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &355906841188229094
 BoxCollider2D:
@@ -324,7 +324,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5062893802021047509}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1764053099979602006
 BoxCollider2D:
@@ -381,7 +381,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5062893802021047509}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7980023840942887277
 GameObject:
@@ -417,8 +417,11 @@ Transform:
   m_LocalPosition: {x: -1.139, y: -0.389, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: [{fileID: 446931645}, {fileID: 2508374025892564982}, {fileID: 6057816493103281308},
-    {fileID: 5918696357354974917}]
+  m_Children:
+  - {fileID: 446931645}
+  - {fileID: 2508374025892564982}
+  - {fileID: 6057816493103281308}
+  - {fileID: 5918696357354974917}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -562,8 +565,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b2610a628fe03940ae5731002ec0c3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typeofenemy: 0
+  EnemyType: 0
   Player: {fileID: 7716982155159702624, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
+  Enemy: {fileID: 7980023840942887277}
   AttackRangeRight: {fileID: 1640941196777520287}
   AttackRangeLeft: {fileID: 1480894137752686995}
   TPlayer: {fileID: 0}
+  iSwordDamage: 0
