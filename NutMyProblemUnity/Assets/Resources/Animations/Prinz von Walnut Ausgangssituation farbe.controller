@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Gloves_Jump_Substitute_Animation
+  m_Name: Player_Gloves_Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -33,7 +33,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Gloves_Run_Substitute_Animation
+  m_Name: Player_Gloves_Run
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -59,7 +59,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_WithoutWeapon_Jump_Animation
+  m_Name: Player_WithoutWeapon_Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -85,7 +85,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Gloves_Idle_Animation
+  m_Name: Player_Gloves_Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -111,7 +111,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_WithoutWeapon_Idle_Animation
+  m_Name: Player_WithoutWeapon_Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -137,7 +137,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Sprung_Ersatzanimation
+  m_Name: Player_Sword_Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -185,7 +185,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Angriff_Ersatzanimation
+  m_Name: Player_Sword_Attack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -211,7 +211,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Lauf_Ersatzanimation
+  m_Name: Player_Sword_Run
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -237,7 +237,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_WithoutWeapon_Attack_Animation
+  m_Name: Player_WithoutWeapon_Attack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -263,7 +263,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Idle_Substitute_Animation
+  m_Name: Player_Sword_Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -289,7 +289,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_WithoutWeapon_Run_Animation
+  m_Name: Player_WithoutWeapon_Run
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -322,7 +322,7 @@ AnimatorStateMachine:
     m_Position: {x: 200, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -366706697747104182}
-    m_Position: {x: 235, y: 65, z: 0}
+    m_Position: {x: 230, y: 60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3522545257189371073}
     m_Position: {x: 270, y: 130, z: 0}
@@ -349,7 +349,7 @@ AnimatorStateMachine:
     m_Position: {x: 510, y: 590, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7725419641172114423}
-    m_Position: {x: 545, y: 655, z: 0}
+    m_Position: {x: 550, y: 650, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6174155462035019053}
     m_Position: {x: 580, y: 720, z: 0}
@@ -370,7 +370,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Gloves_Attack_Substitute_Animation
+  m_Name: Player_Gloves_Attack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

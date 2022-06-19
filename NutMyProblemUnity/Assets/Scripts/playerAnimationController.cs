@@ -33,18 +33,18 @@ public class playerAnimationController : MonoBehaviour
         rb2D = GetComponent<Rigidbody2D>();
         weapons = GetComponent<Weapons>();
 
-        SwordAnimations.Add(State.idle, "Player_Idle_Substitute_Animation");
-        SwordAnimations.Add(State.walking, "Player_Lauf_Ersatzanimation");
-        SwordAnimations.Add(State.running, "Player_Lauf_Ersatzanimation");
-        SwordAnimations.Add(State.airborne, "Player_Sprung_Ersatzanimation");
-        SwordAnimations.Add(State.attacking, "Player_Angriff_Ersatzanimation");
+        SwordAnimations.Add(State.idle, "Player_Sword_Idle");
+        SwordAnimations.Add(State.walking, "Player_Sword_Run");
+        SwordAnimations.Add(State.running, "Player_Sword_Run");
+        SwordAnimations.Add(State.airborne, "Player_Sword_Jump");
+        SwordAnimations.Add(State.attacking, "Player_Sword_Attack");
         SwordAnimations.Add(State.crouching, "");
 
-        GloveAnimations.Add(State.idle, "Player_Gloves_Idle_Animation");
-        GloveAnimations.Add(State.walking, "Player_Gloves_Run_Substitute_Animation");
-        GloveAnimations.Add(State.running, "Player_Gloves_Run_Substitute_Animation");
-        GloveAnimations.Add(State.airborne, "Player_Gloves_Jump_Substitute_Animation");
-        GloveAnimations.Add(State.attacking, "Player_Gloves_Attack_Substitute_Animation");
+        GloveAnimations.Add(State.idle, "Player_Gloves_Idle");
+        GloveAnimations.Add(State.walking, "Player_Gloves_Run");
+        GloveAnimations.Add(State.running, "Player_Gloves_Run");
+        GloveAnimations.Add(State.airborne, "Player_Gloves_Jump");
+        GloveAnimations.Add(State.attacking, "Player_Gloves_Attack");
         GloveAnimations.Add(State.crouching, "");
 
         BowAnimations.Add(State.idle, "");
@@ -54,11 +54,11 @@ public class playerAnimationController : MonoBehaviour
         BowAnimations.Add(State.attacking, "");
         BowAnimations.Add(State.crouching, "");
 
-        FistAnimations.Add(State.idle, "Player_WithoutWeapon_Idle_Animation");
-        FistAnimations.Add(State.walking, "Player_WithoutWeapon_Run_Animation");
-        FistAnimations.Add(State.running, "Player_WithoutWeapon_Run_Animation");
-        FistAnimations.Add(State.airborne, "Player_WithoutWeapon_Jump_Animation");
-        FistAnimations.Add(State.attacking, "Player_WithoutWeapon_Attack_Animation");
+        FistAnimations.Add(State.idle, "Player_WithoutWeapon_Idle");
+        FistAnimations.Add(State.walking, "Player_WithoutWeapon_Run");
+        FistAnimations.Add(State.running, "Player_WithoutWeapon_Run");
+        FistAnimations.Add(State.airborne, "Player_WithoutWeapon_Jump");
+        FistAnimations.Add(State.attacking, "Player_WithoutWeapon_Attack");
         FistAnimations.Add(State.crouching, "");
 
         playerState = State.idle;
