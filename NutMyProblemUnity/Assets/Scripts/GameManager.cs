@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
         player = Instantiate(Resources.Load("prefabs/Player") as GameObject);
         player.transform.position = new Vector2(0,0);
 
-        enemy = Instantiate(Resources.Load("prefabs/commonkught") as GameObject);
+        enemy = Instantiate(Resources.Load("prefabs/CommonKnught") as GameObject);
         enemy.transform.position = new Vector2(4,0);
 
         GameObject testDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
