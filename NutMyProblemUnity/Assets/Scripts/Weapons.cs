@@ -52,6 +52,8 @@ public class Weapons : MonoBehaviour
 
     public void AddWeaponFromDrop(GameObject _drop)
     {
+        if (_drop == null) return;
+
         Weapon weaponToAdd = allWeapons.Find(weapon => weapon.WeaponType == _drop.GetComponent<WeaponDropManager>().WeaponType);    //finds the weapon that should be added to the player's inventory based on the weaponType of the drop
 
         foreach(Weapon weapon in availableWeapons)      //returns if the player already has that weapon
