@@ -8,7 +8,7 @@ public class playerAnimationController : MonoBehaviour
 {
     float attackAnimationStartTime;
     float currentWeaponAttackLength;
-    public enum State { idle, walking, running, airborne, crouching, attacking };
+    public enum State { idle, walking, running, airborne, crouching, attacking, dashing };
     [SerializeField] public State playerState;
 
     public State currentAnimationState;
@@ -39,6 +39,7 @@ public class playerAnimationController : MonoBehaviour
         SwordAnimations.Add(State.airborne, "Player_Sword_Jump_Animation");
         SwordAnimations.Add(State.attacking, "Player_Sword_Attack_Animation");
         SwordAnimations.Add(State.crouching, "");
+        SwordAnimations.Add(State.dashing, "");
 
         GloveAnimations.Add(State.idle, "Player_Gloves_Idle_Animation");
         GloveAnimations.Add(State.walking, "Player_Gloves_Run_Animation");
@@ -46,6 +47,7 @@ public class playerAnimationController : MonoBehaviour
         GloveAnimations.Add(State.airborne, "Player_Gloves_Jump_Animation");
         GloveAnimations.Add(State.attacking, "Player_Gloves_Attack_Animation");
         GloveAnimations.Add(State.crouching, "");
+        GloveAnimations.Add(State.dashing, "");
 
         BowAnimations.Add(State.idle, "");
         BowAnimations.Add(State.walking, "");
@@ -53,6 +55,7 @@ public class playerAnimationController : MonoBehaviour
         BowAnimations.Add(State.airborne, "");
         BowAnimations.Add(State.attacking, "");
         BowAnimations.Add(State.crouching, "");
+        BowAnimations.Add(State.dashing, "");
 
         FistAnimations.Add(State.idle, "Player_WithoutWeapon_Idle_Animation");
         FistAnimations.Add(State.walking, "Player_WithoutWeapon_Run_Animation");
@@ -60,6 +63,7 @@ public class playerAnimationController : MonoBehaviour
         FistAnimations.Add(State.airborne, "Player_WithoutWeapon_Jump_Animation");
         FistAnimations.Add(State.attacking, "Player_WithoutWeapon_Attack_Animation");
         FistAnimations.Add(State.crouching, "");
+        FistAnimations.Add(State.dashing, "");
 
         playerState = State.idle;
     }
@@ -92,6 +96,12 @@ public class playerAnimationController : MonoBehaviour
         if (attackAnimationStartTime + currentWeaponAttackLength > Time.fixedUnscaledTime)
         {
             playerState = State.attacking;
+            return;
+        }
+
+        if (Time.time < playerController.lastDashTime + playerController.fDashLength)
+        {
+            playerState = State.dashing;
             return;
         }
 
