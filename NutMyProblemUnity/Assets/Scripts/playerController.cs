@@ -8,15 +8,21 @@ public class playerController : MonoBehaviour
 {
     Rigidbody2D rb;
     Weapons weapons;
-
-    public enum State { idle, walking, running, crouching, airborne };
-    public State playerState { get; protected set; }
+    playerAnimationController playerAnimationController;
 
     int iPlayerSpeed;
     [SerializeField] int iPlayerWalkSpeed;
     [SerializeField] int iPlayerSprintSpeed;
     [SerializeField] int iJumpSpeed;
     [SerializeField] int iFallSpeed;
+
+    public bool noMovement;
+    float noMovementEndTime;
+
+    public float lastDashTime { get; protected set; }
+    public float fDashLength { get; protected set; } = .2f;
+    public float fDashCooldown { get; } = .8f;
+    float fDashStartHeight;
 
     public bool isGrounded;
     bool leftRay;
@@ -38,7 +44,7 @@ public class playerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         weapons = GetComponent<Weapons>();
-
+        playerAnimationController = GetComponent<playerAnimationController>();
 
         iPlayerWalkSpeed = 4;
         iPlayerSprintSpeed = 6;
@@ -49,10 +55,17 @@ public class playerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        IsDashAvailable();
+
+        if (noMovement && Time.time > noMovementEndTime) noMovement = false;
+
         if (isSprinting) iPlayerSpeed = iPlayerSprintSpeed;      //sprinting
         else iPlayerSpeed = iPlayerWalkSpeed;
 
-        if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
+        if (!noMovement)
+        {
+            if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
+        }
 
         if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                       //higher than standard fall speed
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - 50 * Time.deltaTime);
@@ -62,6 +75,7 @@ public class playerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);    //higher jump if jump button is held down
         }
 
+        if (playerAnimationController.playerState == playerAnimationController.State.dashing) rb.position = new Vector2( rb.position.x, fDashStartHeight );
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -73,7 +87,7 @@ public class playerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && isGrounded)
+        if (context.started && isGrounded && !noMovement)
         {
             //Debug.Log("jump start");
             isGrounded = false;
@@ -130,6 +144,26 @@ public class playerController : MonoBehaviour
             Destroy(DropToPickUp);
 
         }
+    }
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (IsDashAvailable())
+        {
+            lastDashTime = Time.time;
+
+            noMovementEndTime = Time.time + fDashLength;
+            noMovement = true;
+
+            fDashStartHeight = rb.position.y;
+
+            rb.AddForce(new Vector2(1000, 0) * moveDir);
+        }
+    }
+
+    public bool IsDashAvailable()
+    {
+        return Time.time > lastDashTime + fDashCooldown;
     }
 
     bool IsOnPlatformEdge()
