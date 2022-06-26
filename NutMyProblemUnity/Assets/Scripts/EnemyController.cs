@@ -8,6 +8,9 @@ public class EnemyController : MonoBehaviour
     enum AIMode { follow, patrol };
 
     public directions EnemyDirection;
+
+    [SerializeField] public GameObject WeaponDrop;
+
     AIMode mode;
 
     Rigidbody2D rb;
@@ -17,6 +20,7 @@ public class EnemyController : MonoBehaviour
     Vector2 endPosition;
     Vector2 startPosition;
     Vector3 CastPointDirection;
+    Vector2 WeaponDropPosition;
 
 
     float fEnemyPathStartPoint;
@@ -173,5 +177,23 @@ public class EnemyController : MonoBehaviour
                 mode = AIMode.patrol;
             }
         }
+    }
+    private void OnDestroy()
+    {
+        WeaponDropPosition = new Vector2(transform.position.x, transform.position.y +0.1f);
+        WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
+        WeaponDrop.transform.position = WeaponDropPosition;
+
+        WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2 (UnityEngine.Random.Range(-50f,50f),200));
+
+
+
+        switch(GetComponent<EnemyAttack>().EnemyType)
+        {
+            case EnemyAttack.Type.commonKnught:
+                WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
+                break;
+        }
+
     }
 }
