@@ -13,6 +13,8 @@ public class EnemyController : MonoBehaviour
 
     AIMode mode;
 
+    GameManager gm;
+
     Rigidbody2D rb;
     Transform Target;
     [SerializeField] Transform CastPoint;
@@ -38,7 +40,7 @@ public class EnemyController : MonoBehaviour
         fEnemySpeed = 2;
 
 
-
+        gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
         fEnemyPathEndPoint = fEnemyPathStartPoint + fEnemyPathLength;
         EnemyDirection = directions.right;
@@ -180,19 +182,22 @@ public class EnemyController : MonoBehaviour
     }
     private void OnDestroy()
     {
-        WeaponDropPosition = new Vector2(transform.position.x, transform.position.y +0.1f);
-        WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
-        WeaponDrop.transform.position = WeaponDropPosition;
-
-        WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2 (UnityEngine.Random.Range(-50f,50f),200));
-
-
-
-        switch(GetComponent<EnemyAttack>().EnemyType)
+        if (!gm.changingScene)
         {
-            case EnemyAttack.Type.commonKnught:
-                WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
-                break;
+            WeaponDropPosition = new Vector2(transform.position.x, transform.position.y + 0.1f);
+            WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
+            WeaponDrop.transform.position = WeaponDropPosition;
+
+            WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
+
+
+
+            switch (GetComponent<EnemyAttack>().EnemyType)
+            {
+                case EnemyAttack.Type.commonKnught:
+                    WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
+                    break;
+            }
         }
 
     }
