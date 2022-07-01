@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] public GameObject WeaponDrop;
 
-    AIMode mode;
+    [SerializeField] AIMode mode;
 
     GameManager gm;
 
@@ -25,7 +25,7 @@ public class EnemyController : MonoBehaviour
     Vector2 WeaponDropPosition;
 
 
-    float fEnemyPathStartPoint;
+    [SerializeField] float fEnemyPathStartPoint;
     float fEnemyPathEndPoint;
     float fEnemyPathLength;
     float fEnemySpeed;
@@ -35,7 +35,7 @@ public class EnemyController : MonoBehaviour
     {
         //kann später raus genommen werden und in Unity bestimmt werden -> maybe??!
         // PathStartPoint ist der Spawnpoint des Gegners
-        fEnemyPathStartPoint = 4;
+        //fEnemyPathStartPoint = 4;
         fEnemyPathLength = 6;
         fEnemySpeed = 2;
 
@@ -118,12 +118,34 @@ public class EnemyController : MonoBehaviour
         {
             case directions.right:
                 GetComponent<SpriteRenderer>().flipX = false;
-                CastPointDirection = CastPoint.position + Vector3.right * 5;
+
+                switch (GetComponent<EnemyAttack>().EnemyType)
+                {
+                    case EnemyAttack.Type.commonKnught:
+                        CastPointDirection = CastPoint.position + Vector3.right * 5;
+                        break;
+                    case EnemyAttack.Type.hazardnut:
+
+                        CastPointDirection = CastPoint.position + Vector3.right * 10;
+                        break;
+                }
+
                 break;
 
             case directions.left:
                 GetComponent<SpriteRenderer>().flipX = true;
-                CastPointDirection = CastPoint.position + -Vector3.right * 5;
+
+                switch (GetComponent<EnemyAttack>().EnemyType)
+                {
+                    case EnemyAttack.Type.commonKnught:
+                        CastPointDirection = CastPoint.position + -Vector3.right * 5;
+                        break;
+
+                    case EnemyAttack.Type.hazardnut:
+                        CastPointDirection = CastPoint.position + -Vector3.right * 10;
+                        break;
+                }
+
                 break;
         }
 
@@ -174,10 +196,22 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            if (Vector3.Distance(transform.position, Target.position) > 5)
+            switch (GetComponent<EnemyAttack>().EnemyType)
             {
-                mode = AIMode.patrol;
+                case EnemyAttack.Type.commonKnught:
+                    if (Vector3.Distance(transform.position, Target.position) > 5)
+                    {
+                        mode = AIMode.patrol;
+                    }
+                    break;
+                case EnemyAttack.Type.hazardnut:
+                    if (Vector3.Distance(transform.position, Target.position) > 10)
+                    {
+                        mode = AIMode.patrol;
+                    }
+                    break;
             }
+
         }
     }
     private void OnDestroy()
@@ -197,6 +231,11 @@ public class EnemyController : MonoBehaviour
                 case EnemyAttack.Type.commonKnught:
                     WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
                     break;
+
+                case EnemyAttack.Type.hazardnut:
+                    WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Gloves);
+                    break;
+
             }
         }
 
