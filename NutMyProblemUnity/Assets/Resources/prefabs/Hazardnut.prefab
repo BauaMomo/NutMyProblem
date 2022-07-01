@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 425788150}
   - component: {fileID: 425788152}
   - component: {fileID: 425788151}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyHPText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 446931648}
   - component: {fileID: 446931647}
   - component: {fileID: 446931646}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,13 +246,13 @@ GameObject:
   m_Component:
   - component: {fileID: 5918696357354974917}
   - component: {fileID: 355906841188229094}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: AttackRangeLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5918696357354974917
 Transform:
   m_ObjectHideFlags: 0
@@ -281,7 +281,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.6209578, y: -0.029336572}
+  m_Offset: {x: 0.26500225, y: -0.13360637}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -292,7 +292,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.224914, y: 0.94132686}
+  m_Size: {x: 1.9368248, y: 1.3224511}
   m_EdgeRadius: 0
 --- !u!1 &1640941196777520287
 GameObject:
@@ -304,13 +304,13 @@ GameObject:
   m_Component:
   - component: {fileID: 6057816493103281308}
   - component: {fileID: 1764053099979602006}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: AttackRangeRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6057816493103281308
 Transform:
   m_ObjectHideFlags: 0
@@ -339,7 +339,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.6209578, y: -0.029336572}
+  m_Offset: {x: 1.0847789, y: -0.12281975}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -350,7 +350,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.224914, y: 0.94132686}
+  m_Size: {x: 2.1525562, y: 1.2864957}
   m_EdgeRadius: 0
 --- !u!1 &2187201757612838699
 GameObject:
@@ -361,7 +361,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2508374025892564982}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: CastPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2187201757612838699}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.214, y: 0.158, z: 0}
+  m_LocalPosition: {x: 0.68, y: -0.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -399,8 +399,8 @@ GameObject:
   - component: {fileID: 8178064294339364966}
   - component: {fileID: 8484898466572323132}
   - component: {fileID: 427948674614170402}
-  m_Layer: 8
-  m_Name: CommonKnught
+  m_Layer: 10
+  m_Name: Hazardnut
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -466,7 +466,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: b772f86876285fa428b22bd59af6afac, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c1be0ecaa25cd4e4498e6d4c03794081, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -489,7 +489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e11d2050195f89469d9ffa969b076b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <iHealth>k__BackingField: 100
+  <iHealth>k__BackingField: 150
 --- !u!114 &2458784347105620590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,8 +504,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyDirection: 0
   WeaponDrop: {fileID: 0}
+  mode: 0
   CastPoint: {fileID: 2508374025892564982}
-  fEnemyPathStartPoint: 4
+  fEnemyPathStartPoint: 12
 --- !u!70 &6034621536976202164
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -519,9 +520,9 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.046367645, y: -0.08430481}
-  m_Size: {x: 1.021167, y: 1.4258304}
-  m_Direction: 0
+  m_Offset: {x: -0.10887651, y: -0.24384947}
+  m_Size: {x: 2.6063616, y: 1.836161}
+  m_Direction: 1
 --- !u!50 &8178064294339364966
 Rigidbody2D:
   serializedVersion: 4
@@ -567,8 +568,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b2610a628fe03940ae5731002ec0c3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyType: 0
+  EnemyType: 1
   Player: {fileID: 7716982155159702624, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
   Enemy: {fileID: 7980023840942887277}
   TPlayer: {fileID: 0}
   iSwordDamage: 0
+  iGlovesDamage: 0

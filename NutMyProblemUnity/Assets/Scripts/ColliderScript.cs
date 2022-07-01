@@ -44,7 +44,16 @@ public class ColliderScript : MonoBehaviour
                 switch (collision.tag)
                 {
                     case "Player":
-                        parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iSwordDamage, this.gameObject);
+                        switch (parent.GetComponent<EnemyAttack>().EnemyType)
+                        {
+                            case EnemyAttack.Type.commonKnught:
+                                parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iSwordDamage, this.gameObject);
+                                break;
+                            case EnemyAttack.Type.hazardnut:
+                                parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iGlovesDamage, this.gameObject);
+                                break;
+
+                        }
                         break;
                 }
                 break;
