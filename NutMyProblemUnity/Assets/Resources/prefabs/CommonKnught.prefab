@@ -399,9 +399,9 @@ GameObject:
   - component: {fileID: 8178064294339364966}
   - component: {fileID: 8484898466572323132}
   - component: {fileID: 427948674614170402}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: CommonKnught
-  m_TagString: Enemy
+  m_TagString: CommonKnught
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

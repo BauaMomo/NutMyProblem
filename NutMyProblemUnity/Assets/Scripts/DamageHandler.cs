@@ -23,7 +23,7 @@ public class DamageHandler : MonoBehaviour
     public void HandleDamage(int _damage, GameObject _other)
     {
         iHealth -= _damage;
-        if (this.tag == "Enemy")
+        if (this.tag == "CommonKnught" || this.tag == "Hazardnut")
         {
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
