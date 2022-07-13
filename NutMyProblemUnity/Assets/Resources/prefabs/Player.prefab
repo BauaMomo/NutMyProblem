@@ -245,19 +245,7 @@ MonoBehaviour:
     m_ActionId: cc9f7efa-e909-448f-bdd3-348b9c2c623b
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7716982155159702633}
-        m_TargetAssemblyTypeName: playerController, Assembly-CSharp
-        m_MethodName: OnSprint
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: a49c1816-eb2c-45fe-ba9f-52841922f4b7
     m_ActionName: Player/Sprint[/Keyboard/leftShift]
   - m_PersistentCalls:
