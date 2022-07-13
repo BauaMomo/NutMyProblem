@@ -5,12 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - Floor
-  - Enemy
   - WeaponTrigger
   - GroundedTrigger
   - GroudedTrigger
   - PlayerTrigger
   - WeaponDrop
+  - Hazardnut
+  - CommonKnught
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - UI
   - Enemy
   - Player
-  - Commonkught
+  - CommonKnught
   - WeaponDrop
   - Hazardnut
   - 

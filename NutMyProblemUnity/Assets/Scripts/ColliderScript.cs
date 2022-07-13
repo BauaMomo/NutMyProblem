@@ -19,14 +19,8 @@ public class ColliderScript : MonoBehaviour
             case "Player":
                 switch (tag)
                 {
-                    case "WeaponTrigger":
-                        switch (collision.tag)
-                        {
-                            case "Enemy":
-                                collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
-                                //Debug.Log("enemy hit");
-                                break;
-                        }
+                    default:
+                        if(collision.tag == "CommonKnught" || collision.tag == "Hazardnut") collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
                         break;
                     case "GroundedTrigger":
                         switch (collision.tag)
@@ -40,20 +34,20 @@ public class ColliderScript : MonoBehaviour
                 break;
 
 
-            case "Enemy":
+            case "CommonKnught":
                 switch (collision.tag)
                 {
                     case "Player":
-                        switch (parent.GetComponent<EnemyAttack>().EnemyType)
-                        {
-                            case EnemyAttack.Type.commonKnught:
-                                parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iSwordDamage, this.gameObject);
-                                break;
-                            case EnemyAttack.Type.hazardnut:
-                                parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iGlovesDamage, this.gameObject);
-                                break;
+                        parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iSwordDamage, parent.gameObject);
+                        break;
+                }
+                break;
 
-                        }
+            case "Hazardnut":
+                switch (collision.tag)
+                {
+                    case "Player":
+                        parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iGlovesDamage, parent.gameObject);
                         break;
                 }
                 break;
