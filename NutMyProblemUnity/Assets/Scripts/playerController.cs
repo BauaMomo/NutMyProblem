@@ -11,8 +11,6 @@ public class playerController : MonoBehaviour
     playerAnimationController playerAnimationController;
 
     int iPlayerSpeed;
-    [SerializeField] int iPlayerWalkSpeed;
-    [SerializeField] int iPlayerSprintSpeed;
     [SerializeField] int iJumpSpeed;
     [SerializeField] int iFallSpeed;
 
@@ -46,8 +44,7 @@ public class playerController : MonoBehaviour
         weapons = GetComponent<Weapons>();
         playerAnimationController = GetComponent<playerAnimationController>();
 
-        iPlayerWalkSpeed = 4;
-        iPlayerSprintSpeed = 6;
+        iPlayerSpeed = 8;
         iJumpSpeed = 10;
         iFallSpeed = 13;
     }
@@ -58,9 +55,6 @@ public class playerController : MonoBehaviour
         IsDashAvailable();
 
         if (noMovement && Time.time > noMovementEndTime) noMovement = false;
-
-        if (isSprinting) iPlayerSpeed = iPlayerSprintSpeed;      //sprinting
-        else iPlayerSpeed = iPlayerWalkSpeed;
 
         if (!noMovement)
         {
@@ -108,12 +102,6 @@ public class playerController : MonoBehaviour
         }
     }
 
-    public void OnSprint(InputAction.CallbackContext context)
-    {
-        if (context.started) isSprinting = true;
-        if (context.canceled) isSprinting = false;
-    }
-
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
         if (context.started) weapons.SwitchWeapon();
@@ -148,7 +136,7 @@ public class playerController : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (IsDashAvailable())
+        if (context.started && IsDashAvailable())
         {
             lastDashTime = Time.time;
 

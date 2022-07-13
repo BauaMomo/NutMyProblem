@@ -8,7 +8,7 @@ public class playerAnimationController : MonoBehaviour
 {
     float attackAnimationStartTime;
     float currentWeaponAttackLength;
-    public enum State { idle, walking, running, airborne, crouching, attacking, dashing };
+    public enum State { idle, walking, airborne, crouching, attacking, dashing };
     [SerializeField] public State playerState;
 
     public State currentAnimationState;
@@ -35,7 +35,6 @@ public class playerAnimationController : MonoBehaviour
 
         SwordAnimations.Add(State.idle, "Player_Sword_Idle_Animation");
         SwordAnimations.Add(State.walking, "Player_Sword_Run_Animation");
-        SwordAnimations.Add(State.running, "Player_Sword_Run_Animation");
         SwordAnimations.Add(State.airborne, "Player_Sword_Jump_Animation");
         SwordAnimations.Add(State.attacking, "Player_Sword_Attack_Animation");
         SwordAnimations.Add(State.crouching, "");
@@ -43,7 +42,6 @@ public class playerAnimationController : MonoBehaviour
 
         GloveAnimations.Add(State.idle, "Player_Gloves_Idle_Animation");
         GloveAnimations.Add(State.walking, "Player_Gloves_Run_Animation");
-        GloveAnimations.Add(State.running, "Player_Gloves_Run_Animation");
         GloveAnimations.Add(State.airborne, "Player_Gloves_Jump_Animation");
         GloveAnimations.Add(State.attacking, "Player_Gloves_Attack_Animation");
         GloveAnimations.Add(State.crouching, "");
@@ -51,7 +49,6 @@ public class playerAnimationController : MonoBehaviour
 
         BowAnimations.Add(State.idle, "");
         BowAnimations.Add(State.walking, "");
-        BowAnimations.Add(State.running, "");
         BowAnimations.Add(State.airborne, "");
         BowAnimations.Add(State.attacking, "");
         BowAnimations.Add(State.crouching, "");
@@ -59,7 +56,6 @@ public class playerAnimationController : MonoBehaviour
 
         FistAnimations.Add(State.idle, "Player_WithoutWeapon_Idle_Animation");
         FistAnimations.Add(State.walking, "Player_WithoutWeapon_Run_Animation");
-        FistAnimations.Add(State.running, "Player_WithoutWeapon_Run_Animation");
         FistAnimations.Add(State.airborne, "Player_WithoutWeapon_Jump_Animation");
         FistAnimations.Add(State.attacking, "Player_WithoutWeapon_Attack_Animation");
         FistAnimations.Add(State.crouching, "");
@@ -108,7 +104,6 @@ public class playerAnimationController : MonoBehaviour
         if (playerController.isGrounded)
         {
             if (rb2D.velocity.x == 0) playerState = State.idle;
-            else if (playerController.isSprinting) playerState = State.running;
             else playerState = State.walking;
         }
         else playerState = State.airborne;
