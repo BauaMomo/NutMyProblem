@@ -127,8 +127,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.22947687}
-  m_Size: {x: 0.7194804, y: 1.132219}
+  m_Offset: {x: 0, y: -0.11521804}
+  m_Size: {x: 0.9141243, y: 2.119848}
   m_Direction: 0
 --- !u!114 &7716982155159702633
 MonoBehaviour:
@@ -142,8 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c82f186c6ffeb03418aba945ca9a7bbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iPlayerWalkSpeed: 0
-  iPlayerSprintSpeed: 0
   iJumpSpeed: 0
   iFallSpeed: 0
   noMovement: 0
@@ -244,10 +242,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: cc9f7efa-e909-448f-bdd3-348b9c2c623b
     m_ActionName: Player/Jump[/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: a49c1816-eb2c-45fe-ba9f-52841922f4b7
-    m_ActionName: Player/Sprint[/Keyboard/leftShift]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7716982155159702633}
@@ -402,7 +396,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 183875852521906957, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}
       propertyPath: m_Size.y
-      value: 0.1882447
+      value: 0.3117671
       objectReference: {fileID: 0}
     - target: {fileID: 183875852521906957, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}
       propertyPath: m_Offset.x
@@ -410,7 +404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 183875852521906957, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}
       propertyPath: m_Offset.y
-      value: -0.4575736
+      value: -0.88990426
       objectReference: {fileID: 0}
     - target: {fileID: 496650100529887933, guid: 18da9f7eebc5a254dad9bf9afd1c5afa, type: 3}
       propertyPath: m_RootOrder

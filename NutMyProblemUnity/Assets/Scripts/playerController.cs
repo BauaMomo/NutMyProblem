@@ -45,7 +45,7 @@ public class playerController : MonoBehaviour
         playerAnimationController = GetComponent<playerAnimationController>();
 
         iPlayerSpeed = 8;
-        iJumpSpeed = 10;
+        iJumpSpeed = 18;
         iFallSpeed = 13;
     }
 
