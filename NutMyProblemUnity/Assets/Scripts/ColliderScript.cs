@@ -47,7 +47,7 @@ public class ColliderScript : MonoBehaviour
                 switch (collision.tag)
                 {
                     case "Player":
-                        parent.GetComponent<HazardnutControler>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutControler>().iGlovesDamage, parent.gameObject);
+                        parent.GetComponent<HazardnutController>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutController>().iGlovesDamage, parent.gameObject);
                         break;
                 }
                 break;

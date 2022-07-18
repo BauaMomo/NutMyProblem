@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class HazardnutControler : MonoBehaviour
+public class HazardnutController : MonoBehaviour
 {
     public enum directions { right, left };
     public directions HazardnutDirection;
@@ -19,8 +20,9 @@ public class HazardnutControler : MonoBehaviour
     GameObject weaponTrigger;
 
     GameManager gm;
-
     Rigidbody2D rb;
+
+    public UnityEvent OnAttack;
 
     Transform Target;
     [SerializeField] Transform CastPoint;
@@ -45,6 +47,8 @@ public class HazardnutControler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        OnAttack = new UnityEvent();
+
         fHazardnutPathLength = 6;
         fHazardnutSpeed = 2;
 
