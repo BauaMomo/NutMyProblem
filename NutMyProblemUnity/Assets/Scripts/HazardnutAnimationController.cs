@@ -8,7 +8,6 @@ public class HazardnutAnimationController : MonoBehaviour
     Rigidbody2D rb;
     Animator animator;
 
-    public UnityEvent OnAttack;
     public UnityEvent OnDamaged;
 
     public enum State { idle, moving, attacking, stunned };
@@ -16,7 +15,7 @@ public class HazardnutAnimationController : MonoBehaviour
     public State oldState;
 
     float attackStartTime;
-    float attackTime = 1f;
+    float attackTime = .8f;
 
     float stunStartTime;
     float stunTime = 1f;
@@ -29,8 +28,6 @@ public class HazardnutAnimationController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        OnAttack = new UnityEvent();
-        OnAttack.AddListener(StartAttackPhase);
         OnDamaged = new UnityEvent();
         OnDamaged.AddListener(StartStunPhase);
 
@@ -71,8 +68,9 @@ public class HazardnutAnimationController : MonoBehaviour
         if (enemyState == State.stunned && Time.time > stunStartTime + stunTime) enemyState = State.idle;
     }
 
-    void StartAttackPhase()
+    public void OnAttack()
     {
+        Debug.Log("OnAttack called");
         attackStartTime = Time.time;
         enemyState = State.attacking;
     }

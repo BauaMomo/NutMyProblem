@@ -434,9 +434,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daf8c61917d78874cb68118e493f0ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnAttack:
-    m_PersistentCalls:
-      m_Calls: []
   OnDamaged:
     m_PersistentCalls:
       m_Calls: []
