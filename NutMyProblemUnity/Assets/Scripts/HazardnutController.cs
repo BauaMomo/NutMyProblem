@@ -48,6 +48,7 @@ public class HazardnutController : MonoBehaviour
     void Start()
     {
         OnAttack = new UnityEvent();
+        OnAttack.AddListener(GetComponent<HazardnutAnimationController>().OnAttack);
 
         fHazardnutPathLength = 6;
         fHazardnutSpeed = 2;
@@ -134,12 +135,12 @@ public class HazardnutController : MonoBehaviour
         switch (HazardnutDirection)
         {
             case directions.right:
-                GetComponent<SpriteRenderer>().flipX = false;
+                GetComponent<SpriteRenderer>().flipX = true;
                 CastPointDirection = CastPoint.position + Vector3.right * 10;
                 break;
 
             case directions.left:
-                GetComponent<SpriteRenderer>().flipX = true;
+                GetComponent<SpriteRenderer>().flipX = false;
                 CastPointDirection = CastPoint.position + -Vector3.right * 10;
                 break;
         }
@@ -147,13 +148,13 @@ public class HazardnutController : MonoBehaviour
         //Spriteflip im follow mode
         if (mode == AIMode.follow && transform.position.x < Target.position.x)
         {
-            GetComponent<SpriteRenderer>().flipX = false;
+            GetComponent<SpriteRenderer>().flipX = true;
             HazardnutDirection = directions.right;
             CastPointDirection = CastPoint.position + Vector3.right * 5;
         }
         if (mode == AIMode.follow && transform.position.x > Target.position.x)
         {
-            GetComponent<SpriteRenderer>().flipX = true;
+            GetComponent<SpriteRenderer>().flipX = false;
             HazardnutDirection = directions.left;
             CastPointDirection = CastPoint.position + -Vector3.right * 5;
         }
@@ -206,6 +207,8 @@ public class HazardnutController : MonoBehaviour
     {
         if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fGlovesAttackSpeed))
         {
+            OnAttack.Invoke();
+
             fColliderSpawnTime = Time.fixedUnscaledTime;
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, Hazardnut.transform);
