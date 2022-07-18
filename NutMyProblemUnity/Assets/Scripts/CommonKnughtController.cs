@@ -34,8 +34,7 @@ public class CommonKnughtController : MonoBehaviour
     public float iAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
     [SerializeField] float fCommonKnughtPathStartPoint;
-    float fCommonKnughtPathEndPoint;
-    float fCommonKnughtPathLength;
+    [SerializeField] float fCommonKnughtPathEndPoint;
     float fCommonKnughtSpeed;
     float fColliderSpawnTime;
 
@@ -45,12 +44,10 @@ public class CommonKnughtController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fCommonKnughtPathLength = 6;
         fCommonKnughtSpeed = 2;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
-        fCommonKnughtPathEndPoint = fCommonKnughtPathStartPoint + fCommonKnughtPathLength;
         CommonKnughtDirection = directions.right;
         mode = AIMode.patrol;
 

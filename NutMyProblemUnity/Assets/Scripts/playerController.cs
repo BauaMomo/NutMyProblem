@@ -15,12 +15,13 @@ public class playerController : MonoBehaviour
     int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
     [SerializeField] int iFallSpeed;
+    [SerializeField] int iFallAcceleration;
 
     public bool noMovement;
     float noMovementEndTime;
 
     public float lastDashTime { get; protected set; }
-    public float fDashLength { get; protected set; } = .2f;
+    public float fDashLength { get; protected set; } = .4f;
     public float fDashCooldown { get; } = .8f;
     float fDashStartHeight;
 
@@ -48,9 +49,10 @@ public class playerController : MonoBehaviour
 
         shadow = transform.Find("BlobShadow").gameObject;
 
-        iPlayerSpeed = 8;
+        iPlayerSpeed = 12;
         iJumpSpeed = 18;
-        iFallSpeed = 13;
+        iFallSpeed = 30;
+        iFallAcceleration = 70;
     }
 
     // Update is called once per frame
@@ -66,7 +68,7 @@ public class playerController : MonoBehaviour
         }
 
         if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                       //higher than standard fall speed
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - 50 * Time.deltaTime);
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
 
         if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)
         {
@@ -87,7 +89,8 @@ public class playerController : MonoBehaviour
         Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
 
         shadow.transform.position = new Vector2(transform.position.x, hit.point.y);
-        if(hit.distance > 1f)   shadow.transform.localScale = new Vector3(2,1,1) * (1/hit.distance);
+        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, 1, 1) * (0.5f / hit.distance + 0.5f);
+        else shadow.transform.localScale = new Vector3(2, 1, 1) * hit.distance;
     }
 
     public void OnMove(InputAction.CallbackContext context)
