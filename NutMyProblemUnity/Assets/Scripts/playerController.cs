@@ -10,6 +10,8 @@ public class playerController : MonoBehaviour
     Weapons weapons;
     playerAnimationController playerAnimationController;
 
+    GameObject shadow;
+
     int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
     [SerializeField] int iFallSpeed;
@@ -44,6 +46,8 @@ public class playerController : MonoBehaviour
         weapons = GetComponent<Weapons>();
         playerAnimationController = GetComponent<playerAnimationController>();
 
+        shadow = transform.Find("BlobShadow").gameObject;
+
         iPlayerSpeed = 8;
         iJumpSpeed = 18;
         iFallSpeed = 13;
@@ -70,6 +74,20 @@ public class playerController : MonoBehaviour
         }
 
         if (playerAnimationController.playerState == playerAnimationController.State.dashing) rb.position = new Vector2( rb.position.x, fDashStartHeight );
+    }
+
+    private void Update()
+    {
+        UpdateShadow();
+    }
+
+    void UpdateShadow()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
+        Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
+
+        shadow.transform.position = new Vector2(transform.position.x, hit.point.y);
+        if(hit.distance > 1f)   shadow.transform.localScale = new Vector3(2,1,1) * (1/hit.distance);
     }
 
     public void OnMove(InputAction.CallbackContext context)
