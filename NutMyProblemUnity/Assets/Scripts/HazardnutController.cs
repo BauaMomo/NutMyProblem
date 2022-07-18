@@ -36,8 +36,7 @@ public class HazardnutController : MonoBehaviour
     public float fGlovesAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
     [SerializeField] float fHazardnutPathStartPoint;
-    float fHazardnutPathEndPoint;
-    float fHazardnutPathLength;
+    [SerializeField] float fHazardnutPathEndPoint;
     float fHazardnutSpeed;
     float fColliderSpawnTime;
 
@@ -50,12 +49,10 @@ public class HazardnutController : MonoBehaviour
         OnAttack = new UnityEvent();
         OnAttack.AddListener(GetComponent<HazardnutAnimationController>().OnAttack);
 
-        fHazardnutPathLength = 6;
         fHazardnutSpeed = 2;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
-        fHazardnutPathEndPoint = fHazardnutPathStartPoint + fHazardnutPathLength;
         HazardnutDirection = directions.right;
         mode = AIMode.patrol;
 

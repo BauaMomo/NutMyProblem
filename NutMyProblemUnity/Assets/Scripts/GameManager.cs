@@ -7,8 +7,6 @@ public class GameManager : MonoBehaviour
 {
     public GameObject player;
     public bool changingScene { get; protected set; } = false;
-    GameObject enemy;
-    GameObject enemy2;
     
     
     
@@ -18,12 +16,6 @@ public class GameManager : MonoBehaviour
     {
         player = Instantiate(Resources.Load("prefabs/Player") as GameObject);
         player.transform.position = new Vector2(0, 0);
-
-       enemy = Instantiate(Resources.Load("prefabs/CommonKnught") as GameObject);
-        enemy.transform.position = new Vector2(4, 0); 
-        
-        enemy2 = Instantiate(Resources.Load("prefabs/Hazardnut") as GameObject);
-        enemy2.transform.position = new Vector2(12, 0);
 
 
     }
