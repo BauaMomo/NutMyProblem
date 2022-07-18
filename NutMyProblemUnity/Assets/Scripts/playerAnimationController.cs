@@ -67,7 +67,7 @@ public class playerAnimationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switchAnimation(playerState);
+        SwitchAnimation(playerState);
 
         switch (playerController.playerDirection)
         {
@@ -84,10 +84,10 @@ public class playerAnimationController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        switchPlayerState();
+        SwitchPlayerState();
     }
 
-    void switchPlayerState()
+    void SwitchPlayerState()
     {
         if (attackAnimationStartTime + currentWeaponAttackLength > Time.fixedUnscaledTime)
         {
@@ -117,7 +117,7 @@ public class playerAnimationController : MonoBehaviour
         }
     }
 
-    void switchAnimation(State _newState)
+    void SwitchAnimation(State _newState)
     {
         Weapons.Weapon currentWeapon = weapons.currentWeapon;
 
