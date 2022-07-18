@@ -394,11 +394,10 @@ GameObject:
   - component: {fileID: 5062893802021047509}
   - component: {fileID: 4013562312518721994}
   - component: {fileID: 5699053939938225422}
-  - component: {fileID: 2458784347105620590}
   - component: {fileID: 6034621536976202164}
   - component: {fileID: 8178064294339364966}
   - component: {fileID: 8484898466572323132}
-  - component: {fileID: 427948674614170402}
+  - component: {fileID: 4585177581542308824}
   m_Layer: 6
   m_Name: CommonKnught
   m_TagString: CommonKnught
@@ -490,23 +489,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <iHealth>k__BackingField: 100
---- !u!114 &2458784347105620590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7980023840942887277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 767897963a749364984b7c3554618179, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnemyDirection: 0
-  WeaponDrop: {fileID: 0}
-  mode: 0
-  CastPoint: {fileID: 2508374025892564982}
-  fEnemyPathStartPoint: 4
 --- !u!70 &6034621536976202164
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -556,7 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a63151566c8b62c46822a9ede381beef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &427948674614170402
+--- !u!114 &4585177581542308824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -565,12 +547,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 7980023840942887277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b2610a628fe03940ae5731002ec0c3e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cf988f5a835bab4c99494b5f1facc66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CommonKnughtDirection: 0
+  WeaponDrop: {fileID: 0}
+  mode: 0
+  CastPoint: {fileID: 2508374025892564982}
+  fCommonKnughtPathStartPoint: 5
   EnemyType: 0
   Player: {fileID: 7716982155159702624, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
-  Enemy: {fileID: 7980023840942887277}
+  CommonKnught: {fileID: 0}
   TPlayer: {fileID: 0}
   iSwordDamage: 0
-  iGlovesDamage: 0
