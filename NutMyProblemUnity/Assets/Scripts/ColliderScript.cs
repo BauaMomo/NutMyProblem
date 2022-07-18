@@ -38,7 +38,7 @@ public class ColliderScript : MonoBehaviour
                 switch (collision.tag)
                 {
                     case "Player":
-                        parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iSwordDamage, parent.gameObject);
+                        parent.GetComponent<CommonKnughtController>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<CommonKnughtController>().iSwordDamage, parent.gameObject);
                         break;
                 }
                 break;
@@ -47,7 +47,7 @@ public class ColliderScript : MonoBehaviour
                 switch (collision.tag)
                 {
                     case "Player":
-                        parent.GetComponent<EnemyAttack>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<EnemyAttack>().iGlovesDamage, parent.gameObject);
+                        parent.GetComponent<HazardnutControler>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutControler>().iGlovesDamage, parent.gameObject);
                         break;
                 }
                 break;
