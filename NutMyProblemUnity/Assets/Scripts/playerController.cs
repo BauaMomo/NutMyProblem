@@ -13,6 +13,7 @@ public class playerController : MonoBehaviour
 
     GameObject shadow;
     GameObject DeathBarrier;
+    GameObject PlayerCamera;
 
     int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
@@ -54,14 +55,23 @@ public class playerController : MonoBehaviour
         DeathBarrier = Instantiate(Resources.Load("Prefabs/DeathBarrier") as GameObject);
         DeathBarrier.transform.position = transform.position;
 
+        PlayerCamera = Instantiate(Resources.Load("Prefabs/PlayerCamera") as GameObject);
+        PlayerCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+
         iPlayerSpeed = 12;
-        iJumpSpeed = 18;
+        iJumpSpeed = 16;
         iFallSpeed = 30;
         iFallAcceleration = 70;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
+    {
+        MovePlayer();
+        UpdateShadow();
+        MoveDeathBarrier();
+    }
+
+    void MovePlayer()
     {
         IsDashAvailable();
 
@@ -72,30 +82,24 @@ public class playerController : MonoBehaviour
             if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
         }
 
-        if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                       //higher than standard fall speed
+        if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                           //higher than standard fall speed
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
 
-        if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)
+        if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)                                          //higher jump if jump button is held down
         {
-            rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);    //higher jump if jump button is held down
+            rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);    
         }
 
         if (playerAnimationController.playerState == playerAnimationController.State.dashing) rb.position = new Vector2(rb.position.x, fDashStartHeight);
-    }
-
-    private void Update()
-    {
-        UpdateShadow();
-        MoveDeathBarrier();
     }
 
     void UpdateShadow()
     {
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
         Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
-
-        shadow.transform.position = new Vector2(transform.position.x, hit.point.y);
-        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, 1, 1) * (0.5f / hit.distance + 0.5f);
+        
+        shadow.transform.position = new Vector2(transform.position.x, hit.point.y);                                     //Draws the shadow at the intersection of the ray and the next collider on the layer "Floor"
+        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, 1, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
         else shadow.transform.localScale = new Vector3(2, 1, 1) * hit.distance;
     }
 
@@ -103,6 +107,8 @@ public class playerController : MonoBehaviour
     {
         DeathBarrier.transform.position = new Vector2(transform.position.x, -20);
     }
+
+    // v Unity InputSystem Stuff v
 
     public void OnMove(InputAction.CallbackContext context)
     {
