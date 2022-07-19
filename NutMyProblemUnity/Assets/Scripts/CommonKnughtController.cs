@@ -183,7 +183,8 @@ public class CommonKnughtController : MonoBehaviour
             { mode = AIMode.patrol; }
         }
     }
-    private void OnDestroy()
+
+    public void CommonKnughtDeath()
     {
         if (!gm.changingScene)
         {
@@ -193,11 +194,9 @@ public class CommonKnughtController : MonoBehaviour
 
             WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
+            Destroy(this.gameObject);
         }
-
     }
-
-
 
     public void SwordAttack(directions _directions)
     {

@@ -187,7 +187,8 @@ public class HazardnutController : MonoBehaviour
             { mode = AIMode.patrol; }
         }
     }
-    private void OnDestroy()
+
+    public void HazardnutDeath()
     {
         if (!gm.changingScene)
         {
@@ -197,8 +198,12 @@ public class HazardnutController : MonoBehaviour
 
             WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Gloves);
+            Destroy(this.gameObject);
         }
     }
+
+
+
 
     public void GlovesAttack(directions _directions)
     {
