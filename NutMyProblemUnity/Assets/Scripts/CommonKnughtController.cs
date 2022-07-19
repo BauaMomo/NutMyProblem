@@ -34,8 +34,7 @@ public class CommonKnughtController : MonoBehaviour
     public float iAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
     [SerializeField] float fCommonKnughtPathStartPoint;
-    float fCommonKnughtPathEndPoint;
-    float fCommonKnughtPathLength;
+    [SerializeField] float fCommonKnughtPathEndPoint;
     float fCommonKnughtSpeed;
     float fColliderSpawnTime;
 
@@ -45,12 +44,10 @@ public class CommonKnughtController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fCommonKnughtPathLength = 6;
         fCommonKnughtSpeed = 2;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
-        fCommonKnughtPathEndPoint = fCommonKnughtPathStartPoint + fCommonKnughtPathLength;
         CommonKnughtDirection = directions.right;
         mode = AIMode.patrol;
 
@@ -186,7 +183,8 @@ public class CommonKnughtController : MonoBehaviour
             { mode = AIMode.patrol; }
         }
     }
-    private void OnDestroy()
+
+    public void CommonKnughtDeath()
     {
         if (!gm.changingScene)
         {
@@ -196,11 +194,9 @@ public class CommonKnughtController : MonoBehaviour
 
             WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
+            Destroy(this.gameObject);
         }
-
     }
-
-
 
     public void SwordAttack(directions _directions)
     {

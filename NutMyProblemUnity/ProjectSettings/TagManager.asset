@@ -12,6 +12,7 @@ TagManager:
   - WeaponDrop
   - Hazardnut
   - CommonKnught
+  - DeathBarrier
   layers:
   - Default
   - TransparentFX
