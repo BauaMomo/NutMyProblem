@@ -70,7 +70,7 @@ public class HazardnutAnimationController : MonoBehaviour
 
     public void OnAttack()
     {
-        Debug.Log("OnAttack called");
+        //Debug.Log("OnAttack called");
         attackStartTime = Time.time;
         enemyState = State.attacking;
     }

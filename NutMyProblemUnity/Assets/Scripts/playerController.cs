@@ -7,10 +7,12 @@ using System.Linq;
 public class playerController : MonoBehaviour
 {
     Rigidbody2D rb;
+    GameManager gm;
     Weapons weapons;
     playerAnimationController playerAnimationController;
 
     GameObject shadow;
+    GameObject DeathBarrier;
 
     int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
@@ -44,10 +46,13 @@ public class playerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        gm = Object.FindObjectOfType<GameManager>();
         weapons = GetComponent<Weapons>();
         playerAnimationController = GetComponent<playerAnimationController>();
 
         shadow = transform.Find("BlobShadow").gameObject;
+        DeathBarrier = Instantiate(Resources.Load("Prefabs/DeathBarrier") as GameObject);
+        DeathBarrier.transform.position = transform.position;
 
         iPlayerSpeed = 12;
         iJumpSpeed = 18;
@@ -75,12 +80,13 @@ public class playerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);    //higher jump if jump button is held down
         }
 
-        if (playerAnimationController.playerState == playerAnimationController.State.dashing) rb.position = new Vector2( rb.position.x, fDashStartHeight );
+        if (playerAnimationController.playerState == playerAnimationController.State.dashing) rb.position = new Vector2(rb.position.x, fDashStartHeight);
     }
 
     private void Update()
     {
         UpdateShadow();
+        MoveDeathBarrier();
     }
 
     void UpdateShadow()
@@ -91,6 +97,11 @@ public class playerController : MonoBehaviour
         shadow.transform.position = new Vector2(transform.position.x, hit.point.y);
         if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, 1, 1) * (0.5f / hit.distance + 0.5f);
         else shadow.transform.localScale = new Vector3(2, 1, 1) * hit.distance;
+    }
+
+    void MoveDeathBarrier()
+    {
+        DeathBarrier.transform.position = new Vector2(transform.position.x, -20);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -149,7 +160,7 @@ public class playerController : MonoBehaviour
             GameObject DropToPickUp = WeaponDropObjects.Find(x => Vector3.Distance(x.transform.position, this.transform.position) == WeaponDropDistances.Min());    //Finds the WeaponDrop with the smallest distance
 
             weapons.AddWeaponFromDrop(DropToPickUp);
-            
+
             Destroy(DropToPickUp);
 
         }

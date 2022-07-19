@@ -5,10 +5,13 @@ using UnityEngine;
 public class ColliderScript : MonoBehaviour
 {
     Transform parent;
+    GameManager gm;
 
     // Start is called before the first frame update
     void Start()
     {
+        gm = Object.FindObjectOfType<GameManager>();
+
         parent = this.transform.parent;
     }
 
@@ -19,7 +22,7 @@ public class ColliderScript : MonoBehaviour
             case "Player":
                 switch (tag)
                 {
-                    default:
+                    case "WeaponTrigger":
                         if(collision.tag == "CommonKnught" || collision.tag == "Hazardnut") collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
                         break;
                     case "GroundedTrigger":
@@ -27,6 +30,8 @@ public class ColliderScript : MonoBehaviour
                         {
                             case "Floor":
                                 parent.GetComponent<playerController>().isGrounded = true;
+                                break;
+                            case "DeathBarrier": gm.ReloadScene();
                                 break;
                         }
                         break;
