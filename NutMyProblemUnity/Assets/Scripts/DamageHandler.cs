@@ -21,7 +21,23 @@ public class DamageHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(iHealth <= 0) Destroy(this.gameObject);
+        if (iHealth <= 0)
+        {
+            switch (this.tag)
+            {
+                case "Player":
+                    Destroy(this.gameObject);
+                    break;
+
+                case "CommonKnught":
+                        GetComponent<CommonKnughtController>().CommonKnughtDeath();
+                    break;
+
+                case "Hazardnut":
+                        GetComponent<HazardnutController>().HazardnutDeath();
+                    break;
+            }
+        }
     }
 
     public void HandleDamage(int _damage, GameObject _other)
