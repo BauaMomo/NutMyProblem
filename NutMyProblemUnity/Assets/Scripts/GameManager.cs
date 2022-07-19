@@ -20,6 +20,11 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void ReloadScene()
+    {   
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     // Update is called once per frame
     void Update()
     {
