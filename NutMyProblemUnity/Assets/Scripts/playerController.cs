@@ -27,6 +27,9 @@ public class playerController : MonoBehaviour
     public float fDashLength { get; protected set; } = .4f;
     public float fDashCooldown { get; } = .8f;
     float fDashStartHeight;
+    float defaultGravity;
+    float dashGravity = 1;
+    bool isDashing;
 
     public bool isGrounded;
     bool leftRay;
@@ -51,6 +54,8 @@ public class playerController : MonoBehaviour
         weapons = GetComponent<Weapons>();
         playerAnimationController = GetComponent<playerAnimationController>();
 
+        defaultGravity = rb.gravityScale;
+
         shadow = transform.Find("BlobShadow").gameObject;
         DeathBarrier = Instantiate(Resources.Load("Prefabs/DeathBarrier") as GameObject);
         DeathBarrier.transform.position = transform.position;
@@ -73,24 +78,30 @@ public class playerController : MonoBehaviour
 
     void MovePlayer()
     {
-        IsDashAvailable();
+        rb.gravityScale = defaultGravity;
 
-        if (noMovement && Time.time > noMovementEndTime) noMovement = false;
+        IsDashAvailable();
+        if (Time.time > lastDashTime + fDashLength) isDashing = false;
+        if (isDashing) rb.gravityScale = dashGravity;
 
         if (!noMovement)
         {
             if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
         }
+        else if(Time.time > noMovementEndTime) noMovement = false;
 
-        if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                           //higher than standard fall speed
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
-
-        if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)                                          //higher jump if jump button is held down
+        if (!isDashing)
         {
-            rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
+            if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                   //higher than standard fall speed
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
+
+            if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)                                  //higher jump if jump button is held down
+            {
+                rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
+            }
         }
 
-        if (playerAnimationController.playerState == playerAnimationController.State.dashing) rb.position = new Vector2(rb.position.x, fDashStartHeight);
+        
     }
 
     void UpdateShadow()
@@ -204,14 +215,15 @@ public class playerController : MonoBehaviour
     {
         if (context.started && IsDashAvailable())
         {
+            isDashing = true;
             lastDashTime = Time.time;
 
             noMovementEndTime = Time.time + fDashLength;
             noMovement = true;
 
-            fDashStartHeight = rb.position.y;
 
             rb.AddForce(new Vector2(1000, 0) * moveDir);
+            rb.velocity = new Vector2(rb.velocity.x, 0);
         }
     }
 
