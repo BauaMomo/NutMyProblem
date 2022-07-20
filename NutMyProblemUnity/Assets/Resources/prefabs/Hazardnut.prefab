@@ -462,6 +462,7 @@ MonoBehaviour:
   CastPoint: {fileID: 2508374025892564982}
   TPlayer: {fileID: 0}
   fHazardnutPathStartPoint: 0
+  fHazardnutPathEndPoint: 0
   iGlovesDamage: 0
 --- !u!95 &5153707702191215973
 Animator:

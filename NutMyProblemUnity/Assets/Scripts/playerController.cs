@@ -87,7 +87,7 @@ public class playerController : MonoBehaviour
 
         if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)                                          //higher jump if jump button is held down
         {
-            rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);    
+            rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
         }
 
         if (playerAnimationController.playerState == playerAnimationController.State.dashing) rb.position = new Vector2(rb.position.x, fDashStartHeight);
@@ -97,7 +97,7 @@ public class playerController : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
         Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
-        
+
         shadow.transform.position = new Vector2(transform.position.x, hit.point.y);                                     //Draws the shadow at the intersection of the ray and the next collider on the layer "Floor"
         if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, 1, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
         else shadow.transform.localScale = new Vector3(2, 1, 1) * hit.distance;
@@ -150,26 +150,54 @@ public class playerController : MonoBehaviour
         if (context.started)
         {
             Collider2D[] searchColliders = Physics2D.OverlapCircleAll(this.transform.position, 2);      //creates an array of colliders within a certain radius
+            List<GameObject> AllGO = new List<GameObject>();
 
-            List<GameObject> WeaponDropObjects = new List<GameObject>();
-            List<float> WeaponDropDistances = new List<float>();
-
-            foreach (Collider2D collider in searchColliders)        //adds all WeaponDrop GameObjects to their List
+            foreach (Collider2D c in searchColliders)
             {
-                if (collider.gameObject.tag == "WeaponDrop")
-                {
-                    WeaponDropObjects.Add(collider.gameObject);
-                    WeaponDropDistances.Add(Vector3.Distance(this.transform.position, collider.transform.position));
-                }
+                AllGO.Add(c.gameObject);
             }
 
-            GameObject DropToPickUp = WeaponDropObjects.Find(x => Vector3.Distance(x.transform.position, this.transform.position) == WeaponDropDistances.Min());    //Finds the WeaponDrop with the smallest distance
+            List<GameObject> SortedGos = SortGOByDistance(AllGO, transform);
 
-            weapons.AddWeaponFromDrop(DropToPickUp);
-
-            Destroy(DropToPickUp);
-
+            foreach (GameObject go in SortedGos)
+            {
+                switch (go.tag)
+                {
+                    case "WeaponDrop":
+                        PickUpDrop(go);
+                        return;
+                    case "Lever":
+                        go.GetComponent<LeverController>().SwitchLever();
+                        return;
+                }
+            }
         }
+    }
+
+    void PickUpDrop(GameObject _drop)
+    {
+        weapons.AddWeaponFromDrop(_drop);
+
+        Destroy(_drop);
+    }
+
+    List<GameObject> SortGOByDistance(List<GameObject> _gameObjects, Transform _target)
+    {
+        List<float> GODistances = new List<float>();
+        foreach (GameObject go in _gameObjects)
+        {
+            GODistances.Add(Vector2.Distance(go.transform.position, _target.position));
+        }
+
+        List<GameObject> SortedGOs = new List<GameObject>();
+        foreach (GameObject go in _gameObjects)
+        {
+            int addIndex = GODistances.IndexOf(GODistances.Min());
+            GODistances[addIndex] = float.MaxValue;
+            SortedGOs.Add(_gameObjects[addIndex]);
+        }
+
+        return SortedGOs;
     }
 
     public void OnDash(InputAction.CallbackContext context)

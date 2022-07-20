@@ -59,7 +59,7 @@ public class ColliderScript : MonoBehaviour
                         switch (collision.tag)
                         {
                             case "Floor":
-                                if(parent.GetComponent<Rigidbody2D>().velocity.y <= 0)  parent.GetComponent<playerController>().isGrounded = true;
+                                if (parent.GetComponent<Rigidbody2D>().velocity.y <= 1) parent.GetComponent<playerController>().isGrounded = true;
                                 break;
                             case "DeathBarrier":
                                 gm.ReloadScene();
