@@ -28,8 +28,8 @@ TagManager:
   - Hazardnut
   - Floor
   - CameraPushBox
-  - 
-  - 
+  - InteractCollider
+  - WeaponTrigger
   - 
   - 
   - 
