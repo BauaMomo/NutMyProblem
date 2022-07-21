@@ -30,6 +30,7 @@ public class playerController : MonoBehaviour
     float defaultGravity;
     float dashGravity = 1;
     bool isDashing;
+    bool hasDash;
 
     public bool isGrounded;
     bool leftRay;
@@ -71,6 +72,8 @@ public class playerController : MonoBehaviour
 
     private void Update()
     {
+        if (isGrounded) hasDash = true;
+
         MovePlayer();
         UpdateShadow();
         MoveDeathBarrier();
@@ -225,10 +228,14 @@ public class playerController : MonoBehaviour
             rb.AddForce(new Vector2(1000, 0) * moveDir);
             rb.velocity = new Vector2(rb.velocity.x, 0);
         }
+
+        if (!isGrounded) hasDash = false;
     }
 
     public bool IsDashAvailable()
     {
+        if(!hasDash) return false;
+        if(moveDir == 0) return false;
         return Time.time > lastDashTime + fDashCooldown;
     }
 
