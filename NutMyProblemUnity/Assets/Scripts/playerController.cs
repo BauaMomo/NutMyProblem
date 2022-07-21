@@ -13,7 +13,7 @@ public class playerController : MonoBehaviour
 
     GameObject shadow;
     GameObject DeathBarrier;
-    GameObject PlayerCamera;
+    Camera PlayerCamera;
 
     int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
@@ -48,7 +48,7 @@ public class playerController : MonoBehaviour
     public direction playerDirection { get; protected set; }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         gm = Object.FindObjectOfType<GameManager>();
@@ -61,7 +61,7 @@ public class playerController : MonoBehaviour
         DeathBarrier = Instantiate(Resources.Load("Prefabs/DeathBarrier") as GameObject);
         DeathBarrier.transform.position = transform.position;
 
-        PlayerCamera = Instantiate(Resources.Load("Prefabs/PlayerCamera") as GameObject);
+        PlayerCamera = Camera.main;
         PlayerCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 
         iPlayerSpeed = 12;
