@@ -7,21 +7,16 @@ using UnityEngine.InputSystem;
 public class InteractPrompts : MonoBehaviour
 {
     GameObject child;
+    GameObject player;
 
     SpriteRenderer sr;
-
     Sprite KeyboardButton;
     Sprite ControllerButton;
 
-    GameObject player;
-
-    String currentControls;
-
-    public float maxMoveRange;
-    public float speed;
-    public float smoothingStrength;
-    float lerpPos;
+    [SerializeField] float maxMoveRange;
+    [SerializeField] float speed;
     float curveLerpPos;
+
     Vector2 startPos = new Vector2(0, 0);
     Vector2 rPoint1;
     Vector2 rPoint2 = new Vector2();
@@ -29,45 +24,42 @@ public class InteractPrompts : MonoBehaviour
     Vector2 curvePointStart = new Vector2();
     Vector2 curvePointEnd = new Vector2();
 
-    float sizeIncrease = .1f;
+    float spriteSizeIncrease = .05f;
+    float spriteScale;
+    Vector3 spriteStartScale;
     bool growing = false;
     bool shrinking = false;
-
-    public bool test = false;
-    public bool test2 = false;
 
     // Start is called before the first frame update
     void Start()
     {
         child = transform.Find("Sprite").gameObject;
-        startPos = child.transform.localPosition;
 
         sr = child.GetComponent<SpriteRenderer>();
         player = GameObject.FindGameObjectWithTag("Player");
 
-        player.GetComponent<PlayerInput>().controlsChangedEvent.AddListener(OnControlChange);
-
         KeyboardButton = Resources.Load<Sprite>("Sprites/F_Key_Light");
         ControllerButton = Resources.Load<Sprite>("Sprites/XboxSeriesX_Y");
 
-        child.transform.localScale *= 0;
+        player.GetComponent<PlayerInput>().controlsChangedEvent.AddListener(OnControlChange);
+
+        startPos = child.transform.localPosition;
+        spriteStartScale = child.transform.localScale;
+
         rPoint1 = new Vector2(maxMoveRange/2, 0);
         GetNewRandomPoints(ref rPoint1, ref rPoint2);
     }
 
     // Update is called once per frame
     void Update()
-    {
-        SetSprite(currentControls);
+    {        
+        if (growing) spriteScale += spriteSizeIncrease;
+        if (shrinking) spriteScale -= spriteSizeIncrease;
 
-        if (growing) child.transform.localScale = child.transform.localScale + new Vector3(sizeIncrease, sizeIncrease, sizeIncrease);
-        if (child.transform.localScale.x >= 1) growing = false;
+        child.transform.localScale = spriteStartScale * spriteScale;
 
-        if (shrinking) child.transform.localScale = child.transform.localScale - new Vector3(sizeIncrease, sizeIncrease, sizeIncrease);
-        if (child.transform.localScale.x <= 0.1) shrinking = false;
-
-        if (Vector2.Distance(transform.position, player.transform.position) <= 3f) RespawnParticle();
-        if (Vector2.Distance(transform.position, player.transform.position) > 3f) DespawnParticle();
+        if (Vector2.Distance(transform.position, player.transform.position) < 3f) RespawnPrompt();
+        if (Vector2.Distance(transform.position, player.transform.position) > 3f) DespawnPrompt();
 
         MoveSprite();
     }
@@ -75,88 +67,71 @@ public class InteractPrompts : MonoBehaviour
     void MoveSprite()
     {
         float localSpeed = speed * 0.01f;
-        lerpPos += localSpeed;
+        curveLerpPos += localSpeed;
 
-        Vector2 v1 = 2 * startPos - 4 * rPoint1 + 2 * rPoint2;
-        Vector2 v2 = -2 * startPos + 2 * rPoint1;
-
-        if (curveLerpPos == 0) curveLerpPos = 0.001f;
-
-        curveLerpPos = curveLerpPos + localSpeed / (Vector2.Distance(curveLerpPos * v1, v2));
-
-        curvePointStart = Vector2.Lerp(startPos, rPoint1, curveLerpPos);
+        curvePointStart = Vector2.Lerp(startPos, rPoint1, curveLerpPos);    //moves the sprite along a bezier curve
         curvePointEnd = Vector2.Lerp(rPoint1, rPoint2, curveLerpPos);
 
-        child.transform.localPosition = Vector2.MoveTowards(child.transform.localPosition, Vector2.Lerp(curvePointStart, curvePointEnd, curveLerpPos), 
-                                        Vector2.Distance(child.transform.localPosition, Vector2.Lerp(curvePointStart, curvePointEnd, curveLerpPos)) * smoothingStrength);
+        child.transform.localPosition = Vector2.Lerp(curvePointStart, curvePointEnd, curveLerpPos);
 
-        Debug.DrawLine(startPos + (Vector2)transform.position, rPoint1 + (Vector2)transform.position, Color.blue);
+        Debug.DrawLine(startPos + (Vector2)transform.position, rPoint1 + (Vector2)transform.position, Color.blue);      // Debug lines for looking at exclusive bezier curve bts :)
         Debug.DrawLine(rPoint1 + (Vector2)transform.position, rPoint2 + (Vector2)transform.position, Color.blue);
         Debug.DrawLine(curvePointStart + (Vector2)transform.position, curvePointEnd + (Vector2)transform.position, Color.red);
 
-        if (curveLerpPos >= 1) GetNewRandomPoints(ref rPoint1, ref rPoint2);
-        if (curveLerpPos >= 1) curveLerpPos = 0;
-
+        if (curveLerpPos >= 1)
+        {
+            GetNewRandomPoints(ref rPoint1, ref rPoint2);
+            curveLerpPos = 0;
+        }
     }
 
     void GetNewRandomPoints(ref Vector2 _p1, ref Vector2 _p2)
     {
-        Vector2 minPos = new Vector2(-maxMoveRange, -maxMoveRange);
-        Vector2 maxPos = new Vector2(maxMoveRange, maxMoveRange);
+        startPos = _p2;                                                 //sets all points for next bezier curve
+        _p1 = _p2 + (_p2 - _p1).normalized * (maxMoveRange / 2);        //sets middle point in a straight line after the previous end point
 
-        Vector2 p2Copy = _p2;
+        int tries = 0;
 
-        startPos = p2Copy;
-        _p1 = p2Copy + (p2Copy - _p1).normalized * (maxMoveRange / 2);
-        p2Copy = GetRandomPointAroundP2(_p2);
-
-        _p2 = p2Copy;
-
-        //Debug.Log(_p1 + ", " + _p2);
-    }
-
-    Vector2 GetRandomPointAroundP2(Vector2 _p2)
-    {
-        Vector2 minPos = new Vector2(-maxMoveRange, -maxMoveRange);
-        Vector2 maxPos = new Vector2(maxMoveRange, maxMoveRange);
-
-        Vector2 newP2 = new Vector2();
-
-        for (int i = 0; i < 20; i ++)
+        for (int i = 0; i < 20; i++)
         {
-            Vector2 random = new Vector2(UnityEngine.Random.Range(minPos.x, maxPos.x), UnityEngine.Random.Range(minPos.y, maxPos.y));
-            newP2 = rPoint1 + (random - rPoint1).normalized * (maxMoveRange /2);
-            if (Vector2.Distance(newP2, new Vector2(0, 0)) > maxMoveRange) newP2 = new Vector2(0, 0);
-            else break;
+            tries = i;
+            Vector2 newRandomPoint = UnityEngine.Random.insideUnitCircle * maxMoveRange;            //random point inside the maxMoveRange
+            _p2 = _p1 + (newRandomPoint - _p1).normalized * (maxMoveRange / 2);                     //sets new end point on the vector to the random point, so the distance between points is always the same
+            if (Vector2.Distance(_p2, new Vector2(0, 0)) > maxMoveRange) _p2 = new Vector2(0, 0);   //this loop only runs 20 times to prevent lag
+            else break;                                                                            //if it finds a point, it cancels immediately, if not the new point is (0,0)
         }
-        return newP2;
+        tries += 1;
+        //if(tries > 1) Debug.Log(tries);
     }
 
-    void RespawnParticle()
+    void RespawnPrompt()
     {
-        if (child.transform.localScale.x >= 0.1f) return;
+        if (spriteScale >= 0.9f)
+        {
+            growing = false;
+            spriteScale = 1;
+            return;
+        }
+        if(shrinking) shrinking = false;
 
-
-        child.transform.localScale = child.transform.localScale * 0;
         growing = true;
-
     }
 
-    void DespawnParticle()
+    void DespawnPrompt()
     {
-        if (child.transform.localScale.x <= 0.1f) return;
+        if (spriteScale <= 0.1f)
+        {
+            shrinking = false;
+            spriteScale = 0;
+            return;
+        }
+        if(growing) growing = false;
+
         shrinking = true;
-    }
-
-    void SetSprite(string _ctrlScheme)
-    {
-
     }
 
     public void OnControlChange(PlayerInput input)
     {
-        currentControls = input.currentControlScheme;
-
         if (input.currentControlScheme == "Keyboard&Mouse") sr.sprite = KeyboardButton;
         if (input.currentControlScheme == "Gamepad") sr.sprite = ControllerButton;
     }

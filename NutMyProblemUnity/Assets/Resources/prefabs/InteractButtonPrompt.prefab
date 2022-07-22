@@ -129,8 +129,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4dd78180d21f5646b60ccad23cd8934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxMoveRange: 0.3
-  speed: 0.1
-  smoothingStrength: 0.004
-  test: 0
-  test2: 0
+  maxMoveRange: 0.2
+  speed: 0.2
