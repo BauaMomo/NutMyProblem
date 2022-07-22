@@ -33,7 +33,7 @@ public class InteractPrompts : MonoBehaviour
         player.GetComponent<PlayerInput>().controlsChangedEvent.AddListener(OnControlChange);
 
         KeyboardButton = Resources.Load<Sprite>("Sprites/F_Key_Light");
-        ControllerButton = Resources.Load<Sprite>("Sprites/Positional_Prompts_Up");
+        ControllerButton = Resources.Load<Sprite>("Sprites/XboxSeriesX_Y");
 
         transform.localScale *= 0;
     }
