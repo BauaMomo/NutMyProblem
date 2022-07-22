@@ -40,7 +40,7 @@ public class playerController : MonoBehaviour
     float fJumpStartTime;
     float fCollExitTime;
 
-    float moveDir;
+    public float moveDir { get; protected set; }
     public bool isHoldingJump { get; protected set; } = false;
 
 
@@ -74,9 +74,14 @@ public class playerController : MonoBehaviour
     {
         if (isGrounded) hasDash = true;
 
-        MovePlayer();
         UpdateShadow();
         MoveDeathBarrier();
+    }
+
+    private void FixedUpdate()
+    {
+        MovePlayer();
+
     }
 
     void MovePlayer()
