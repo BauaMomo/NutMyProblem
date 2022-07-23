@@ -83,13 +83,18 @@ public class ColliderScript : MonoBehaviour
                 switch (collision.tag)
                 {
                     case "Player":
-                        parent.GetComponent<HazardnutController>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutController>().iGlovesDamage, parent.gameObject);
+                        Invoke("AttackTimer", 1);
                         break;
                 }
                 break;
 
 
         }
+
+    }
+    void AttackTimer()
+    {
+        parent.GetComponent<HazardnutController>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutController>().iGlovesDamage, parent.gameObject);
 
     }
 }

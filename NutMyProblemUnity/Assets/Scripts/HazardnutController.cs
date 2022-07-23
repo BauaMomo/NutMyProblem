@@ -11,8 +11,8 @@ public class HazardnutController : MonoBehaviour
     public enum Type { commonKnught, hazardnut }
     public Type EnemyType;
 
-    enum AIMode { follow, patrol };
-    AIMode mode;
+    enum AIMode { follow, patrol, waiting };
+    [SerializeField] AIMode mode;
 
     [SerializeField] GameObject Player;
     [SerializeField] GameObject Hazardnut;
@@ -31,6 +31,7 @@ public class HazardnutController : MonoBehaviour
     Vector2 endPosition;
     Vector2 startPosition;
     Vector3 CastPointDirection;
+    Vector3 RayCastVector;
     Vector2 WeaponDropPosition;
 
     public float fGlovesAttackSpeed { get; protected set; }
@@ -42,19 +43,25 @@ public class HazardnutController : MonoBehaviour
 
     public int iGlovesDamage;
 
+    [SerializeField] bool bHazardnutAwake;
 
+    RaycastHit2D[] raycastArray = new RaycastHit2D[3];
+
+    public bool bAttackTimerState;
+    public float fAttackTimerTime;
     // Start is called before the first frame update
     void Start()
     {
         OnAttack = new UnityEvent();
         OnAttack.AddListener(GetComponent<HazardnutAnimationController>().OnAttack);
 
-        fHazardnutSpeed = 2;
+        fHazardnutSpeed = 4;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
         HazardnutDirection = directions.right;
-        mode = AIMode.patrol;
+
+        mode = AIMode.waiting;
 
 
         iGlovesDamage = 30;
@@ -63,6 +70,9 @@ public class HazardnutController : MonoBehaviour
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         Hazardnut = this.gameObject;
+        fAttackTimerTime = 0;
+        bAttackTimerState = false;
+
     }
 
     // Update is called once per frame
@@ -71,13 +81,10 @@ public class HazardnutController : MonoBehaviour
         endPosition = new Vector2(fHazardnutPathEndPoint, transform.position.y);
         startPosition = new Vector2(fHazardnutPathStartPoint, transform.position.y);
 
-        TarggetPlayer();
         EnemyMovement();
         SwitchMovementMode();
         FlipEnemy();
 
-        if (Vector3.Distance(transform.position, TPlayer.position) < 8)
-            GlovesAttack(HazardnutDirection);
     }
 
     void EnemyMovement()
@@ -121,7 +128,20 @@ public class HazardnutController : MonoBehaviour
                 break;
 
             case AIMode.follow:
-                transform.position = Vector2.MoveTowards(transform.position, Target.position, fHazardnutSpeed * Time.deltaTime);
+                if (transform.position.x - Target.position.x >= -4 && transform.position.x - Target.position.x <= 4)
+                    transform.position = Vector2.MoveTowards(transform.position, Target.position, fHazardnutSpeed * Time.deltaTime);
+                else
+                {
+                    if (transform.position.x < Target.position.x)
+                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x - 4, Target.position.y), fHazardnutSpeed * Time.deltaTime);
+                    if (transform.position.x > Target.position.x)
+                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x + 4, Target.position.y), fHazardnutSpeed * Time.deltaTime);
+                }
+
+                break;
+
+            case AIMode.waiting:
+
                 break;
         }
     }
@@ -133,12 +153,12 @@ public class HazardnutController : MonoBehaviour
         {
             case directions.right:
                 GetComponent<SpriteRenderer>().flipX = true;
-                CastPointDirection = CastPoint.position + Vector3.right * 10;
+                RayCastVector = new Vector3(10, 0);
                 break;
 
             case directions.left:
                 GetComponent<SpriteRenderer>().flipX = false;
-                CastPointDirection = CastPoint.position + -Vector3.right * 10;
+                RayCastVector = new Vector3(-10, 0);
                 break;
         }
 
@@ -147,45 +167,83 @@ public class HazardnutController : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().flipX = true;
             HazardnutDirection = directions.right;
-            CastPointDirection = CastPoint.position + Vector3.right * 5;
+            RayCastVector = new Vector3(5, 0);
         }
         if (mode == AIMode.follow && transform.position.x > Target.position.x)
         {
             GetComponent<SpriteRenderer>().flipX = false;
             HazardnutDirection = directions.left;
-            CastPointDirection = CastPoint.position + -Vector3.right * 5;
+            RayCastVector = new Vector3(-5, 0);
         }
     }
 
     bool TarggetPlayer()
     {
-        RaycastHit2D hit = Physics2D.Linecast(CastPoint.position, CastPointDirection, 1 << LayerMask.NameToLayer("Player"));
-
-        if (hit.collider != null)
+        switch(mode)
         {
-            if (hit.collider.gameObject.CompareTag("Player"))
-            {
-                Target = hit.collider.transform;
-                return true;
-            }
+            case AIMode.follow:
+                RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position + RayCastVector, 1 << LayerMask.NameToLayer("Player"));
+                if (hit.collider != null)
+                {
 
-            else
-            { return false; }
+                    if (hit.collider.gameObject.CompareTag("Player"))
+                    {
+                        Target = hit.collider.transform;
 
+                        if (Vector3.Distance(transform.position, TPlayer.position) < 4)
+                            GlovesAttack(HazardnutDirection);
+                        return true;
+                    }
+
+                    else
+                    { return false; }
+
+                }
+                return false;
+
+            case AIMode.waiting:
+
+                raycastArray[0] = Physics2D.Linecast(transform.position, transform.position + new Vector3(0, -5), 1 << LayerMask.NameToLayer("Player"));
+                raycastArray[1] = Physics2D.Linecast(transform.position, transform.position + new Vector3(5, -5), 1 << LayerMask.NameToLayer("Player"));
+                raycastArray[2] = Physics2D.Linecast(transform.position, transform.position + new Vector3(-5, -5), 1 << LayerMask.NameToLayer("Player"));
+
+                foreach (RaycastHit2D Hitdirection in raycastArray)
+                {
+                   if (Hitdirection.collider != null)
+                    {
+                        if (Hitdirection.collider.gameObject.CompareTag("Player"))
+                        {
+                            Target = Hitdirection.collider.transform;
+                            bHazardnutAwake = true;
+                            return true;
+                        }
+
+                        else
+                        { return false; }
+
+                    }
+                }
+
+                return false;
         }
         return false;
+        
     }
 
     void SwitchMovementMode()
     {
-
         if (TarggetPlayer() == true)
-        { mode = AIMode.follow; }
-        else
         {
+            mode = AIMode.follow;
+        }
+        if (TarggetPlayer() == false && bHazardnutAwake == false)
+        { mode = AIMode.waiting; }
+
+
+        /*{
             if (Vector3.Distance(transform.position, Target.position) > 10)
             { mode = AIMode.patrol; }
-        }
+        }*/
     }
 
     public void HazardnutDeath()
@@ -231,4 +289,5 @@ public class HazardnutController : MonoBehaviour
             Destroy(weaponTrigger, 0.1f);
         }
     }
+
 }

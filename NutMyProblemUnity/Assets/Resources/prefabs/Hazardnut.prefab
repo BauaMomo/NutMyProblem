@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 553578683379520181}
   - component: {fileID: 5272579694379837413}
   - component: {fileID: 5153707702191215973}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Hazardnut
   m_TagString: Hazardnut
   m_Icon: {fileID: 0}
@@ -404,7 +404,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 1
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -453,6 +453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HazardnutDirection: 0
   EnemyType: 1
+  mode: 2
   Player: {fileID: 0}
   Hazardnut: {fileID: 0}
   WeaponDrop: {fileID: 0}
@@ -462,7 +463,9 @@ MonoBehaviour:
   CastPoint: {fileID: 2508374025892564982}
   TPlayer: {fileID: 0}
   fHazardnutPathStartPoint: 0
+  fHazardnutPathEndPoint: 0
   iGlovesDamage: 0
+  bHazardnutAwake: 0
 --- !u!95 &5153707702191215973
 Animator:
   serializedVersion: 4
