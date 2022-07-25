@@ -11,7 +11,7 @@ public class HazardnutController : MonoBehaviour
     public enum Type { commonKnught, hazardnut }
     public Type EnemyType;
 
-    enum AIMode { follow, patrol, waiting };
+    enum AIMode { follow, patrol, waiting, attack };
     [SerializeField] AIMode mode;
 
     [SerializeField] GameObject Player;
@@ -30,7 +30,6 @@ public class HazardnutController : MonoBehaviour
 
     Vector2 endPosition;
     Vector2 startPosition;
-    Vector3 CastPointDirection;
     Vector3 RayCastVector;
     Vector2 WeaponDropPosition;
 
@@ -39,6 +38,7 @@ public class HazardnutController : MonoBehaviour
     [SerializeField] float fHazardnutPathStartPoint;
     [SerializeField] float fHazardnutPathEndPoint;
     float fHazardnutSpeed;
+    float fHazardnutChargeSpeed;
     float fColliderSpawnTime;
 
     public int iGlovesDamage;
@@ -47,8 +47,8 @@ public class HazardnutController : MonoBehaviour
 
     RaycastHit2D[] raycastArray = new RaycastHit2D[3];
 
-    public bool bAttackTimerState;
-    public float fAttackTimerTime;
+    public bool battack;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +56,7 @@ public class HazardnutController : MonoBehaviour
         OnAttack.AddListener(GetComponent<HazardnutAnimationController>().OnAttack);
 
         fHazardnutSpeed = 4;
+        fHazardnutChargeSpeed = 20;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
@@ -66,12 +67,10 @@ public class HazardnutController : MonoBehaviour
 
         iGlovesDamage = 30;
         fGlovesAttackSpeed = 0.5f;
-        iRange = 1.5f;
+        iRange = 3.5f;
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         Hazardnut = this.gameObject;
-        fAttackTimerTime = 0;
-        bAttackTimerState = false;
 
     }
 
@@ -81,13 +80,13 @@ public class HazardnutController : MonoBehaviour
         endPosition = new Vector2(fHazardnutPathEndPoint, transform.position.y);
         startPosition = new Vector2(fHazardnutPathStartPoint, transform.position.y);
 
-        EnemyMovement();
+        StartCoroutine(EnemyMovement());
         SwitchMovementMode();
         FlipEnemy();
 
     }
 
-    void EnemyMovement()
+    IEnumerator EnemyMovement()
     {
         switch (mode)
         {
@@ -128,7 +127,8 @@ public class HazardnutController : MonoBehaviour
                 break;
 
             case AIMode.follow:
-                if (transform.position.x - Target.position.x >= -4 && transform.position.x - Target.position.x <= 4)
+
+                if (transform.position.x - Target.position.x >= -4 && transform.position.x - Target.position.x <= 4 && transform.position.y == Target.position.y + -1)
                     transform.position = Vector2.MoveTowards(transform.position, Target.position, fHazardnutSpeed * Time.deltaTime);
                 else
                 {
@@ -142,6 +142,23 @@ public class HazardnutController : MonoBehaviour
 
             case AIMode.waiting:
 
+                break;
+
+            case AIMode.attack:
+
+                if (HazardnutDirection == directions.left)
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector3(transform.position.x - 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime);
+                }
+                if (HazardnutDirection == directions.right)
+                {
+                    transform.position = Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime);
+                }
+
+
+                yield return new WaitForSeconds(0.8f);
+                battack = false;
+                mode = AIMode.follow;
                 break;
         }
     }
@@ -179,7 +196,7 @@ public class HazardnutController : MonoBehaviour
 
     bool TarggetPlayer()
     {
-        switch(mode)
+        switch (mode)
         {
             case AIMode.follow:
                 RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position + RayCastVector, 1 << LayerMask.NameToLayer("Player"));
@@ -190,8 +207,8 @@ public class HazardnutController : MonoBehaviour
                     {
                         Target = hit.collider.transform;
 
-                        if (Vector3.Distance(transform.position, TPlayer.position) < 4)
-                            GlovesAttack(HazardnutDirection);
+                        if (Vector3.Distance(transform.position, TPlayer.position) < 4.5f)
+                            StartCoroutine(GlovesAttack(HazardnutDirection));
                         return true;
                     }
 
@@ -209,7 +226,7 @@ public class HazardnutController : MonoBehaviour
 
                 foreach (RaycastHit2D Hitdirection in raycastArray)
                 {
-                   if (Hitdirection.collider != null)
+                    if (Hitdirection.collider != null)
                     {
                         if (Hitdirection.collider.gameObject.CompareTag("Player"))
                         {
@@ -227,12 +244,17 @@ public class HazardnutController : MonoBehaviour
                 return false;
         }
         return false;
-        
+
     }
 
     void SwitchMovementMode()
     {
-        if (TarggetPlayer() == true)
+        if (battack == true)
+        {
+            mode = AIMode.attack;
+
+        }
+        if (TarggetPlayer() == true && battack == false)
         {
             mode = AIMode.follow;
         }
@@ -263,14 +285,17 @@ public class HazardnutController : MonoBehaviour
 
 
 
-    public void GlovesAttack(directions _directions)
+    public IEnumerator GlovesAttack(directions _directions)
     {
+
         if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fGlovesAttackSpeed))
         {
             OnAttack.Invoke();
-
             fColliderSpawnTime = Time.fixedUnscaledTime;
 
+            yield return new WaitForSeconds(0.5f);
+
+            battack = true;
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, Hazardnut.transform);
             weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
 
@@ -285,7 +310,6 @@ public class HazardnutController : MonoBehaviour
                     break;
             }
             weaponTrigger.transform.position = Hazardnut.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
-
             Destroy(weaponTrigger, 0.1f);
         }
     }

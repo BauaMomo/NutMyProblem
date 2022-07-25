@@ -401,9 +401,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 1
-  m_AngularDrag: 0.05
+  m_Mass: 5
+  m_LinearDrag: 5
+  m_AngularDrag: 5
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -466,6 +466,7 @@ MonoBehaviour:
   fHazardnutPathEndPoint: 0
   iGlovesDamage: 0
   bHazardnutAwake: 0
+  battack: 0
 --- !u!95 &5153707702191215973
 Animator:
   serializedVersion: 4
