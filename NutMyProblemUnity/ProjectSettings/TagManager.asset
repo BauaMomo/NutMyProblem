@@ -13,6 +13,8 @@ TagManager:
   - Hazardnut
   - CommonKnught
   - DeathBarrier
+  - Lever
+  - Spikes
   layers:
   - Default
   - TransparentFX
@@ -27,8 +29,8 @@ TagManager:
   - Hazardnut
   - Floor
   - CameraPushBox
-  - 
-  - 
+  - InteractCollider
+  - WeaponTrigger
   - 
   - 
   - 
