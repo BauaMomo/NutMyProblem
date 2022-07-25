@@ -87,6 +87,9 @@ public class ColliderScript : MonoBehaviour
                         break;
                 }
                 break;
+            case "Spikes":
+                if(collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(40, parent.gameObject);
+                break;
 
 
         }
