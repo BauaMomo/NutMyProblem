@@ -6,6 +6,7 @@ public class DamageHandler : MonoBehaviour
 {
     [field: SerializeField] public int iHealth { get; private set; } = 100;
     Rigidbody2D rb;
+    bool isInvincible = false;
 
     HazardnutAnimationController anim;
 
@@ -40,9 +41,33 @@ public class DamageHandler : MonoBehaviour
         }
     }
 
+    void StartInvincibility()
+    {
+        isInvincible = true;
+        Invoke(nameof(EndInvincibility), 0.5f);
+    }
+
+    void EndInvincibility()
+    {
+        isInvincible = false;
+    }
+
     public void HandleDamage(int _damage, GameObject _other)
     {
+        if(isInvincible) return;
         iHealth -= _damage;
+        if(this.tag == "Player")
+        {
+            StartInvincibility();
+
+            switch (_other.tag)
+            {
+                case "Spikes":
+                    rb.velocity = new Vector2(rb.velocity.x, 0);
+                    rb.AddForce(new Vector2(0, 1000));
+                    break;
+            }
+        }
         if (this.tag == "CommonKnught" || this.tag == "Hazardnut")
         {
             if(this.tag == "Hazardnut") anim.OnDamaged.Invoke();
