@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5466510888777470788}
   - component: {fileID: 4547176696522686132}
   - component: {fileID: -145175696733540610}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: WeaponTrigger
   m_TagString: WeaponTrigger
   m_Icon: {fileID: 0}
