@@ -92,6 +92,7 @@ public class playerController : MonoBehaviour
         IsDashAvailable();
         if (Time.time > lastDashTime + fDashLength) isDashing = false;
         if (isDashing) rb.gravityScale = dashGravity;
+        if (IsAttackting()) rb.gravityScale = 3;
 
         if (!noMovement)
         {
@@ -99,7 +100,7 @@ public class playerController : MonoBehaviour
         }
         else if(Time.time > noMovementEndTime) noMovement = false;
 
-        if (!isDashing)
+        if (!isDashing && !IsAttackting())
         {
             if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                   //higher than standard fall speed
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
@@ -111,6 +112,11 @@ public class playerController : MonoBehaviour
         }
 
         
+    }
+
+    bool IsAttackting()
+    {
+        return playerAnimationController.playerState == playerAnimationController.State.attacking;
     }
 
     void UpdateShadow()
@@ -158,6 +164,11 @@ public class playerController : MonoBehaviour
             //Debug.Log("mouse left pressed");
             weapons.currentWeapon.Attack(playerDirection);
         }
+    }
+
+    public void OnWeaponAttack()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0);
     }
 
     public void OnWeaponChange(InputAction.CallbackContext context)

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class Weapons : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class Weapons : MonoBehaviour
     public Weapon currentWeapon { get; protected set; }
     List<Weapon> allWeapons;
     List<Weapon> availableWeapons;
+
+    public UnityEvent onAttack = new UnityEvent();
 
     // Start is called before the first frame update
     void Start()
@@ -101,7 +105,7 @@ public class Weapons : MonoBehaviour
         {
             WeaponType = Type.Sword;
             iDamage = 20;
-            iAttackSpeed = 6;
+            iAttackSpeed = 2;
             iRange = 1.5f;
             KnockbackVector = new Vector2(50, 20);
             SetUniversalVars(this);
@@ -111,6 +115,7 @@ public class Weapons : MonoBehaviour
         {
             if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
             {
+                GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
@@ -164,6 +169,7 @@ public class Weapons : MonoBehaviour
 
             if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
             {
+                GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
@@ -204,6 +210,7 @@ public class Weapons : MonoBehaviour
 
             if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
             {
+                GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 

@@ -109,12 +109,9 @@ public class playerAnimationController : MonoBehaviour
         else playerState = State.airborne;
     }
 
-    public void OnAttack(InputAction.CallbackContext context)
+    public void OnAttack()
     {
-        if (context.started)
-        {
             attackAnimationStartTime = Time.fixedUnscaledTime;
-        }
     }
 
     void SwitchAnimation(State _newState)
