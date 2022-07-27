@@ -38,7 +38,7 @@ public class InteractPrompts : MonoBehaviour
         sr = child.GetComponent<SpriteRenderer>();
         player = GameObject.FindGameObjectWithTag("Player");
 
-        KeyboardButton = Resources.Load<Sprite>("Sprites/F_Key_Light");
+        KeyboardButton = Resources.Load<Sprite>("Sprites/E_Key_Light");
         ControllerButton = Resources.Load<Sprite>("Sprites/XboxSeriesX_Y");
 
         player.GetComponent<PlayerInput>().controlsChangedEvent.AddListener(OnControlChange);

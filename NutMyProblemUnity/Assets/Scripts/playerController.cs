@@ -31,6 +31,9 @@ public class playerController : MonoBehaviour
     bool isDashing;
     bool hasDash;
 
+    float defaultDrag;
+    float stillDrag = 10;
+
     public bool isGrounded;
     bool leftRay;
     bool rightRay;
@@ -56,6 +59,7 @@ public class playerController : MonoBehaviour
         playerAnimationController = GetComponent<playerAnimationController>();
 
         defaultGravity = rb.gravityScale;
+        defaultDrag = rb.drag;
 
         shadow = transform.Find("BlobShadow").gameObject;
         DeathBarrier = Instantiate(Resources.Load("Prefabs/DeathBarrier") as GameObject);
@@ -87,6 +91,8 @@ public class playerController : MonoBehaviour
     void MovePlayer()
     {
         rb.gravityScale = defaultGravity;
+        if (moveDir == 0 && isGrounded) rb.drag = stillDrag;
+        else rb.drag = defaultDrag;
 
         IsDashAvailable();
         if (Time.time > lastDashTime + fDashLength) isDashing = false;

@@ -238,6 +238,7 @@ public class Weapons : MonoBehaviour
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
+                yield return new WaitForSeconds(0.2f);
                 weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
                 weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 2);
 
