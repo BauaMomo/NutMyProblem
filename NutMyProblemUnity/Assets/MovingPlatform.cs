@@ -15,9 +15,9 @@ public class MovingPlatform : MonoBehaviour
 
     Vector2 posChange;
 
-    public float lerpPos = 0.01f;
+    public float lerpPos;
     [SerializeField] float platformSpeed;
-    float localSpeed = 1;
+    float localSpeed = -1;
 
     public bool playerOnPlatform;
 

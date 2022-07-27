@@ -34,7 +34,9 @@ public class HazardnutController : MonoBehaviour
     Vector2 WeaponDropPosition;
 
     public float fGlovesAttackSpeed { get; protected set; }
-    public float iRange { get; protected set; }
+    public float fRange { get; protected set; }
+    float lastAttackTime = -10f;
+    float attackCooldown = 3f; 
     [SerializeField] float fHazardnutPathStartPoint;
     [SerializeField] float fHazardnutPathEndPoint;
     float fHazardnutSpeed;
@@ -67,7 +69,7 @@ public class HazardnutController : MonoBehaviour
 
         iGlovesDamage = 30;
         fGlovesAttackSpeed = 0.5f;
-        iRange = 3.5f;
+        fRange = 3.5f;
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         Hazardnut = this.gameObject;
@@ -133,9 +135,9 @@ public class HazardnutController : MonoBehaviour
                 else
                 {
                     if (transform.position.x < Target.position.x)
-                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x - 4, Target.position.y), fHazardnutSpeed * Time.deltaTime);
+                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x - 7, Target.position.y), fHazardnutSpeed * Time.deltaTime);
                     if (transform.position.x > Target.position.x)
-                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x + 4, Target.position.y), fHazardnutSpeed * Time.deltaTime);
+                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x + 7, Target.position.y), fHazardnutSpeed * Time.deltaTime);
                 }
 
                 break;
@@ -156,7 +158,7 @@ public class HazardnutController : MonoBehaviour
                 }
 
 
-                yield return new WaitForSeconds(0.8f);
+                yield return new WaitForSeconds(0.6f);
                 battack = false;
                 mode = AIMode.follow;
                 break;
@@ -184,17 +186,17 @@ public class HazardnutController : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().flipX = true;
             HazardnutDirection = directions.right;
-            RayCastVector = new Vector3(5, 0);
+            RayCastVector = new Vector3(10, 0);
         }
         if (mode == AIMode.follow && transform.position.x > Target.position.x)
         {
             GetComponent<SpriteRenderer>().flipX = false;
             HazardnutDirection = directions.left;
-            RayCastVector = new Vector3(-5, 0);
+            RayCastVector = new Vector3(-10, 0);
         }
     }
 
-    bool TarggetPlayer()
+    bool TargetPlayer()
     {
         switch (mode)
         {
@@ -207,7 +209,7 @@ public class HazardnutController : MonoBehaviour
                     {
                         Target = hit.collider.transform;
 
-                        if (Vector3.Distance(transform.position, TPlayer.position) < 4.5f)
+                        if (Vector3.Distance(transform.position, TPlayer.position) < 10)
                             StartCoroutine(GlovesAttack(HazardnutDirection));
                         return true;
                     }
@@ -254,11 +256,11 @@ public class HazardnutController : MonoBehaviour
             mode = AIMode.attack;
 
         }
-        if (TarggetPlayer() == true && battack == false)
+        if (TargetPlayer() == true && battack == false)
         {
             mode = AIMode.follow;
         }
-        if (TarggetPlayer() == false && bHazardnutAwake == false)
+        if (TargetPlayer() == false && bHazardnutAwake == false)
         { mode = AIMode.waiting; }
 
 
@@ -288,18 +290,18 @@ public class HazardnutController : MonoBehaviour
     public IEnumerator GlovesAttack(directions _directions)
     {
 
-        if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fGlovesAttackSpeed))
+        if (Time.time > lastAttackTime + attackCooldown)
         {
             OnAttack.Invoke();
-            fColliderSpawnTime = Time.fixedUnscaledTime;
+            lastAttackTime = Time.time;
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(.5f);
 
             battack = true;
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, Hazardnut.transform);
-            weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
+            weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 1);
 
-            float fColliderXOffset = 0.5f + iRange / 2;
+            float fColliderXOffset = 0.5f + fRange / 2;
 
             switch (_directions)
             {
@@ -310,7 +312,7 @@ public class HazardnutController : MonoBehaviour
                     break;
             }
             weaponTrigger.transform.position = Hazardnut.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
-            Destroy(weaponTrigger, 0.1f);
+            Destroy(weaponTrigger, 0.5f);
         }
     }
 
