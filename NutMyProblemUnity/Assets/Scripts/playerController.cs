@@ -21,7 +21,6 @@ public class playerController : MonoBehaviour
     [SerializeField] int iFallAcceleration;
 
     public bool noMovement;
-    float noMovementEndTime;
 
     public float lastDashTime { get; protected set; }
     public float fDashLength { get; protected set; } = .4f;
@@ -31,6 +30,9 @@ public class playerController : MonoBehaviour
     float dashGravity = 1;
     bool isDashing;
     bool hasDash;
+
+    float defaultDrag;
+    float stillDrag = 10;
 
     public bool isGrounded;
     bool leftRay;
@@ -56,6 +58,7 @@ public class playerController : MonoBehaviour
         playerAnimationController = GetComponent<playerAnimationController>();
 
         defaultGravity = rb.gravityScale;
+        defaultDrag = rb.drag;
 
         shadow = transform.Find("BlobShadow").gameObject;
         DeathBarrier = Instantiate(Resources.Load("Prefabs/DeathBarrier") as GameObject);
@@ -87,18 +90,20 @@ public class playerController : MonoBehaviour
     void MovePlayer()
     {
         rb.gravityScale = defaultGravity;
+        if (moveDir == 0 && isGrounded) rb.drag = stillDrag;
+        else rb.drag = defaultDrag;
 
         IsDashAvailable();
         if (Time.time > lastDashTime + fDashLength) isDashing = false;
         if (isDashing) rb.gravityScale = dashGravity;
+        if (IsAttackting()) rb.gravityScale = 3;
 
         if (!noMovement)
         {
             if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
         }
-        else if(Time.time > noMovementEndTime) noMovement = false;
 
-        if (!isDashing)
+        if (!isDashing && !IsAttackting())
         {
             if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                   //higher than standard fall speed
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
@@ -110,6 +115,11 @@ public class playerController : MonoBehaviour
         }
 
         
+    }
+
+    bool IsAttackting()
+    {
+        return playerAnimationController.playerState == playerAnimationController.State.attacking;
     }
 
     void UpdateShadow()
@@ -125,6 +135,17 @@ public class playerController : MonoBehaviour
     void MoveDeathBarrier()
     {
         DeathBarrier.transform.position = new Vector2(transform.position.x, -20);
+    }
+
+    public void DisableMovementFor(float _time)
+    {
+        noMovement = true;
+        Invoke(nameof(EnableMovement), _time);
+    }
+
+    void EnableMovement()
+    {
+        noMovement = false;
     }
 
     // v Unity InputSystem Stuff v
@@ -155,8 +176,13 @@ public class playerController : MonoBehaviour
         if (context.started)
         {
             //Debug.Log("mouse left pressed");
-            weapons.currentWeapon.Attack(playerDirection);
+            StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
         }
+    }
+
+    public void OnWeaponAttack()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0);
     }
 
     public void OnWeaponChange(InputAction.CallbackContext context)
@@ -226,8 +252,7 @@ public class playerController : MonoBehaviour
             isDashing = true;
             lastDashTime = Time.time;
 
-            noMovementEndTime = Time.time + fDashLength;
-            noMovement = true;
+            DisableMovementFor(fDashLength);
 
 
             rb.AddForce(new Vector2(1000, 0) * moveDir);

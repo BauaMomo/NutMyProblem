@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class Weapons : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class Weapons : MonoBehaviour
     List<Weapon> allWeapons;
     List<Weapon> availableWeapons;
 
+    public UnityEvent onAttack = new UnityEvent();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +24,7 @@ public class Weapons : MonoBehaviour
         fists = gameObject.AddComponent<Fists>();
 
         allWeapons = new List<Weapon> { sword, gloves, fists };     //all weapons the player could pick up
-        availableWeapons = new List<Weapon> {fists, sword };               //all weapons the player currently has
+        availableWeapons = new List<Weapon> { fists, sword };               //all weapons the player currently has
 
         currentWeapon = availableWeapons[0];                        //the weapon the player has equipped
     }
@@ -56,9 +60,13 @@ public class Weapons : MonoBehaviour
 
         Weapon weaponToAdd = allWeapons.Find(weapon => weapon.WeaponType == _drop.GetComponent<WeaponDropManager>().WeaponType);    //finds the weapon that should be added to the player's inventory based on the weaponType of the drop
 
-        foreach(Weapon weapon in availableWeapons)      //returns if the player already has that weapon
+        foreach (Weapon weapon in availableWeapons)      //returns if the player already has that weapon
         {
-            if (weapon == weaponToAdd) return;
+            if (weapon == weaponToAdd)
+            {
+                SwitchToWeapon(weaponToAdd);
+                return;
+            }
         }
 
         availableWeapons.Add(weaponToAdd);
@@ -73,27 +81,31 @@ public class Weapons : MonoBehaviour
         public Type WeaponType { get; protected set; }
 
         protected playerController playerController;
+        protected Rigidbody2D rb;
         protected GameObject player;
 
         protected float fColliderSpawnTime;
         protected GameObject weaponTrigger;
 
         public int iDamage { get; protected set; }
-        public float iAttackSpeed { get; protected set; }       //Attack speed in hits per second
-        public float iRange { get; protected set; }
+        public float fAttackSpeed { get; protected set; }       //Attack speed in hits per second
+        public float fRange { get; protected set; }
+        public float attackMoveStrength { get; protected set; }
         public Vector2 KnockbackVector { get; protected set; }      //The direction and strength the enemy gets pushed in when hit
 
-        public virtual void Attack(playerController.direction direction) 
+        public virtual IEnumerator Attack(playerController.direction direction)
         {
             Debug.LogWarning("No Attack function found");
+            yield return new WaitForSeconds(0f);
         }
 
         public void SetUniversalVars(Weapon weapon)     //Sets variables that are the same in all weapons
         {
             weapon.player = this.gameObject;
             weapon.playerController = GetComponent<playerController>();
+            weapon.rb = GetComponent<Rigidbody2D>();
         }
-    }    
+    }
 
     public class Sword : Weapon
     {
@@ -101,36 +113,44 @@ public class Weapons : MonoBehaviour
         {
             WeaponType = Type.Sword;
             iDamage = 20;
-            iAttackSpeed = 6;
-            iRange = 1.5f;
+            fAttackSpeed = 2;
+            fRange = 3f;
+            attackMoveStrength = 4;
             KnockbackVector = new Vector2(50, 20);
             SetUniversalVars(this);
         }
 
-        public override void Attack(playerController.direction _direction)
+        public override IEnumerator Attack(playerController.direction _direction)
         {
-            if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
+            if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fAttackSpeed))
             {
+                GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
                 weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
-                weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
+                weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 3);
 
-                float fColliderXOffset = 0.5f + iRange / 2;
+                Vector2 ColliderOffset = new Vector2(-0.7f + fRange / 2, 0);
+                Vector2 attackMoveForce = new Vector2(100*attackMoveStrength, 0 * attackMoveStrength);
 
                 switch (_direction)     //decide on which side of the player the collider will be
                 {
                     case playerController.direction.right:
+                        attackMoveForce.x *= 1;
                         break;
                     case playerController.direction.left:
-                        fColliderXOffset *= -1;
+                        attackMoveForce.x *= -1;
+                        ColliderOffset.x *= -1;
                         break;
                 }
-                weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
+                rb.AddForce(attackMoveForce);
 
-                Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
+                weaponTrigger.transform.position = playerController.transform.position + (Vector3)ColliderOffset;
+
+                Destroy(weaponTrigger, 0.3f);       //Destroy the collider after x seconds
             }
+            yield return new WaitForSeconds(0f);
         }
     }
 
@@ -140,10 +160,10 @@ public class Weapons : MonoBehaviour
         {
             WeaponType = Type.Bow;
             iDamage = 20;
-            iAttackSpeed = 4;
-            iRange = 1.5f;
+            fAttackSpeed = 4;
+            fRange = 1.5f;
             SetUniversalVars(this);
-        }        
+        }
     }
 
     public class Gloves : Weapon
@@ -152,37 +172,46 @@ public class Weapons : MonoBehaviour
         {
             WeaponType = Type.Gloves;
             iDamage = 40;
-            iAttackSpeed = 1;
-            iRange = 3f;
-            KnockbackVector = new Vector2(130, 50);
+            fAttackSpeed = 0.8f;
+            fRange = 3f;
+            attackMoveStrength = 1000;
+            KnockbackVector = new Vector2(180, 50);
             SetUniversalVars(this);
         }
 
-        public override void Attack(playerController.direction _direction)
+        public override IEnumerator Attack(playerController.direction _direction)
         {
-            //THIS IS A COPY OF THE SWORD ATTACK AND SHOULD BE CHANGED!
-
-            if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
+            if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fAttackSpeed))
             {
+                GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
-                weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
-                weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
+                playerController.DisableMovementFor(0.8f);
+                yield return new WaitForSeconds(0.3f);
 
-                float fColliderXOffset = 0.5f + iRange / 2;
+                weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
+                weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 1.5f);
+
+                Vector2 ColliderOffset = new Vector2(0.5f + fRange / 2, 0.2f);
+
+                Vector2 attackMoveForce = new Vector2(100, 0).normalized * attackMoveStrength;
 
                 switch (_direction)     //decide on which side of the player the collider will be
                 {
                     case playerController.direction.right:
+                        attackMoveForce.x *= 1;
                         break;
                     case playerController.direction.left:
-                        fColliderXOffset *= -1;
+                        attackMoveForce.x *= -1;
+                        ColliderOffset.x *= -1;
                         break;
                 }
-                weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
+                rb.AddForce(attackMoveForce);
 
-                Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
+                weaponTrigger.transform.position = playerController.transform.position + (Vector3)ColliderOffset;
+
+                Destroy(weaponTrigger, 0.5f);       //Destroy the collider after x seconds
             }
         }
     }
@@ -193,37 +222,47 @@ public class Weapons : MonoBehaviour
         {
             WeaponType = Type.Fists;
             iDamage = 10;
-            iAttackSpeed = 3;
-            iRange = 1.5f;
-            KnockbackVector = new Vector2(30, 10);
+            fAttackSpeed = 2;
+            fRange = 1.5f;
+            attackMoveStrength = 300;
+            KnockbackVector = new Vector2(120, 80);
             SetUniversalVars(this);
         }
-        public override void Attack(playerController.direction _direction)
+        public override IEnumerator Attack(playerController.direction _direction)
         {
             //THIS IS A COPY OF THE SWORD ATTACK AND SHOULD BE CHANGED!
 
-            if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
+            if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fAttackSpeed))
             {
+                GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
+                yield return new WaitForSeconds(0.2f);
                 weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
-                weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
+                weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 2);
 
-                float fColliderXOffset = 0.5f + iRange / 2;
+                Vector2 ColliderOffset = new Vector2(0.5f + fRange / 2, 0);
+
+                Vector2 attackMoveForce = new Vector2(100, 100).normalized * attackMoveStrength;
 
                 switch (_direction)     //decide on which side of the player the collider will be
                 {
                     case playerController.direction.right:
+                        attackMoveForce.x *= 1;
                         break;
                     case playerController.direction.left:
-                        fColliderXOffset *= -1;
+                        attackMoveForce.x *= -1;
+                        ColliderOffset.x *= -1;
                         break;
                 }
-                weaponTrigger.transform.position = playerController.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
+                rb.AddForce(attackMoveForce);
+
+                weaponTrigger.transform.position = playerController.transform.position + (Vector3)ColliderOffset;
 
                 Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
             }
+            yield return new WaitForSeconds(0f);
         }
     }
 }
