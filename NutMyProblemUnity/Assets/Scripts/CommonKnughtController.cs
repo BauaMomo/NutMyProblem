@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class CommonKnughtController : MonoBehaviour
 {
-    public UnityEvent OnAttack;
-
     public enum directions { right, left };
     public directions CommonKnughtDirection;
 
@@ -47,9 +44,6 @@ public class CommonKnughtController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OnAttack = new UnityEvent();
-        OnAttack.AddListener(GetComponent<CommonKnughtAnimationController>().OnAttack);
-
         fCommonKnughtSpeed = 2;
 
         gm = Object.FindObjectOfType<GameManager>();
@@ -211,7 +205,6 @@ public class CommonKnughtController : MonoBehaviour
         {
             fColliderSpawnTime = Time.fixedUnscaledTime;
 
-            OnAttack.Invoke();
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
             weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
 

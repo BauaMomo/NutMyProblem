@@ -8,15 +8,10 @@ public class DamageHandler : MonoBehaviour
     Rigidbody2D rb;
     bool isInvincible = false;
 
-    HazardnutAnimationController hAnimationController;
-    CommonKnughtAnimationController cAnimationController;
-
-
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
         if (this.tag == "Hazardnut") hAnimationController = GetComponent<HazardnutAnimationController>();
         if (this.tag == "CommonKnught") cAnimationController = GetComponent<CommonKnughtAnimationController>();
     }
