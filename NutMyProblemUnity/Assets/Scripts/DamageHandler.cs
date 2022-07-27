@@ -8,7 +8,8 @@ public class DamageHandler : MonoBehaviour
     Rigidbody2D rb;
     bool isInvincible = false;
 
-    HazardnutAnimationController anim;
+    HazardnutAnimationController hAnimationController;
+    CommonKnughtAnimationController cAnimationController;
 
 
     // Start is called before the first frame update
@@ -16,7 +17,8 @@ public class DamageHandler : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        if(this.tag == "Hazardnut") anim = GetComponent<HazardnutAnimationController>();
+        if(this.tag == "Hazardnut") hAnimationController = GetComponent<HazardnutAnimationController>();
+        if(this.tag == "CommonKnught") cAnimationController = GetComponent<CommonKnughtAnimationController>();
     }
 
     // Update is called once per frame
@@ -70,7 +72,8 @@ public class DamageHandler : MonoBehaviour
         }
         if (this.tag == "CommonKnught" || this.tag == "Hazardnut")
         {
-            if(this.tag == "Hazardnut") anim.OnDamaged.Invoke();
+            if(this.tag == "Hazardnut") hAnimationController.OnDamaged.Invoke();
+            if(this.tag == "CommonKnught") cAnimationController.OnDamaged.Invoke();
 
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
