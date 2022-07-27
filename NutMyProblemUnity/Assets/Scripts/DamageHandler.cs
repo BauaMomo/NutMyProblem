@@ -8,6 +8,9 @@ public class DamageHandler : MonoBehaviour
     Rigidbody2D rb;
     bool isInvincible = false;
 
+    HazardnutAnimationController hAnimationController;
+    CommonKnughtAnimationController cAnimationController;
+
     // Start is called before the first frame update
     void Start()
     {

@@ -398,6 +398,7 @@ GameObject:
   - component: {fileID: 8178064294339364966}
   - component: {fileID: 8484898466572323132}
   - component: {fileID: 4585177581542308824}
+  - component: {fileID: 9097906515624357443}
   m_Layer: 6
   m_Name: CommonKnught
   m_TagString: CommonKnught
@@ -558,5 +559,27 @@ MonoBehaviour:
   CastPoint: {fileID: 2508374025892564982}
   TPlayer: {fileID: 0}
   fCommonKnughtPathStartPoint: 5
+  fCommonKnughtPathEndPoint: 0
+  iSwordDamage: 0
+--- !u!114 &9097906515624357443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7980023840942887277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cf988f5a835bab4c99494b5f1facc66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonKnughtDirection: 0
+  EnemyType: 0
+  Player: {fileID: 0}
+  CommonKnught: {fileID: 0}
+  WeaponDrop: {fileID: 0}
+  CastPoint: {fileID: 0}
+  TPlayer: {fileID: 0}
+  fCommonKnughtPathStartPoint: 0
   fCommonKnughtPathEndPoint: 0
   iSwordDamage: 0
