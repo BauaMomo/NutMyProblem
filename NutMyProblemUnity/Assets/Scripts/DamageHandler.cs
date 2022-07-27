@@ -17,8 +17,8 @@ public class DamageHandler : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        if(this.tag == "Hazardnut") hAnimationController = GetComponent<HazardnutAnimationController>();
-        if(this.tag == "CommonKnught") cAnimationController = GetComponent<CommonKnughtAnimationController>();
+        if (this.tag == "Hazardnut") hAnimationController = GetComponent<HazardnutAnimationController>();
+        if (this.tag == "CommonKnught") cAnimationController = GetComponent<CommonKnughtAnimationController>();
     }
 
     // Update is called once per frame
@@ -33,20 +33,20 @@ public class DamageHandler : MonoBehaviour
                     break;
 
                 case "CommonKnught":
-                        GetComponent<CommonKnughtController>().CommonKnughtDeath();
+                    GetComponent<CommonKnughtController>().CommonKnughtDeath();
                     break;
 
                 case "Hazardnut":
-                        GetComponent<HazardnutController>().HazardnutDeath();
+                    GetComponent<HazardnutController>().HazardnutDeath();
                     break;
             }
         }
     }
 
-    void StartInvincibility()
+    void StartInvincibility(float _time)
     {
         isInvincible = true;
-        Invoke(nameof(EndInvincibility), 0.5f);
+        Invoke(nameof(EndInvincibility), _time);
     }
 
     void EndInvincibility()
@@ -56,24 +56,36 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleDamage(int _damage, GameObject _other)
     {
-        if(isInvincible) return;
+        if (isInvincible) return;
         iHealth -= _damage;
-        if(this.tag == "Player")
+        if (this.tag == "Player")
         {
-            StartInvincibility();
-
             switch (_other.tag)
             {
                 case "Spikes":
+                    StartInvincibility(1f);
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(0, 1000));
+                    break;
+                case "CommonKnught":
+                    StartInvincibility(0.5f);
+                    GetComponent<playerController>().DisableMovementFor(0.3f);
+                    rb.velocity = new Vector2(0, rb.velocity.y);
+                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.5f) * 700);
+                    break;
+                case "Hazardnut":
+                    StartInvincibility(0.5f);
+                    GetComponent<playerController>().DisableMovementFor(0.6f);
+                    rb.velocity = new Vector2(0, rb.velocity.y);
+                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.3f) * 2000);
                     break;
             }
         }
         if (this.tag == "CommonKnught" || this.tag == "Hazardnut")
         {
-            if(this.tag == "Hazardnut") hAnimationController.OnDamaged.Invoke();
-            if(this.tag == "CommonKnught") cAnimationController.OnDamaged.Invoke();
+            StartInvincibility(0.3f);
+            if (this.tag == "Hazardnut") hAnimationController.OnDamaged.Invoke();
+            if (this.tag == "CommonKnught") cAnimationController.OnDamaged.Invoke();
 
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;

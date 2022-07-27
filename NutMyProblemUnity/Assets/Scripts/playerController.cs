@@ -21,7 +21,6 @@ public class playerController : MonoBehaviour
     [SerializeField] int iFallAcceleration;
 
     public bool noMovement;
-    float noMovementEndTime;
 
     public float lastDashTime { get; protected set; }
     public float fDashLength { get; protected set; } = .4f;
@@ -98,7 +97,6 @@ public class playerController : MonoBehaviour
         {
             if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
         }
-        else if(Time.time > noMovementEndTime) noMovement = false;
 
         if (!isDashing && !IsAttackting())
         {
@@ -134,6 +132,17 @@ public class playerController : MonoBehaviour
         DeathBarrier.transform.position = new Vector2(transform.position.x, -20);
     }
 
+    public void DisableMovementFor(float _time)
+    {
+        noMovement = true;
+        Invoke(nameof(EnableMovement), _time);
+    }
+
+    void EnableMovement()
+    {
+        noMovement = false;
+    }
+
     // v Unity InputSystem Stuff v
 
     public void OnMove(InputAction.CallbackContext context)
@@ -162,7 +171,7 @@ public class playerController : MonoBehaviour
         if (context.started)
         {
             //Debug.Log("mouse left pressed");
-            weapons.currentWeapon.Attack(playerDirection);
+            StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
         }
     }
 
@@ -238,8 +247,7 @@ public class playerController : MonoBehaviour
             isDashing = true;
             lastDashTime = Time.time;
 
-            noMovementEndTime = Time.time + fDashLength;
-            noMovement = true;
+            DisableMovementFor(fDashLength);
 
 
             rb.AddForce(new Vector2(1000, 0) * moveDir);
