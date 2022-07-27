@@ -68,7 +68,13 @@ public class playerAnimationController : MonoBehaviour
     void Update()
     {
         SwitchAnimation(playerState);
+        if (playerState != State.attacking) FlipSprite();
 
+        oldWeaponType = weapons.currentWeapon.WeaponType;
+    }
+
+    void FlipSprite()
+    {
         switch (playerController.playerDirection)
         {
             case playerController.direction.left:
@@ -78,8 +84,6 @@ public class playerAnimationController : MonoBehaviour
                 GetComponent<SpriteRenderer>().flipX = false;
                 break;
         }
-
-        oldWeaponType = weapons.currentWeapon.WeaponType;
     }
 
     private void FixedUpdate()
@@ -109,12 +113,9 @@ public class playerAnimationController : MonoBehaviour
         else playerState = State.airborne;
     }
 
-    public void OnAttack(InputAction.CallbackContext context)
+    public void OnAttack()
     {
-        if (context.started)
-        {
             attackAnimationStartTime = Time.fixedUnscaledTime;
-        }
     }
 
     void SwitchAnimation(State _newState)

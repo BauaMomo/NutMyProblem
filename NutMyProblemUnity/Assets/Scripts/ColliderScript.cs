@@ -59,6 +59,7 @@ public class ColliderScript : MonoBehaviour
                         switch (collision.tag)
                         {
                             case "Floor":
+                                //Debug.Log(parent.GetComponent<Rigidbody2D>().velocity.y);
                                 if (parent.GetComponent<Rigidbody2D>().velocity.y <= 1) parent.GetComponent<playerController>().isGrounded = true;
                                 break;
                             case "DeathBarrier":
@@ -86,6 +87,10 @@ public class ColliderScript : MonoBehaviour
                         parent.GetComponent<HazardnutController>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutController>().iGlovesDamage, parent.gameObject);
                         break;
                 }
+                break;
+            case "Spikes":
+                if(collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(40, parent.gameObject);
+                if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) collision.GetComponent<DamageHandler>().HandleDamage(1000, parent.gameObject);
                 break;
 
 

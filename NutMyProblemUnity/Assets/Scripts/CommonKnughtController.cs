@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CommonKnughtController : MonoBehaviour
 {
+    public UnityEvent OnAttack;
+
     public enum directions { right, left };
     public directions CommonKnughtDirection;
 
@@ -12,6 +15,8 @@ public class CommonKnughtController : MonoBehaviour
 
     enum AIMode { follow, patrol };
     AIMode mode;
+    public enum MoveState { step, stand };
+    public MoveState MoveStatus;
 
     [SerializeField] GameObject Player;
     [SerializeField] GameObject CommonKnught;
@@ -23,13 +28,13 @@ public class CommonKnughtController : MonoBehaviour
     Rigidbody2D rb;
 
     Transform Target;
-    [SerializeField] Transform CastPoint;
     public Transform TPlayer;
 
     Vector2 endPosition;
     Vector2 startPosition;
-    Vector3 CastPointDirection;
     Vector2 WeaponDropPosition;
+    Vector3 RayCastVector;
+    Vector3 CommonKnughtMoveDirection;
 
     public float iAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
@@ -37,6 +42,10 @@ public class CommonKnughtController : MonoBehaviour
     [SerializeField] float fCommonKnughtPathEndPoint;
     float fCommonKnughtSpeed;
     float fColliderSpawnTime;
+    float fStepTime;
+    float fStandingTime;
+    float fStepBeginningTime;
+    float fStandingBeginningTime;
 
     public int iSwordDamage;
 
@@ -44,6 +53,9 @@ public class CommonKnughtController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        OnAttack = new UnityEvent();
+        OnAttack.AddListener(GetComponent<CommonKnughtAnimationController>().OnAttack);
+
         fCommonKnughtSpeed = 2;
 
         gm = Object.FindObjectOfType<GameManager>();
@@ -57,6 +69,9 @@ public class CommonKnughtController : MonoBehaviour
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         CommonKnught = this.gameObject;
+
+        fStepTime = 0.51f;
+        fStandingTime = 0.555f;
     }
 
     // Update is called once per frame
@@ -65,13 +80,13 @@ public class CommonKnughtController : MonoBehaviour
         endPosition = new Vector2(fCommonKnughtPathEndPoint, transform.position.y);
         startPosition = new Vector2(fCommonKnughtPathStartPoint, transform.position.y);
 
-        TarggetPlayer();
         EnemyMovement();
+        TarggetPlayer();
         SwitchMovementMode();
         FlipEnemy();
 
-        if (Vector3.Distance(transform.position, TPlayer.position) < 1)
-            SwordAttack(CommonKnughtDirection);
+        if (Vector3.Distance(transform.position, TPlayer.position) < 4.25f)
+            StartCoroutine(SwordAttack(CommonKnughtDirection));
     }
 
 
@@ -82,22 +97,22 @@ public class CommonKnughtController : MonoBehaviour
             case AIMode.patrol:
                 if (transform.position.x < startPosition.x)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, startPosition, fCommonKnughtSpeed * Time.deltaTime);
+                    CommonKnughtMoveDirection = new Vector3(3, 0, 0);
                     CommonKnughtDirection = directions.right;
                     FlipEnemy();
                 }
 
                 if (transform.position.x > endPosition.x)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, endPosition, fCommonKnughtSpeed * Time.deltaTime);
+                    CommonKnughtMoveDirection = new Vector3(-3, 0, 0);
                     CommonKnughtDirection = directions.left;
                     FlipEnemy();
                 }
 
                 if (transform.position.x >= startPosition.x && CommonKnughtDirection == directions.right)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, endPosition, fCommonKnughtSpeed * Time.deltaTime);
-                    if (transform.position.x == endPosition.x)
+                    CommonKnughtMoveDirection = new Vector3(3, 0, 0);
+                    if (transform.position.x >= endPosition.x)
                     {
                         CommonKnughtDirection = directions.left;
                         FlipEnemy();
@@ -106,22 +121,36 @@ public class CommonKnughtController : MonoBehaviour
 
                 if (transform.position.x <= endPosition.x && CommonKnughtDirection == directions.left)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, startPosition, fCommonKnughtSpeed * Time.deltaTime);
-                    if (transform.position.x == fCommonKnughtPathStartPoint)
+                    CommonKnughtMoveDirection = new Vector3(-3, 0, 0);
+                    if (transform.position.x <= fCommonKnughtPathStartPoint)
                     {
                         CommonKnughtDirection = directions.right;
                         FlipEnemy();
                     }
                 }
+
+
+                switch (MoveStatus)
+                {
+                    case MoveState.stand:
+                        rb.velocity = new Vector2(0, rb.velocity.y);
+                        break;
+
+                    case MoveState.step:
+                        rb.velocity = CommonKnughtMoveDirection;
+                        break;
+                }
+
+
                 break;
 
             case AIMode.follow:
                 transform.position = Vector2.MoveTowards(transform.position, Target.position, fCommonKnughtSpeed * Time.deltaTime);
                 break;
+
         }
 
     }
-
     void FlipEnemy()
     {
         // Spriteflip im patrol mode
@@ -129,12 +158,12 @@ public class CommonKnughtController : MonoBehaviour
         {
             case directions.right:
                 GetComponent<SpriteRenderer>().flipX = false;
-                CastPointDirection = CastPoint.position + Vector3.right * 5;
+                RayCastVector = new Vector3(5, 0);
                 break;
 
             case directions.left:
                 GetComponent<SpriteRenderer>().flipX = true;
-                CastPointDirection = CastPoint.position + -Vector3.right * 5;
+                RayCastVector = new Vector3(-5, 0);
                 break;
         }
 
@@ -144,20 +173,20 @@ public class CommonKnughtController : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().flipX = false;
             CommonKnughtDirection = directions.right;
-            CastPointDirection = CastPoint.position + Vector3.right * 5;
+            RayCastVector = new Vector3(5, 0);
         }
         if (mode == AIMode.follow && transform.position.x > Target.position.x)
         {
             GetComponent<SpriteRenderer>().flipX = true;
             CommonKnughtDirection = directions.left;
-            CastPointDirection = CastPoint.position + -Vector3.right * 5;
+            RayCastVector = new Vector3(-5, 0);
         }
 
     }
 
     bool TarggetPlayer()
     {
-        RaycastHit2D hit = Physics2D.Linecast(CastPoint.position, CastPointDirection, 1 << LayerMask.NameToLayer("Player"));
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position + RayCastVector, 1 << LayerMask.NameToLayer("Player"));
 
         if (hit.collider != null)
         {
@@ -177,10 +206,20 @@ public class CommonKnughtController : MonoBehaviour
 
         if (TarggetPlayer() == true)
         { mode = AIMode.follow; }
-        else
+
+        if (Vector3.Distance(transform.position, TPlayer.transform.position) > 10)
+        { mode = AIMode.patrol; }
+
+        if (MoveStatus == MoveState.step && Time.time > fStepBeginningTime + fStepTime)
         {
-            if (Vector3.Distance(transform.position, Target.position) > 5)
-            { mode = AIMode.patrol; }
+            fStandingBeginningTime = Time.time;
+            MoveStatus = MoveState.stand;
+        }
+
+        if (MoveStatus == MoveState.stand && Time.time > fStandingBeginningTime + fStandingTime)
+        {
+            fStepBeginningTime = Time.time;
+            MoveStatus = MoveState.step;
         }
     }
 
@@ -198,15 +237,20 @@ public class CommonKnughtController : MonoBehaviour
         }
     }
 
-    public void SwordAttack(directions _directions)
+    public IEnumerator SwordAttack(directions _directions)
     {
 
         if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
         {
+
             fColliderSpawnTime = Time.fixedUnscaledTime;
+            yield return new WaitForSeconds(0.4f);
+
+            OnAttack.Invoke();
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
-            weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(iRange, 1);
+            weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(5, 1);
+
 
             float fColliderXOffset = 0.5f + iRange / 2;
 
@@ -218,8 +262,8 @@ public class CommonKnughtController : MonoBehaviour
                     fColliderXOffset *= -1;
                     break;
             }
-            weaponTrigger.transform.position = CommonKnught.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
-
+            weaponTrigger.transform.position = CommonKnught.transform.position + new Vector3(0, -0.1f, 0);
+            yield return new WaitForSeconds(0.5f);
             Destroy(weaponTrigger, 0.1f);
         }
     }
