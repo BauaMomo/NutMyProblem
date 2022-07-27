@@ -2726,22 +2726,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7266049883734685212, guid: 1a58078056fc55748873b71dbdfc7db1, type: 3}
   m_PrefabInstance: {fileID: 7266049884300062855}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &587218981
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1892483792}
-  m_Layer: 0
-  m_Name: 'Recovery GameObject for Transform (ID in file: 1892483792)'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!4 &591731746 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7711389989138434699, guid: c5ebc3daead84dd48ba0072dbab73b38, type: 3}
@@ -10347,21 +10331,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &1892483792
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 587218981}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -41, y: 25, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1898330152
 PrefabInstance:
   m_ObjectHideFlags: 0

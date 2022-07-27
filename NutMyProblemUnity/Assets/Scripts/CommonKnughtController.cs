@@ -28,7 +28,6 @@ public class CommonKnughtController : MonoBehaviour
     Rigidbody2D rb;
 
     Transform Target;
-    [SerializeField] Transform CastPoint;
     public Transform TPlayer;
 
     Vector2 endPosition;
@@ -46,11 +45,9 @@ public class CommonKnughtController : MonoBehaviour
     float fStepTime;
     float fStandingTime;
     float fStepBeginningTime;
-    float fStandignBeginningTime;
+    float fStandingBeginningTime;
 
     public int iSwordDamage;
-
-    bool bStanding;
 
 
     // Start is called before the first frame update
@@ -136,15 +133,10 @@ public class CommonKnughtController : MonoBehaviour
                 switch (MoveStatus)
                 {
                     case MoveState.stand:
-                        if (fStandignBeginningTime == 0)
-                            fStandignBeginningTime = Time.time;
-                        rb.velocity = new Vector3(0,0,0);
-                        bStanding = true;
+                        rb.velocity = new Vector2(0, rb.velocity.y);
                         break;
 
                     case MoveState.step:
-                        if (fStepBeginningTime == 0)
-                            fStepBeginningTime = Time.time;
                         rb.velocity = CommonKnughtMoveDirection;
                         break;
                 }
@@ -218,18 +210,16 @@ public class CommonKnughtController : MonoBehaviour
         if (Vector3.Distance(transform.position, TPlayer.transform.position) > 10)
         { mode = AIMode.patrol; }
 
-        if (bStanding == false && (Time.time - fStepBeginningTime) >= fStepTime)
+        if (MoveStatus == MoveState.step && Time.time > fStepBeginningTime + fStepTime)
         {
-            fStandignBeginningTime = 0;
+            fStandingBeginningTime = Time.time;
             MoveStatus = MoveState.stand;
         }
 
-
-        if (bStanding == true && (Time.time - fStandignBeginningTime) >= fStandingTime)
+        if (MoveStatus == MoveState.stand && Time.time > fStandingBeginningTime + fStandingTime)
         {
-            fStepBeginningTime = 0;
+            fStepBeginningTime = Time.time;
             MoveStatus = MoveState.step;
-            bStanding = false;
         }
     }
 
