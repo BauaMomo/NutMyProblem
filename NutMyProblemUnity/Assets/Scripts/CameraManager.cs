@@ -21,7 +21,7 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 newCamPosition = new Vector3(CameraPushBox.transform.position.x, CameraPushBox.transform.position.y + 3, -10);                                 //Moves the camera towards the CameraPushBox
+        Vector3 newCamPosition = new Vector3(CameraPushBox.transform.position.x, CameraPushBox.transform.position.y + 1.5f, -10);                                 //Moves the camera towards the CameraPushBox
         transform.position = Vector3.MoveTowards(transform.position, newCamPosition, Vector3.Distance(transform.position, newCamPosition) / 5 + 0.3f);         //CameraPushBox is a box of colliders, gets pushed around by the player
         if (Vector2.Distance(player.transform.position, transform.position) > 10f) CameraPushBox.transform.position = player.transform.position;
     }
