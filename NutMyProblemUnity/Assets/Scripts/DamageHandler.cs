@@ -6,7 +6,7 @@ public class DamageHandler : MonoBehaviour
 {
     [field: SerializeField] public int iHealth { get; private set; } = 100;
     Rigidbody2D rb;
-    bool isInvincible = false;
+    public bool isInvincible { get; protected set; } = false;
 
     HazardnutAnimationController hAnimationController;
     CommonKnughtAnimationController cAnimationController;
@@ -61,7 +61,7 @@ public class DamageHandler : MonoBehaviour
             switch (_other.tag)
             {
                 case "Spikes":
-                    StartInvincibility(1f);
+                    StartInvincibility(0.5f);
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(0, 1000));
                     break;

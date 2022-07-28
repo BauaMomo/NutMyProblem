@@ -7,6 +7,7 @@ public class CommonKnughtAnimationController : MonoBehaviour
 {
     Rigidbody2D rb;
     Animator animator;
+    CommonKnughtController controller;
 
     public UnityEvent OnDamaged;
 
@@ -31,6 +32,7 @@ public class CommonKnughtAnimationController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        controller = GetComponent<CommonKnughtController>();
 
         OnDamaged = new UnityEvent();
         OnDamaged.AddListener(StartStunPhase);
@@ -69,8 +71,8 @@ public class CommonKnughtAnimationController : MonoBehaviour
     {
         if (enemyState != State.attacking && enemyState != State.stunned)
         {
-            if (!moving) enemyState = State.idle;
-            else enemyState = State.moving;
+            if (controller.MoveStatus == CommonKnughtController.MoveState.stand) enemyState = State.idle;
+            if (controller.MoveStatus == CommonKnughtController.MoveState.step) enemyState = State.moving;
         }
 
         if (enemyState == State.attacking && Time.time > attackStartTime + attackTime) enemyState = State.idle;
