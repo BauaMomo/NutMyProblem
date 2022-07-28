@@ -56,8 +56,8 @@ public class HazardnutController : MonoBehaviour
         OnAttack = new UnityEvent();
         OnAttack.AddListener(GetComponent<HazardnutAnimationController>().OnAttack);
 
-        fHazardnutSpeed = 30;
-        fHazardnutChargeSpeed = 120;
+        fHazardnutSpeed = 6;
+        fHazardnutChargeSpeed = 25;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
@@ -78,13 +78,17 @@ public class HazardnutController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    private void FixedUpdate()
+    {
         endPosition = new Vector2(fHazardnutPathEndPoint, transform.position.y);
         startPosition = new Vector2(fHazardnutPathStartPoint, transform.position.y);
 
         StartCoroutine(EnemyMovement());
         SwitchMovementMode();
         FlipEnemy();
-
     }
 
     IEnumerator EnemyMovement()

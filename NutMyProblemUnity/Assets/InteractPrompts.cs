@@ -24,7 +24,7 @@ public class InteractPrompts : MonoBehaviour
     Vector2 curvePointStart = new Vector2();
     Vector2 curvePointEnd = new Vector2();
 
-    float spriteSizeIncrease = .05f;
+    float spriteSizeIncrease = .2f;
     float spriteScale;
     Vector3 spriteStartScale;
     bool growing = false;
@@ -51,7 +51,7 @@ public class InteractPrompts : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {        
         if (growing) spriteScale += spriteSizeIncrease;
         if (shrinking) spriteScale -= spriteSizeIncrease;

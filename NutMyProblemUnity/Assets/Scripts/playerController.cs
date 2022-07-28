@@ -150,6 +150,11 @@ public class playerController : MonoBehaviour
 
     // v Unity InputSystem Stuff v
 
+    public void OnExit(InputAction.CallbackContext context)
+    {
+        Application.Quit();
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<float>();
