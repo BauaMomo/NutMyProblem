@@ -41,7 +41,7 @@ public class CommonKnughtController : MonoBehaviour
     [SerializeField] float fCommonKnughtPathStartPoint;
     [SerializeField] float fCommonKnughtPathEndPoint;
     float fCommonKnughtSpeed;
-    float fColliderSpawnTime;
+    float attackStartTime;
     float fStepTime;
     float fStandingTime;
     float fStepBeginningTime;
@@ -56,7 +56,7 @@ public class CommonKnughtController : MonoBehaviour
         OnAttack = new UnityEvent();
         OnAttack.AddListener(GetComponent<CommonKnughtAnimationController>().OnAttack);
 
-        fCommonKnughtSpeed = 2;
+        fCommonKnughtSpeed = 4;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
@@ -145,7 +145,8 @@ public class CommonKnughtController : MonoBehaviour
                 break;
 
             case AIMode.follow:
-                transform.position = Vector2.MoveTowards(transform.position, Target.position, fCommonKnughtSpeed * Time.deltaTime);
+                rb.velocity = new Vector2(Mathf.Sign(Target.position.x - transform.position.x), 0) * fCommonKnughtSpeed;
+                //rb.MovePosition(Vector2.MoveTowards(transform.position, Target.position, fCommonKnughtSpeed * Time.deltaTime));
                 break;
 
         }
@@ -154,12 +155,15 @@ public class CommonKnughtController : MonoBehaviour
 
     public void StartStep()
     {
+        if (mode == AIMode.follow) return;
+
         rb.AddForce(CommonKnughtMoveDirection * 200);
         fStandingTime = Random.Range(fStandingTime - 0.5f, fStepTime + 0.5f);
     }
 
     public void EndStep()
     {
+        if (mode == AIMode.follow) return;
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
@@ -252,13 +256,13 @@ public class CommonKnughtController : MonoBehaviour
     public IEnumerator SwordAttack(directions _directions)
     {
 
-        if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / iAttackSpeed))
+        if (Time.time > attackStartTime + 2f)
         {
 
-            fColliderSpawnTime = Time.fixedUnscaledTime;
+            attackStartTime = Time.time;
             OnAttack.Invoke();
 
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.5f);
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
             weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(5, 1);
@@ -275,8 +279,7 @@ public class CommonKnughtController : MonoBehaviour
                     break;
             }
             weaponTrigger.transform.position = CommonKnught.transform.position + new Vector3(0, -0.1f, 0);
-            yield return new WaitForSeconds(0.5f);
-            Destroy(weaponTrigger, 0.1f);
+            Destroy(weaponTrigger, 0.2f);
         }
     }
 }
