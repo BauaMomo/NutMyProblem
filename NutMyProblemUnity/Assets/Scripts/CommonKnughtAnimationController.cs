@@ -88,6 +88,7 @@ public class CommonKnughtAnimationController : MonoBehaviour
     }
     void StartStunPhase()
     {
+        if (enemyState == State.attacking) return;
         stunStartTime = Time.time;
         enemyState = State.stunned;
     }

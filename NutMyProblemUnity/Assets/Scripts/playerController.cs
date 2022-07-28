@@ -90,7 +90,7 @@ public class playerController : MonoBehaviour
     void MovePlayer()
     {
         rb.gravityScale = defaultGravity;
-        if (moveDir == 0 && isGrounded) rb.drag = stillDrag;
+        if (moveDir == 0 && isGrounded && !noMovement) rb.drag = stillDrag;
         else rb.drag = defaultDrag;
 
         IsDashAvailable();

@@ -18,7 +18,7 @@ public class HazardnutAnimationController : MonoBehaviour
     float attackTime = .8f;
 
     float stunStartTime;
-    float stunTime = 1f;
+    float stunTime = .5f;
 
     Dictionary<State, string> HazardnutAnimations = new Dictionary<State, string>();
 
@@ -76,6 +76,8 @@ public class HazardnutAnimationController : MonoBehaviour
     }
     void StartStunPhase()
     {
+        if (enemyState == State.attacking) return;
+
         stunStartTime = Time.time;
         enemyState = State.stunned;
     }

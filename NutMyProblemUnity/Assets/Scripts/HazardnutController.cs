@@ -25,7 +25,6 @@ public class HazardnutController : MonoBehaviour
     public UnityEvent OnAttack;
 
     Transform Target;
-    [SerializeField] Transform CastPoint;
     public Transform TPlayer;
 
     Vector2 endPosition;
@@ -57,8 +56,8 @@ public class HazardnutController : MonoBehaviour
         OnAttack = new UnityEvent();
         OnAttack.AddListener(GetComponent<HazardnutAnimationController>().OnAttack);
 
-        fHazardnutSpeed = 4;
-        fHazardnutChargeSpeed = 20;
+        fHazardnutSpeed = 30;
+        fHazardnutChargeSpeed = 120;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
@@ -95,21 +94,21 @@ public class HazardnutController : MonoBehaviour
             case AIMode.patrol:
                 if (transform.position.x < startPosition.x)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, startPosition, fHazardnutSpeed * Time.deltaTime);
+                    rb.MovePosition(Vector2.MoveTowards(transform.position, startPosition, fHazardnutSpeed * Time.deltaTime));
                     HazardnutDirection = directions.right;
                     FlipEnemy();
                 }
 
                 if (transform.position.x > endPosition.x)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, endPosition, fHazardnutSpeed * Time.deltaTime);
+                    rb.MovePosition(Vector2.MoveTowards(transform.position, endPosition, fHazardnutSpeed * Time.deltaTime));
                     HazardnutDirection = directions.left;
                     FlipEnemy();
                 }
 
                 if (transform.position.x >= startPosition.x && HazardnutDirection == directions.right)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, endPosition, fHazardnutSpeed * Time.deltaTime);
+                    rb.MovePosition(Vector2.MoveTowards(transform.position, endPosition, fHazardnutSpeed * Time.deltaTime));
                     if (transform.position.x == endPosition.x)
                     {
                         HazardnutDirection = directions.left;
@@ -119,7 +118,7 @@ public class HazardnutController : MonoBehaviour
 
                 if (transform.position.x <= endPosition.x && HazardnutDirection == directions.left)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, startPosition, fHazardnutSpeed * Time.deltaTime);
+                    rb.MovePosition(Vector2.MoveTowards(transform.position, startPosition, fHazardnutSpeed * Time.deltaTime));
                     if (transform.position.x == fHazardnutPathStartPoint)
                     {
                         HazardnutDirection = directions.right;
@@ -131,13 +130,13 @@ public class HazardnutController : MonoBehaviour
             case AIMode.follow:
 
                 if (transform.position.x - Target.position.x >= -4 && transform.position.x - Target.position.x <= 4 && transform.position.y == Target.position.y + -1)
-                    transform.position = Vector2.MoveTowards(transform.position, Target.position, fHazardnutSpeed * Time.deltaTime);
+                    rb.MovePosition(Vector2.MoveTowards(transform.position, Target.position, fHazardnutSpeed * Time.deltaTime));
                 else
                 {
                     if (transform.position.x < Target.position.x)
-                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x - 7, Target.position.y), fHazardnutSpeed * Time.deltaTime);
+                        rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector2(Target.position.x - 7, Target.position.y), fHazardnutSpeed * Time.deltaTime));
                     if (transform.position.x > Target.position.x)
-                        transform.position = Vector2.MoveTowards(transform.position, new Vector2(Target.position.x + 7, Target.position.y), fHazardnutSpeed * Time.deltaTime);
+                        rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector2(Target.position.x + 7, Target.position.y), fHazardnutSpeed * Time.deltaTime));
                 }
 
                 break;
@@ -150,11 +149,11 @@ public class HazardnutController : MonoBehaviour
 
                 if (HazardnutDirection == directions.left)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, new Vector3(transform.position.x - 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime);
+                    rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector3(transform.position.x - 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime));
                 }
                 if (HazardnutDirection == directions.right)
                 {
-                    transform.position = Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime);
+                    rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime));
                 }
 
 
@@ -171,12 +170,12 @@ public class HazardnutController : MonoBehaviour
         switch (HazardnutDirection)
         {
             case directions.right:
-                GetComponent<SpriteRenderer>().flipX = true;
+                GetComponent<SpriteRenderer>().flipX = false;
                 RayCastVector = new Vector3(10, 0);
                 break;
 
             case directions.left:
-                GetComponent<SpriteRenderer>().flipX = false;
+                GetComponent<SpriteRenderer>().flipX = true;
                 RayCastVector = new Vector3(-10, 0);
                 break;
         }
@@ -184,13 +183,13 @@ public class HazardnutController : MonoBehaviour
         //Spriteflip im follow mode
         if (mode == AIMode.follow && transform.position.x < Target.position.x)
         {
-            GetComponent<SpriteRenderer>().flipX = true;
+            GetComponent<SpriteRenderer>().flipX = false;
             HazardnutDirection = directions.right;
             RayCastVector = new Vector3(10, 0);
         }
         if (mode == AIMode.follow && transform.position.x > Target.position.x)
         {
-            GetComponent<SpriteRenderer>().flipX = false;
+            GetComponent<SpriteRenderer>().flipX = true;
             HazardnutDirection = directions.left;
             RayCastVector = new Vector3(-10, 0);
         }
