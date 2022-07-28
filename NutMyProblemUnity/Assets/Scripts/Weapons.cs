@@ -222,7 +222,7 @@ public class Weapons : MonoBehaviour
         {
             WeaponType = Type.Fists;
             iDamage = 10;
-            fAttackSpeed = 2;
+            fAttackSpeed = 1.5f;
             fRange = 1.5f;
             attackMoveStrength = 300;
             KnockbackVector = new Vector2(120, 80);
@@ -238,7 +238,7 @@ public class Weapons : MonoBehaviour
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.1f);
                 weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
                 weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 2);
 

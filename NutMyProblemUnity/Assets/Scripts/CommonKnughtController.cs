@@ -70,8 +70,8 @@ public class CommonKnughtController : MonoBehaviour
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         CommonKnught = this.gameObject;
 
-        fStepTime = 0.51f;
-        fStandingTime = 0.555f;
+        fStepTime = 1;
+        fStandingTime = 1.5f;
     }
 
     // Update is called once per frame
@@ -97,21 +97,21 @@ public class CommonKnughtController : MonoBehaviour
             case AIMode.patrol:
                 if (transform.position.x < startPosition.x)
                 {
-                    CommonKnughtMoveDirection = new Vector3(3, 0, 0);
+                    CommonKnughtMoveDirection = new Vector3(6, 0, 0);
                     CommonKnughtDirection = directions.right;
                     FlipEnemy();
                 }
 
                 if (transform.position.x > endPosition.x)
                 {
-                    CommonKnughtMoveDirection = new Vector3(-3, 0, 0);
+                    CommonKnughtMoveDirection = new Vector3(-6, 0, 0);
                     CommonKnughtDirection = directions.left;
                     FlipEnemy();
                 }
 
                 if (transform.position.x >= startPosition.x && CommonKnughtDirection == directions.right)
                 {
-                    CommonKnughtMoveDirection = new Vector3(3, 0, 0);
+                    CommonKnughtMoveDirection = new Vector3(6, 0, 0);
                     if (transform.position.x >= endPosition.x)
                     {
                         CommonKnughtDirection = directions.left;
@@ -121,7 +121,7 @@ public class CommonKnughtController : MonoBehaviour
 
                 if (transform.position.x <= endPosition.x && CommonKnughtDirection == directions.left)
                 {
-                    CommonKnughtMoveDirection = new Vector3(-3, 0, 0);
+                    CommonKnughtMoveDirection = new Vector3(-6, 0, 0);
                     if (transform.position.x <= fCommonKnughtPathStartPoint)
                     {
                         CommonKnughtDirection = directions.right;
@@ -133,11 +133,11 @@ public class CommonKnughtController : MonoBehaviour
                 switch (MoveStatus)
                 {
                     case MoveState.stand:
-                        rb.velocity = new Vector2(0, rb.velocity.y);
+                        //Invoke(nameof(EndStep), 0.1f);
                         break;
 
                     case MoveState.step:
-                        rb.velocity = CommonKnughtMoveDirection;
+                        //Invoke(nameof(StartStep), 0.25f);
                         break;
                 }
 
@@ -151,6 +151,18 @@ public class CommonKnughtController : MonoBehaviour
         }
 
     }
+
+    public void StartStep()
+    {
+        rb.AddForce(CommonKnughtMoveDirection * 200);
+        fStandingTime = Random.Range(fStandingTime - 0.5f, fStepTime + 0.5f);
+    }
+
+    public void EndStep()
+    {
+        rb.velocity = new Vector2(0, rb.velocity.y);
+    }
+
     void FlipEnemy()
     {
         // Spriteflip im patrol mode
@@ -244,9 +256,9 @@ public class CommonKnughtController : MonoBehaviour
         {
 
             fColliderSpawnTime = Time.fixedUnscaledTime;
-            yield return new WaitForSeconds(0.4f);
-
             OnAttack.Invoke();
+
+            yield return new WaitForSeconds(0.4f);
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
             weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(5, 1);

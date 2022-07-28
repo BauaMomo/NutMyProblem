@@ -6,9 +6,12 @@ using UnityEngine.InputSystem;
 
 public class playerAnimationController : MonoBehaviour
 {
+    int invincibilityFlashMaxFrames = 30;
+    public int invincibilityFlashFrameCount = 0;
+
     float attackAnimationStartTime;
     float currentWeaponAttackLength;
-    public enum State { idle, walking, airborne, crouching, attacking, dashing };
+    public enum State { idle, walking, jumping, falling, attacking, dashing };
     [SerializeField] public State playerState;
 
     public State currentAnimationState;
@@ -22,6 +25,8 @@ public class playerAnimationController : MonoBehaviour
     Animator animator;
     Rigidbody2D rb2D;
     Weapons weapons;
+    DamageHandler damageHandler;
+    SpriteRenderer spriteRenderer;
 
     Weapons.Weapon.Type oldWeaponType;
 
@@ -32,33 +37,35 @@ public class playerAnimationController : MonoBehaviour
         animator = GetComponent<Animator>();
         rb2D = GetComponent<Rigidbody2D>();
         weapons = GetComponent<Weapons>();
+        damageHandler = GetComponent<DamageHandler>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         SwordAnimations.Add(State.idle, "Player_Sword_Idle_Animation");
         SwordAnimations.Add(State.walking, "Player_Sword_Run_Animation");
-        SwordAnimations.Add(State.airborne, "Player_Sword_Jump_Animation");
+        SwordAnimations.Add(State.jumping, "Player_Sword_Jump_Animation");
         SwordAnimations.Add(State.attacking, "Player_Sword_Attack_Animation");
-        SwordAnimations.Add(State.crouching, "");
+        SwordAnimations.Add(State.falling, "Player_Sword_Fall_Animation");
         SwordAnimations.Add(State.dashing, "Player_Sword_Dash_Animation");
 
         GloveAnimations.Add(State.idle, "Player_Gloves_Idle_Animation");
         GloveAnimations.Add(State.walking, "Player_Gloves_Run_Animation");
-        GloveAnimations.Add(State.airborne, "Player_Gloves_Jump_Animation");
+        GloveAnimations.Add(State.jumping, "Player_Gloves_Jump_Animation");
         GloveAnimations.Add(State.attacking, "Player_Gloves_Attack_Animation");
-        GloveAnimations.Add(State.crouching, "");
+        GloveAnimations.Add(State.falling, "Player_Gloves_Fall_Animation");
         GloveAnimations.Add(State.dashing, "Player_Gloves_Dash_Animation");
 
         BowAnimations.Add(State.idle, "");
         BowAnimations.Add(State.walking, "");
-        BowAnimations.Add(State.airborne, "");
+        BowAnimations.Add(State.jumping, "");
         BowAnimations.Add(State.attacking, "");
-        BowAnimations.Add(State.crouching, "");
+        BowAnimations.Add(State.falling, "");
         BowAnimations.Add(State.dashing, "");
 
         FistAnimations.Add(State.idle, "Player_WithoutWeapon_Idle_Animation");
         FistAnimations.Add(State.walking, "Player_WithoutWeapon_Run_Animation");
-        FistAnimations.Add(State.airborne, "Player_WithoutWeapon_Jump_Animation");
+        FistAnimations.Add(State.jumping, "Player_WithoutWeapon_Jump_Animation");
         FistAnimations.Add(State.attacking, "Player_WithoutWeapon_Attack_Animation");
-        FistAnimations.Add(State.crouching, "");
+        FistAnimations.Add(State.falling, "Player_WithoutWeapon_Fall_Animation");
         FistAnimations.Add(State.dashing, "Player_WithoutWeapon_Dash_Animation");
 
         playerState = State.idle;
@@ -69,6 +76,21 @@ public class playerAnimationController : MonoBehaviour
     {
         SwitchAnimation(playerState);
         if (playerState != State.attacking) FlipSprite();
+
+        if (damageHandler.isInvincible)
+        {
+            if (invincibilityFlashFrameCount >= invincibilityFlashMaxFrames)
+            {
+                spriteRenderer.enabled = !spriteRenderer.enabled;
+                invincibilityFlashFrameCount = 0;
+            }
+            else invincibilityFlashFrameCount++;
+        }
+        else
+        {
+            spriteRenderer.enabled = true;
+            invincibilityFlashFrameCount = 0;
+        }
 
         oldWeaponType = weapons.currentWeapon.WeaponType;
     }
@@ -110,12 +132,16 @@ public class playerAnimationController : MonoBehaviour
             if (rb2D.velocity.x == 0) playerState = State.idle;
             else playerState = State.walking;
         }
-        else playerState = State.airborne;
+        else if (rb2D.velocity.y > 0)
+        {
+            playerState = State.jumping;
+        }
+        else playerState = State.falling;
     }
 
     public void OnAttack()
     {
-            attackAnimationStartTime = Time.fixedUnscaledTime;
+        attackAnimationStartTime = Time.fixedUnscaledTime;
     }
 
     void SwitchAnimation(State _newState)

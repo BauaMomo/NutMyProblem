@@ -520,9 +520,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 1
+  m_LinearDrag: 5
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 10
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -552,12 +552,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cf988f5a835bab4c99494b5f1facc66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
   CommonKnughtDirection: 0
   EnemyType: 0
+  MoveStatus: 0
   Player: {fileID: 7716982155159702624, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
   CommonKnught: {fileID: 0}
   WeaponDrop: {fileID: 0}
-  CastPoint: {fileID: 2508374025892564982}
   TPlayer: {fileID: 0}
   fCommonKnughtPathStartPoint: 5
   fCommonKnughtPathEndPoint: 0
