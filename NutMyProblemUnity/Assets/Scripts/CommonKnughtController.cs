@@ -97,7 +97,7 @@ public class CommonKnughtController : MonoBehaviour
         SwitchMovementMode();
         FlipEnemy();
 
-        if (TarggetPlayer())
+        if (TarggetPlayer())    //will only attack the player if they are in sight
             StartCoroutine(SwordAttack(CommonKnughtDirection));
     }
 
@@ -111,9 +111,9 @@ public class CommonKnughtController : MonoBehaviour
         switch (mode)
         {
             case AIMode.patrol:
-                if (Vector2.Distance(transform.position, startPosition) < 1) goal = endPosition;
+                if (Vector2.Distance(transform.position, startPosition) < 1) goal = endPosition;        //CommonKnught decides which point is its goal and will move towards it
                 if (Vector2.Distance(transform.position, endPosition) < 1) goal = startPosition;
-                fStandingTime = patrolStandingTime;
+                fStandingTime = patrolStandingTime;     //standingTime is adjusted for faster movement when following player
                 break;
 
             case AIMode.follow:
@@ -124,7 +124,7 @@ public class CommonKnughtController : MonoBehaviour
 
         if (transform.position.x < goal.x)
         {
-            CommonKnughtMoveDirection = new Vector3(1, 0, 0) * fCommonKnughtSpeed;
+            CommonKnughtMoveDirection = new Vector3(1, 0, 0) * fCommonKnughtSpeed;      //MoveDirection is set, now changes with speed
             CommonKnughtDirection = directions.right;
         }
 
@@ -133,10 +133,10 @@ public class CommonKnughtController : MonoBehaviour
             CommonKnughtMoveDirection = new Vector3(1, 0, 0) * -fCommonKnughtSpeed;
             CommonKnughtDirection = directions.left;
         }
-        FlipEnemy();
+        FlipEnemy();       //only needs to be called once at the end
     }
 
-    public void StartStep()
+    public void StartStep()     //StartStep and EndStep are called from the animation with animation events
     {
         if (noMovement) return;
 
@@ -168,7 +168,7 @@ public class CommonKnughtController : MonoBehaviour
 
     bool TarggetPlayer()
     {
-        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(transform.position, 2.5f);
+        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(transform.position, 2.5f);        //enemy now also sees the player if they are close behind it
 
         foreach (Collider2D collider in collider2Ds)
         {
@@ -198,7 +198,7 @@ public class CommonKnughtController : MonoBehaviour
         if (TarggetPlayer())
         { mode = AIMode.follow; }
 
-        if (Vector3.Distance(transform.position, TPlayer.transform.position) > 10)
+        if (Vector3.Distance(transform.position, TPlayer.transform.position) > 20)
         { mode = AIMode.patrol; }
 
         if (MoveStatus == MoveState.step && Time.time > fStepBeginningTime + fStepTime)
@@ -213,7 +213,7 @@ public class CommonKnughtController : MonoBehaviour
             MoveStatus = MoveState.step;
         }
     }
-    void UpdateShadow()
+    void UpdateShadow()        //code for blob shadow
     {
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
         Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
@@ -223,7 +223,7 @@ public class CommonKnughtController : MonoBehaviour
         else shadow.transform.localScale = new Vector3(2, .6f, 1) * hit.distance;
     }
 
-    public void DisableMovementFor(float _time)
+    public void DisableMovementFor(float _time)     //to stun enemies while they take knockback
     {
         noMovement = true;
         EndStep();
