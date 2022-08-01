@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DamageHandler : MonoBehaviour
 {
+    [SerializeField] float knockbackFactor;
+
     [field: SerializeField] public int iHealth { get; private set; } = 100;
     Rigidbody2D rb;
     public bool isInvincible { get; protected set; } = false;
@@ -80,7 +82,7 @@ public class DamageHandler : MonoBehaviour
                     StartInvincibility(0.5f);
                     GetComponent<playerController>().DisableMovementFor(0.6f);
                     rb.velocity = new Vector2(0, rb.velocity.y);
-                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.3f) * 3000);
+                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.3f) * 3000 * knockbackFactor);
                     break;
             }
         }

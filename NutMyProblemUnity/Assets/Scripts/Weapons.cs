@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class Weapons : MonoBehaviour
 {
+    [SerializeField] float rangeFactor;
     public Weapon sword { get; protected set; }
     public Weapon bow { get; protected set; }
     public Weapon gloves { get; protected set; }
@@ -24,7 +25,7 @@ public class Weapons : MonoBehaviour
         fists = gameObject.AddComponent<Fists>();
 
         allWeapons = new List<Weapon> { sword, gloves, fists };     //all weapons the player could pick up
-        availableWeapons = new List<Weapon> { fists, sword };               //all weapons the player currently has
+        availableWeapons = new List<Weapon> { sword , fists};               //all weapons the player currently has
 
         currentWeapon = availableWeapons[0];                        //the weapon the player has equipped
     }
@@ -104,6 +105,7 @@ public class Weapons : MonoBehaviour
             weapon.player = this.gameObject;
             weapon.playerController = GetComponent<playerController>();
             weapon.rb = GetComponent<Rigidbody2D>();
+            weapon.fRange *= GetComponent<Weapons>().rangeFactor;
         }
     }
 

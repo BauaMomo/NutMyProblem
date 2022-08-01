@@ -26,7 +26,6 @@ public class MenuManager : MonoBehaviour
 
     Toggle fullscreenToggle;
 
-
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -35,7 +34,12 @@ public class MenuManager : MonoBehaviour
         SettingsMenuPanel = transform.Find("SettingsMenu").gameObject;
         PauseMenuPanel = transform.Find("PauseMenu").gameObject;
         LastMenuPanel = MainMenuPanel;
-        MenuList = new List<GameObject>() { MainMenuPanel, SettingsMenuPanel, PauseMenuPanel };
+
+        MenuList = new List<GameObject>();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            MenuList.Add(transform.GetChild(i).gameObject);
+        }
 
         MainMenu = SceneManager.GetSceneByName("MainMenu");
         SampleScene = SceneManager.GetSceneByName("SampleScene");
@@ -62,9 +66,12 @@ public class MenuManager : MonoBehaviour
             Time.timeScale = 1.0f;
         }
 
-        TMPro.TextMeshProUGUI toggleFullscreenText = transform.Find("SettingsMenu/ToggleFullscreen/Text (TMP)").GetComponent<TMPro.TextMeshProUGUI>();
-        if (Screen.fullScreen) toggleFullscreenText.SetText("Fullscreen");
-        else toggleFullscreenText.SetText("Windowed");
+        if (SettingsMenuPanel.activeSelf)
+        {
+            TMPro.TextMeshProUGUI toggleFullscreenText = transform.Find("SettingsMenu/ToggleFullscreen/Text (TMP)").GetComponent<TMPro.TextMeshProUGUI>();
+            if (Screen.fullScreen) toggleFullscreenText.SetText("Fullscreen");
+            else toggleFullscreenText.SetText("Windowed");
+        }
     }
 
     //---- Main Menu ----
@@ -82,6 +89,39 @@ public class MenuManager : MonoBehaviour
     public void OnExitButton()
     {
         Application.Quit();
+    }
+
+    public void OnPlayerTestAButton()
+    {
+        SceneManager.LoadScene("PlayerTest A");
+    }
+    public void OnPlayerTestBButton()
+    {
+        SceneManager.LoadScene("PlayerTest B");
+    }
+    public void OnHazardnutTestAButton()
+    {
+        SceneManager.LoadScene("HazardnutTest A");
+    }
+    public void OnHazardnutTestBButton()
+    {
+        SceneManager.LoadScene("HazardnutTest B");
+    }
+    public void OnCameraTestAButton()
+    {
+        SceneManager.LoadScene("CameraTest A");
+    }
+    public void OnCameraTestBButton()
+    {
+        SceneManager.LoadScene("CameraTest B");
+    }
+    public void OnCameraTestCButton()
+    {
+        SceneManager.LoadScene("CameraTest C");
+    }
+    public void OnCameraTestDButton()
+    {
+        SceneManager.LoadScene("CameraTest D");
     }
 
     //---- Pause Menu ----
@@ -117,7 +157,7 @@ public class MenuManager : MonoBehaviour
     public void OnChangeResolution()
     {
         Vector2Int newResolution = resolutions[resolutionDropdown.value];
-        Debug.Log(newResolution.ToString());
+        //Debug.Log(newResolution.ToString());
 
         Screen.SetResolution(newResolution.x, newResolution.y, Screen.fullScreen);
     }
@@ -135,12 +175,16 @@ public class MenuManager : MonoBehaviour
 
     public void OnSceneChange(Scene _a, Scene _b)
     {
-        Debug.Log("Scene changed");
+        Debug.Log("Scene changed to " + _b.name);
+
+        if (_b == SceneManager.GetSceneByName("MainMenu"))
+        {
+            SceneManager.activeSceneChanged -= OnSceneChange;
+            DestroyImmediate(this.gameObject);
+            return;
+        }
 
         gamePaused = false;
         foreach (GameObject menu in MenuList) menu.SetActive(false);
-
-        if (_b == SceneManager.GetSceneByName("MainMenu")) MainMenuPanel.SetActive(true);
-        if (_b == SceneManager.GetSceneByName("SampleScene")) Debug.Log("Game");
     }
 }
