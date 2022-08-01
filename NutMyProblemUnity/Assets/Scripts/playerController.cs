@@ -113,7 +113,7 @@ public class playerController : MonoBehaviour
             }
         }
 
-        
+
     }
 
     bool IsAttackting()
@@ -127,8 +127,8 @@ public class playerController : MonoBehaviour
         Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
 
         shadow.transform.position = new Vector2(transform.position.x, hit.point.y);                                     //Draws the shadow at the intersection of the ray and the next collider on the layer "Floor"
-        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, 1, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
-        else shadow.transform.localScale = new Vector3(2, 1, 1) * hit.distance;
+        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, .6f, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
+        else shadow.transform.localScale = new Vector3(2, .6f, 1) * hit.distance;
     }
 
     void MoveDeathBarrier()
@@ -147,11 +147,23 @@ public class playerController : MonoBehaviour
         noMovement = false;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut")
+        {
+            //GetComponent<DamageHandler>().HandleDamage(20, collision.gameObject);
+            DisableMovementFor(0.4f);
+            Vector2 dirToOther = collision.transform.position - transform.position;
+            if (isGrounded) rb.AddForce(-dirToOther * 1000 + new Vector2(0, 200));
+            else rb.AddForce(-dirToOther * 400 + new Vector2(Random.Range(-400, 400), 0));
+        }
+    }
+
     // v Unity InputSystem Stuff v
 
     public void OnExit(InputAction.CallbackContext context)
     {
-        if(context.started) GameObject.Find("Menus").GetComponent<MenuManager>().OnEsc(context);
+        if (context.started) GameObject.Find("Menus").GetComponent<MenuManager>().OnEsc(context);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -198,7 +210,7 @@ public class playerController : MonoBehaviour
     {
         if (context.started)
         {
-            Collider2D[] searchColliders = Physics2D.OverlapCircleAll(this.transform.position, 2);      //creates an array of colliders within a certain radius
+            Collider2D[] searchColliders = Physics2D.OverlapCircleAll(this.transform.position, 2.1f);      //creates an array of colliders within a certain radius
             List<GameObject> AllGO = new List<GameObject>();
 
             foreach (Collider2D c in searchColliders)
@@ -214,6 +226,7 @@ public class playerController : MonoBehaviour
                 {
                     case "WeaponDrop":
                         PickUpDrop(go);
+                        GetComponent<DamageHandler>().HandleHealing(20);
                         return;
                     case "Lever":
                         go.GetComponent<LeverController>().SwitchLever();
@@ -268,8 +281,8 @@ public class playerController : MonoBehaviour
 
     public bool IsDashAvailable()
     {
-        if(!hasDash) return false;
-        if(moveDir == 0) return false;
+        if (!hasDash) return false;
+        if (moveDir == 0) return false;
         return Time.time > lastDashTime + fDashCooldown;
     }
 

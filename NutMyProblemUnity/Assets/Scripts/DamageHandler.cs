@@ -52,6 +52,11 @@ public class DamageHandler : MonoBehaviour
         isInvincible = false;
     }
 
+    public void HandleHealing(int _ammount)
+    {
+        iHealth = Mathf.Clamp(iHealth + _ammount, 0, 100);
+    }
+
     public void HandleDamage(int _damage, GameObject _other)
     {
         if (isInvincible) return;
@@ -75,19 +80,29 @@ public class DamageHandler : MonoBehaviour
                     StartInvincibility(0.5f);
                     GetComponent<playerController>().DisableMovementFor(0.6f);
                     rb.velocity = new Vector2(0, rb.velocity.y);
-                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.3f) * 2000);
+                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.3f) * 3000);
                     break;
             }
         }
-        if (this.tag == "CommonKnught" || this.tag == "Hazardnut")
+        if (this.tag == "CommonKnught")
         {
             StartInvincibility(0.3f);
-            if (this.tag == "Hazardnut") hAnimationController.OnDamaged.Invoke();
-            if (this.tag == "CommonKnught") cAnimationController.OnDamaged.Invoke();
-
+            cAnimationController.OnDamaged.Invoke();
+            GetComponent<CommonKnughtController>().DisableMovementFor(0.5f);
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
-            rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 4);
+            rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 20);
+        }
+
+        if (this.tag == "Hazardnut")
+        {
+            StartInvincibility(0.3f);
+            hAnimationController.OnDamaged.Invoke();
+            GetComponent<HazardnutController>().DisableMovementFor(0.5f);
+            Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
+            Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
+            rb.AddForce(-directionToOther * 5000);
+
         }
     }
 }

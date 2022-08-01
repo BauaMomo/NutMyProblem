@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class HazardnutController : MonoBehaviour
 {
+    GameObject shadow;
+
     public enum directions { right, left };
     public directions HazardnutDirection;
 
@@ -35,9 +37,10 @@ public class HazardnutController : MonoBehaviour
     public float fGlovesAttackSpeed { get; protected set; }
     public float fRange { get; protected set; }
     float lastAttackTime = -10f;
-    float attackCooldown = 3f; 
+    float attackCooldown = 3f;
     [SerializeField] float fHazardnutPathStartPoint;
     [SerializeField] float fHazardnutPathEndPoint;
+    float originalSpeed;
     float fHazardnutSpeed;
     float fHazardnutChargeSpeed;
     float fColliderSpawnTime;
@@ -49,14 +52,18 @@ public class HazardnutController : MonoBehaviour
     RaycastHit2D[] raycastArray = new RaycastHit2D[3];
 
     public bool battack;
+    private bool noMovement;
 
     // Start is called before the first frame update
     void Start()
     {
+        shadow = transform.Find("BlobShadow").gameObject;
+
         OnAttack = new UnityEvent();
         OnAttack.AddListener(GetComponent<HazardnutAnimationController>().OnAttack);
 
-        fHazardnutSpeed = 6;
+        originalSpeed = 6;
+        fHazardnutSpeed = originalSpeed;
         fHazardnutChargeSpeed = 25;
 
         gm = Object.FindObjectOfType<GameManager>();
@@ -66,7 +73,7 @@ public class HazardnutController : MonoBehaviour
         mode = AIMode.waiting;
 
 
-        iGlovesDamage = 30;
+        iGlovesDamage = 40;
         fGlovesAttackSpeed = 0.5f;
         fRange = 3.5f;
 
@@ -78,7 +85,7 @@ public class HazardnutController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        UpdateShadow();
     }
 
     private void FixedUpdate()
@@ -93,6 +100,8 @@ public class HazardnutController : MonoBehaviour
 
     IEnumerator EnemyMovement()
     {
+        if (noMovement) yield break;
+
         switch (mode)
         {
             case AIMode.patrol:
@@ -225,6 +234,18 @@ public class HazardnutController : MonoBehaviour
 
             case AIMode.waiting:
 
+                Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(transform.position, 4);
+
+                foreach (Collider2D collider in collider2Ds)
+                {
+                    if (collider.tag == "Player")
+                    {
+                        Target = collider.transform;
+                        bHazardnutAwake = true;
+                        return true;
+                    }
+                }
+
                 raycastArray[0] = Physics2D.Linecast(transform.position, transform.position + new Vector3(0, -5), 1 << LayerMask.NameToLayer("Player"));
                 raycastArray[1] = Physics2D.Linecast(transform.position, transform.position + new Vector3(5, -5), 1 << LayerMask.NameToLayer("Player"));
                 raycastArray[2] = Physics2D.Linecast(transform.position, transform.position + new Vector3(-5, -5), 1 << LayerMask.NameToLayer("Player"));
@@ -273,6 +294,28 @@ public class HazardnutController : MonoBehaviour
         }*/
     }
 
+    public void DisableMovementFor(float _time)
+    {
+        if (mode == AIMode.attack) return;
+        noMovement = true;
+        Invoke(nameof(EnableMovement), _time);
+    }
+
+    void EnableMovement()
+    {
+        noMovement = false;
+    }
+
+    void UpdateShadow()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
+        Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
+
+        shadow.transform.position = new Vector2(transform.position.x, hit.point.y);                                     //Draws the shadow at the intersection of the ray and the next collider on the layer "Floor"
+        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, .6f, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
+        else shadow.transform.localScale = new Vector3(2, .6f, 1) * hit.distance;
+    }
+
     public void HazardnutDeath()
     {
         if (!gm.changingScene)
@@ -287,11 +330,14 @@ public class HazardnutController : MonoBehaviour
         }
     }
 
-
-
+    void ResetSpeed()
+    {
+        fHazardnutSpeed = originalSpeed;
+    }
 
     public IEnumerator GlovesAttack(directions _directions)
     {
+        if(noMovement) yield break;
 
         if (Time.time > lastAttackTime + attackCooldown)
         {
@@ -316,6 +362,9 @@ public class HazardnutController : MonoBehaviour
             }
             weaponTrigger.transform.position = Hazardnut.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
             Destroy(weaponTrigger, 0.5f);
+
+            fHazardnutSpeed = originalSpeed / 2;
+            Invoke(nameof(ResetSpeed), 1.5f);
         }
     }
 
