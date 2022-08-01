@@ -22,7 +22,7 @@ public class playerController : MonoBehaviour
 
     public bool noMovement;
 
-    public float lastDashTime { get; protected set; }
+    public float lastDashTime { get; protected set; } = float.MinValue;
     public float fDashLength { get; protected set; } = .4f;
     public float fDashCooldown { get; } = .8f;
     float fDashStartHeight;
@@ -39,8 +39,7 @@ public class playerController : MonoBehaviour
     bool rightRay;
     public bool isSprinting { get; protected set; } = false;
 
-    float fJumpStartTime;
-    float fCollExitTime;
+    float fJumpStartTime = float.MinValue;
 
     public float moveDir { get; protected set; }
     public bool isHoldingJump { get; protected set; } = false;
@@ -90,7 +89,7 @@ public class playerController : MonoBehaviour
     void MovePlayer()
     {
         rb.gravityScale = defaultGravity;
-        if (moveDir == 0 && isGrounded) rb.drag = stillDrag;
+        if (moveDir == 0 && isGrounded && !noMovement) rb.drag = stillDrag;
         else rb.drag = defaultDrag;
 
         IsDashAvailable();
@@ -149,6 +148,11 @@ public class playerController : MonoBehaviour
     }
 
     // v Unity InputSystem Stuff v
+
+    public void OnExit(InputAction.CallbackContext context)
+    {
+        if(context.started) GameObject.Find("Menus").GetComponent<MenuManager>().OnEsc(context);
+    }
 
     public void OnMove(InputAction.CallbackContext context)
     {
