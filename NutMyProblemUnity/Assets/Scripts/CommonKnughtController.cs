@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class CommonKnughtController : MonoBehaviour
 {
+    GameObject shadow;
+
     public UnityEvent OnAttack;
 
     public enum directions { right, left };
@@ -30,6 +32,7 @@ public class CommonKnughtController : MonoBehaviour
     Transform Target;
     public Transform TPlayer;
 
+    public Vector2 goal;
     Vector2 endPosition;
     Vector2 startPosition;
     Vector2 WeaponDropPosition;
@@ -44,19 +47,29 @@ public class CommonKnughtController : MonoBehaviour
     float attackStartTime;
     float fStepTime;
     float fStandingTime;
+    float patrolStandingTime = 2f;
+    float followStandingTime = 0.7f;
     float fStepBeginningTime;
     float fStandingBeginningTime;
 
     public int iSwordDamage;
+    bool noMovement;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        shadow = transform.Find("BlobShadow").gameObject;
+
         OnAttack = new UnityEvent();
         OnAttack.AddListener(GetComponent<CommonKnughtAnimationController>().OnAttack);
 
-        fCommonKnughtSpeed = 4;
+        endPosition = new Vector2(fCommonKnughtPathEndPoint, transform.position.y);
+        startPosition = new Vector2(fCommonKnughtPathStartPoint, transform.position.y);
+
+        goal = startPosition;
+
+        fCommonKnughtSpeed = 6;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
@@ -65,105 +78,74 @@ public class CommonKnughtController : MonoBehaviour
 
         iSwordDamage = 20;
         iAttackSpeed = 1;
-        iRange = 1.5f;
+        iRange = 2f;
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         CommonKnught = this.gameObject;
 
         fStepTime = 1;
-        fStandingTime = 1.5f;
+        fStandingTime = patrolStandingTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        endPosition = new Vector2(fCommonKnughtPathEndPoint, transform.position.y);
-        startPosition = new Vector2(fCommonKnughtPathStartPoint, transform.position.y);
 
+        UpdateShadow();
         EnemyMovement();
         TarggetPlayer();
         SwitchMovementMode();
         FlipEnemy();
 
-        if (Vector3.Distance(transform.position, TPlayer.position) < 4.25f)
+        if (TarggetPlayer())
             StartCoroutine(SwordAttack(CommonKnughtDirection));
     }
 
 
     void EnemyMovement()
     {
+        if (noMovement) return;
+
+        //if (rb.velocity.y < 0 && rb.velocity.y > -30) rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 1.05f);
+
         switch (mode)
         {
             case AIMode.patrol:
-                if (transform.position.x < startPosition.x)
-                {
-                    CommonKnughtMoveDirection = new Vector3(6, 0, 0);
-                    CommonKnughtDirection = directions.right;
-                    FlipEnemy();
-                }
-
-                if (transform.position.x > endPosition.x)
-                {
-                    CommonKnughtMoveDirection = new Vector3(-6, 0, 0);
-                    CommonKnughtDirection = directions.left;
-                    FlipEnemy();
-                }
-
-                if (transform.position.x >= startPosition.x && CommonKnughtDirection == directions.right)
-                {
-                    CommonKnughtMoveDirection = new Vector3(6, 0, 0);
-                    if (transform.position.x >= endPosition.x)
-                    {
-                        CommonKnughtDirection = directions.left;
-                        FlipEnemy();
-                    }
-                }
-
-                if (transform.position.x <= endPosition.x && CommonKnughtDirection == directions.left)
-                {
-                    CommonKnughtMoveDirection = new Vector3(-6, 0, 0);
-                    if (transform.position.x <= fCommonKnughtPathStartPoint)
-                    {
-                        CommonKnughtDirection = directions.right;
-                        FlipEnemy();
-                    }
-                }
-
-
-                switch (MoveStatus)
-                {
-                    case MoveState.stand:
-                        //Invoke(nameof(EndStep), 0.1f);
-                        break;
-
-                    case MoveState.step:
-                        //Invoke(nameof(StartStep), 0.25f);
-                        break;
-                }
-
-
+                if (Vector2.Distance(transform.position, startPosition) < 1) goal = endPosition;
+                if (Vector2.Distance(transform.position, endPosition) < 1) goal = startPosition;
+                fStandingTime = patrolStandingTime;
                 break;
 
             case AIMode.follow:
-                rb.velocity = new Vector2(Mathf.Sign(Target.position.x - transform.position.x), 0) * fCommonKnughtSpeed;
-                //rb.MovePosition(Vector2.MoveTowards(transform.position, Target.position, fCommonKnughtSpeed * Time.deltaTime));
+                goal = Target.position;
+                fStandingTime = followStandingTime;
                 break;
-
         }
 
+        if (transform.position.x < goal.x)
+        {
+            CommonKnughtMoveDirection = new Vector3(1, 0, 0) * fCommonKnughtSpeed;
+            CommonKnughtDirection = directions.right;
+        }
+
+        if (transform.position.x > goal.x)
+        {
+            CommonKnughtMoveDirection = new Vector3(1, 0, 0) * -fCommonKnughtSpeed;
+            CommonKnughtDirection = directions.left;
+        }
+        FlipEnemy();
     }
 
     public void StartStep()
     {
-        if (mode == AIMode.follow) return;
+        if (noMovement) return;
 
-        rb.AddForce(CommonKnughtMoveDirection * 200);
+        rb.AddForce(CommonKnughtMoveDirection * 100);
         fStandingTime = Random.Range(fStandingTime - 0.5f, fStepTime + 0.5f);
     }
 
     public void EndStep()
     {
-        if (mode == AIMode.follow) return;
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
@@ -182,26 +164,21 @@ public class CommonKnughtController : MonoBehaviour
                 RayCastVector = new Vector3(-5, 0);
                 break;
         }
-
-
-        //Spriteflip im follow mode
-        if (mode == AIMode.follow && transform.position.x < Target.position.x)
-        {
-            GetComponent<SpriteRenderer>().flipX = false;
-            CommonKnughtDirection = directions.right;
-            RayCastVector = new Vector3(5, 0);
-        }
-        if (mode == AIMode.follow && transform.position.x > Target.position.x)
-        {
-            GetComponent<SpriteRenderer>().flipX = true;
-            CommonKnughtDirection = directions.left;
-            RayCastVector = new Vector3(-5, 0);
-        }
-
     }
 
     bool TarggetPlayer()
     {
+        Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(transform.position, 2.5f);
+
+        foreach (Collider2D collider in collider2Ds)
+        {
+            if (collider.tag == "Player")
+            {
+                Target = collider.transform;
+                return true;
+            }
+        }
+
         RaycastHit2D hit = Physics2D.Linecast(transform.position, transform.position + RayCastVector, 1 << LayerMask.NameToLayer("Player"));
 
         if (hit.collider != null)
@@ -211,8 +188,6 @@ public class CommonKnughtController : MonoBehaviour
                 Target = hit.collider.transform;
                 return true;
             }
-            else
-            { return false; }
         }
         return false;
     }
@@ -220,7 +195,7 @@ public class CommonKnughtController : MonoBehaviour
     void SwitchMovementMode()
     {
 
-        if (TarggetPlayer() == true)
+        if (TarggetPlayer())
         { mode = AIMode.follow; }
 
         if (Vector3.Distance(transform.position, TPlayer.transform.position) > 10)
@@ -237,6 +212,27 @@ public class CommonKnughtController : MonoBehaviour
             fStepBeginningTime = Time.time;
             MoveStatus = MoveState.step;
         }
+    }
+    void UpdateShadow()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
+        Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
+
+        shadow.transform.position = new Vector2(transform.position.x, hit.point.y);                                     //Draws the shadow at the intersection of the ray and the next collider on the layer "Floor"
+        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, .6f, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
+        else shadow.transform.localScale = new Vector3(2, .6f, 1) * hit.distance;
+    }
+
+    public void DisableMovementFor(float _time)
+    {
+        noMovement = true;
+        EndStep();
+        Invoke(nameof(EnableMovement), _time);
+    }
+
+    void EnableMovement()
+    {
+        noMovement = false;
     }
 
     public void CommonKnughtDeath()
@@ -265,7 +261,7 @@ public class CommonKnughtController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
-            weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(5, 1);
+            weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(7, 1);
 
 
             float fColliderXOffset = 0.5f + iRange / 2;

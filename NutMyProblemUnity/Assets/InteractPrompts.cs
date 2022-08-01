@@ -58,7 +58,7 @@ public class InteractPrompts : MonoBehaviour
 
         child.transform.localScale = spriteStartScale * spriteScale;
 
-        if (Vector2.Distance(transform.position, player.transform.position) < 3f) RespawnPrompt();
+        if (Vector2.Distance(transform.position, player.transform.position) <= 3f) RespawnPrompt();
         if (Vector2.Distance(transform.position, player.transform.position) > 3f) DespawnPrompt();
 
         MoveSprite();

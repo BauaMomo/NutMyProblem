@@ -112,11 +112,11 @@ public class Weapons : MonoBehaviour
         private void Start()
         {
             WeaponType = Type.Sword;
-            iDamage = 20;
+            iDamage = 40;
             fAttackSpeed = 2;
             fRange = 3f;
             attackMoveStrength = 4;
-            KnockbackVector = new Vector2(50, 20);
+            KnockbackVector = new Vector2(40, 20);
             SetUniversalVars(this);
         }
 
@@ -171,11 +171,11 @@ public class Weapons : MonoBehaviour
         private void Start()
         {
             WeaponType = Type.Gloves;
-            iDamage = 40;
+            iDamage = 60;
             fAttackSpeed = 0.8f;
             fRange = 3f;
             attackMoveStrength = 1000;
-            KnockbackVector = new Vector2(180, 50);
+            KnockbackVector = new Vector2(100, 50);
             SetUniversalVars(this);
         }
 
@@ -221,11 +221,11 @@ public class Weapons : MonoBehaviour
         private void Start()
         {
             WeaponType = Type.Fists;
-            iDamage = 10;
+            iDamage = 25;
             fAttackSpeed = 1.5f;
             fRange = 1.5f;
             attackMoveStrength = 300;
-            KnockbackVector = new Vector2(120, 80);
+            KnockbackVector = new Vector2(30, 60);
             SetUniversalVars(this);
         }
         public override IEnumerator Attack(playerController.direction _direction)
