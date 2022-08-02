@@ -91,6 +91,16 @@ public class MenuManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void OnLevelBlockoutButton()
+    {
+        SceneManager.LoadScene("LevelScene");
+    }
+
+    public void OnLevelBlockoutCheckpointButton()
+    {
+        SceneManager.LoadScene("LevelSceneCheckpoint");
+    }
+
     public void OnPlayerTestAButton()
     {
         SceneManager.LoadScene("PlayerTest A");

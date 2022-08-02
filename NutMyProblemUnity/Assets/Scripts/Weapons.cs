@@ -25,7 +25,7 @@ public class Weapons : MonoBehaviour
         fists = gameObject.AddComponent<Fists>();
 
         allWeapons = new List<Weapon> { sword, gloves, fists };     //all weapons the player could pick up
-        availableWeapons = new List<Weapon> { sword , fists};               //all weapons the player currently has
+        availableWeapons = new List<Weapon> { fists};               //all weapons the player currently has
 
         currentWeapon = availableWeapons[0];                        //the weapon the player has equipped
     }
