@@ -69,6 +69,8 @@ public class playerAnimationController : MonoBehaviour
         FistAnimations.Add(State.dashing, "Player_WithoutWeapon_Dash_Animation");
 
         playerState = State.idle;
+        SwitchAnimation(State.walking);
+        SwitchAnimation(State.idle);
     }
 
     // Update is called once per frame

@@ -21548,7 +21548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   afterAttackSpeed: 3
-  fHazardnutChargeSpeed: 20
+  fHazardnutChargeSpeed: 25
   HazardnutDirection: 0
   EnemyType: 1
   mode: 2

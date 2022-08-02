@@ -24585,7 +24585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e11d2050195f89469d9ffa969b076b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockbackFactor: 0
+  knockbackFactor: 1
   <iHealth>k__BackingField: 100
 --- !u!4 &8501232826854784006 stripped
 Transform:
