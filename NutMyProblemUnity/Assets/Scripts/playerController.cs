@@ -12,6 +12,7 @@ public class playerController : MonoBehaviour
     playerAnimationController playerAnimationController;
 
     GameObject shadow;
+    Vector2 ShadowRayStartOffset = new Vector2(0, -1);
     GameObject DeathBarrier;
     Camera PlayerCamera;
 
@@ -123,12 +124,12 @@ public class playerController : MonoBehaviour
 
     void UpdateShadow()
     {
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
-        Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + ShadowRayStartOffset, new Vector2(0, -1), 15f, 1 << LayerMask.NameToLayer("Floor"));
+        Debug.DrawLine((Vector2)transform.position + ShadowRayStartOffset, new Vector2(transform.position.x, hit.point.y), Color.red);
 
         shadow.transform.position = new Vector2(transform.position.x, hit.point.y);                                     //Draws the shadow at the intersection of the ray and the next collider on the layer "Floor"
-        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, .6f, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
-        else shadow.transform.localScale = new Vector3(2, .6f, 1) * hit.distance;
+        if (hit.distance > 1f) shadow.transform.localScale = 0.8f * new Vector3(2, .6f, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
+        else shadow.transform.localScale = new Vector3(2, .6f, 1) * 0.8f;
     }
 
     void MoveDeathBarrier()
