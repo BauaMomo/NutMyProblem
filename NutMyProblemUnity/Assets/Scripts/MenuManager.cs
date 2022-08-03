@@ -96,44 +96,6 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene("LevelScene");
     }
 
-    public void OnLevelBlockoutCheckpointButton()
-    {
-        SceneManager.LoadScene("LevelSceneCheckpoint");
-    }
-
-    public void OnPlayerTestAButton()
-    {
-        SceneManager.LoadScene("PlayerTest A");
-    }
-    public void OnPlayerTestBButton()
-    {
-        SceneManager.LoadScene("PlayerTest B");
-    }
-    public void OnHazardnutTestAButton()
-    {
-        SceneManager.LoadScene("HazardnutTest A");
-    }
-    public void OnHazardnutTestBButton()
-    {
-        SceneManager.LoadScene("HazardnutTest B");
-    }
-    public void OnCameraTestAButton()
-    {
-        SceneManager.LoadScene("CameraTest A");
-    }
-    public void OnCameraTestBButton()
-    {
-        SceneManager.LoadScene("CameraTest B");
-    }
-    public void OnCameraTestCButton()
-    {
-        SceneManager.LoadScene("CameraTest C");
-    }
-    public void OnCameraTestDButton()
-    {
-        SceneManager.LoadScene("CameraTest D");
-    }
-
     //---- Pause Menu ----
     public void OnContinueButton()
     {
