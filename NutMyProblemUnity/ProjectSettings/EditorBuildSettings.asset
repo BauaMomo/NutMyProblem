@@ -11,37 +11,37 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
-    path: Assets/Scenes/CameraTest A.unity
-    guid: 8165c02620288a04294d226240f632bb
-  - enabled: 1
-    path: Assets/Scenes/CameraTest B.unity
-    guid: 79536c49dd5b7564e956de2a138fff4d
-  - enabled: 1
-    path: Assets/Scenes/CameraTest C.unity
-    guid: 86b316e3b2403f44c8e87009620aff44
-  - enabled: 1
-    path: Assets/Scenes/CameraTest D.unity
-    guid: 51f3c2052000d9245b02a9fef5dacf3b
-  - enabled: 1
-    path: Assets/Scenes/HazardnutTest A.unity
-    guid: f0d5b6ed8f0ca8743b586a1f307e2d99
-  - enabled: 1
-    path: Assets/Scenes/HazardnutTest B.unity
-    guid: d49a720b0e37a314f908eafdee2dcfdc
-  - enabled: 1
-    path: Assets/Scenes/PlayerTest A.unity
-    guid: e818825c5c243964b95310a8ab1033b9
-  - enabled: 1
-    path: Assets/Scenes/PlayerTest B.unity
-    guid: 680d9654e17d801448a1a99e0ec4e8e2
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/LevelScene.unity
-    guid: 6dbf83b88cd6ff441870b8482d309b1e
-  - enabled: 1
-    path: Assets/Scenes/LevelSceneCheckpoint.unity
-    guid: 2ec67f11f70f9d147808c91a1e6c9417
+    path: Assets/Scenes/SampleScene.unity
+    guid: 69702830cf5ede54f8f58f36abae11a9
   m_configObjects: {}
