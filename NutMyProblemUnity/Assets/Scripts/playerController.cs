@@ -16,7 +16,7 @@ public class playerController : MonoBehaviour
     GameObject DeathBarrier;
     Camera PlayerCamera;
 
-    int iPlayerSpeed;
+    [SerializeField] int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
     [SerializeField] int iFallSpeed;
     [SerializeField] int iFallAcceleration;
@@ -66,11 +66,6 @@ public class playerController : MonoBehaviour
 
         PlayerCamera = Camera.main;
         PlayerCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
-
-        iPlayerSpeed = 12;
-        iJumpSpeed = 16;
-        iFallSpeed = 30;
-        iFallAcceleration = 70;
     }
 
     private void Update()

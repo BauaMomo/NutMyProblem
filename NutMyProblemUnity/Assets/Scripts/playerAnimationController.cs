@@ -68,7 +68,13 @@ public class playerAnimationController : MonoBehaviour
         FistAnimations.Add(State.falling, "Player_WithoutWeapon_Fall_Animation");
         FistAnimations.Add(State.dashing, "Player_WithoutWeapon_Dash_Animation");
 
-        playerState = State.idle;
+        
+
+    }
+
+    private void Awake()
+    {
+        currentAnimationState = State.walking;
     }
 
     // Update is called once per frame
