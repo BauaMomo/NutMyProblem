@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cab3e736a4cb89f4b9e679cd82db5f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraYOffset: 1.5
+  cameraYOffset: 3
   cameraSmoothing: 5
   predictingCamera: 0
 --- !u!114 &7395988492277562140
