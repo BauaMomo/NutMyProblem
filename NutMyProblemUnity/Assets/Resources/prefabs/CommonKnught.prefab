@@ -575,6 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e11d2050195f89469d9ffa969b076b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  knockbackFactor: 1
   <iHealth>k__BackingField: 100
 --- !u!70 &6034621536976202164
 CapsuleCollider2D:

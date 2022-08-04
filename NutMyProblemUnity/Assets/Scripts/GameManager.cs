@@ -15,8 +15,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        player = Instantiate(Resources.Load("prefabs/Player") as GameObject);
-        player.transform.position = new Vector2(0, 0);
+        player = transform.Find("Player").gameObject;
+        player.transform.parent = null;
+        //player.transform.position = new Vector2(0, 0);
 
 
     }
@@ -33,7 +34,7 @@ public class GameManager : MonoBehaviour
         if (player.GetComponent<DamageHandler>().iHealth <= 0)
         {
             changingScene = true;
-            SceneManager.LoadScene("SampleScene");
+            ReloadScene();
         }
     }
 }
