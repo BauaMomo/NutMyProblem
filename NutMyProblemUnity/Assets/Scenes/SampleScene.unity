@@ -20104,6 +20104,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1208762947}
     m_Modifications:
+    - target: {fileID: 7319751006799944564, guid: 5eeb3a5242d807843ba53624deff9577, type: 3}
+      propertyPath: isBridgeLowered
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7319751006799944565, guid: 5eeb3a5242d807843ba53624deff9577, type: 3}
       propertyPath: m_Name
       value: Drawbridge (1)

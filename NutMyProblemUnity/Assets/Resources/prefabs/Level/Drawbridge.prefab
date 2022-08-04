@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1561379668031340850}
   - component: {fileID: 3501249556317528827}
-  - component: {fileID: 6078325738068712795}
   - component: {fileID: 4527955024040065405}
   m_Layer: 0
   m_Name: DrawBridge_Open_InFront
@@ -86,21 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!111 &6078325738068712795
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 978606701491610409}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: a08e847e394c68947aeda3c53ecdf54c, type: 2}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!95 &4527955024040065405
 Animator:
   serializedVersion: 4
@@ -215,7 +199,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3447152381494240145}
   - component: {fileID: 3776097056160283685}
-  - component: {fileID: 1489561100286024530}
   - component: {fileID: 7254860758288230895}
   m_Layer: 0
   m_Name: DrawBridge_Open_Behind
@@ -291,21 +274,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!111 &1489561100286024530
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3979025035639723121}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: e857e658e1fc2f741891a3ac1bdd734a, type: 2}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!95 &7254860758288230895
 Animator:
   serializedVersion: 4
