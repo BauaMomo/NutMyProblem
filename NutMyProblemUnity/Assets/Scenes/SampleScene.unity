@@ -13729,17 +13729,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6302345894097048392, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
+      propertyPath: doorColor
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6302345894097048394, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6302345894097048394, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 86.987076
+      value: 89
       objectReference: {fileID: 0}
     - target: {fileID: 6302345894097048394, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.6878214
+      value: 3.25
       objectReference: {fileID: 0}
     - target: {fileID: 6302345894097048394, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13776,6 +13780,14 @@ PrefabInstance:
     - target: {fileID: 6302345896011075893, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
       propertyPath: canBeDeactivated
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302345896011075894, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302345896011075894, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
