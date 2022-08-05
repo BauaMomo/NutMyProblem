@@ -14,6 +14,9 @@ public class CameraManager : MonoBehaviour
     [SerializeField] bool predictingCamera;
 
     Vector2 oldMoveDir;
+    bool isInFallState;
+    bool oldIsInFallState;
+    bool oldIsGrounded;
 
     float lastMainXMoveDir;
     float lastXMoveDirChangeTime;
@@ -57,27 +60,55 @@ public class CameraManager : MonoBehaviour
         Vector3 goal = camPosOffset;
         camLocalPos = transform.position - player.transform.position;
 
+
         if (XMoveDir() == 0)
         {
             goal.x = Mathf.Clamp(camLocalPos.x, -3, 3);
             camStartPos.x = camLocalPos.x;
         }
-        if(YMoveDir() == 0)
+        if (YMoveDir() == 0)
         {
-            goal.y = Mathf.Clamp(camLocalPos.y, -3.5f, 3.5f);
+            goal.y = Mathf.Clamp(camLocalPos.y, -2f, 4f);
+            if (pCon.isGrounded)
+                goal.y = Mathf.Clamp(camLocalPos.y, 0f, 4f);
+            camStartPos.y = camLocalPos.y;
+        }
+        isInFallState = !pCon.isGrounded && pCon.moveVector.y < 0 && Time.time > lastYMoveDirChangeTime + 0.3f;
+        if (isInFallState)
+        {
+            //Debug.Log("falling");
+            goal.y = 0;
             camStartPos.y = camLocalPos.y;
         }
 
-        if (HasMoveDirChanged(mainMoveDir)) StartCamMove();
-        if (camMoveStarted) transform.position = MoveCam(goal);
-        if (!camMoveStarted) transform.position = goal + player.transform.position;
+
+
+        if (HasMoveDirChanged(mainMoveDir)) CancelCamMove();
+        StartCamMove();
+
+        Vector3 newLocalCamPos = new Vector3();
+        if (camMoveStarted) newLocalCamPos = MoveCam(goal);
+        if (!camMoveStarted) newLocalCamPos = goal;
+
+        newLocalCamPos = new Vector3(Mathf.Clamp(newLocalCamPos.x, -3, 3), Mathf.Clamp(newLocalCamPos.y, -3, 4), -10);
+
+        transform.position = Vector3.MoveTowards(transform.position, newLocalCamPos + player.transform.position, Mathf.Pow(Vector3.Distance(transform.position, newLocalCamPos + player.transform.position), 2) / 4);
+
+
+        //if (!camMoveStarted) transform.position = camLocalPos + player.transform.position;
+
+
 
         /* transform.position = MoveCamToPosition((Vector3)camPosOffset); */
     }
 
     Vector3 MoveCam(Vector3 _goal)
     {
-        if (Vector3.Distance(camLocalPos, _goal) < 0.1f) camMoveStarted = false;
+        if (Vector3.Distance(camLocalPos, _goal) < 0.1f)
+        {
+            camMoveStarted = false;
+            //Debug.Log("reached goal " + _goal);
+        }
 
         lerpPos = Mathf.Clamp(lerpPos + 0.05f * cameraSmoothing /* / Vector3.Distance(camStartPos, _goal) */, 0, 1);
 
@@ -85,7 +116,7 @@ public class CameraManager : MonoBehaviour
 
         Vector3 newCamPos = Vector3.Lerp(camStartPos, _goal, easedLerpPos);
 
-        return player.transform.position + newCamPos;
+        return newCamPos;
     }
 
     float CamSpeed(Vector3 _goal)
@@ -97,16 +128,40 @@ public class CameraManager : MonoBehaviour
 
     void StartCamMove()
     {
+        if (camMoveStarted) return;
+
         camStartPos = camLocalPos;
         camMoveStarted = true;
         lerpPos = 0;
     }
 
+    void CancelCamMove()
+    {
+        camMoveStarted = false;
+        lerpPos = 0;
+    }
+
     bool HasMoveDirChanged(Vector2 _newMoveDir)
     {
-        bool hasMoveDirChanged = _newMoveDir != oldMoveDir;
+        bool hasMoveDirChanged = _newMoveDir != oldMoveDir || HasChangedFallState() || HasChangedGroundedState();
         if (hasMoveDirChanged) oldMoveDir = _newMoveDir;
+        //if (hasMoveDirChanged) Debug.Log("move dir changed");
         return hasMoveDirChanged;
+    }
+
+    bool HasChangedFallState()
+    {
+        bool hasChangedFallState = isInFallState != oldIsInFallState;
+        if (hasChangedFallState) oldIsInFallState = isInFallState;
+        //if (hasChangedFallState) Debug.Log("fallstate changed");
+        return hasChangedFallState;
+    }
+
+    bool HasChangedGroundedState()
+    {
+        bool hasChangedGroundedState = pCon.isGrounded != oldIsGrounded;
+        if (hasChangedGroundedState) oldIsGrounded = pCon.isGrounded;
+        return hasChangedGroundedState;
     }
 
     float XMoveDir()
@@ -120,7 +175,7 @@ public class CameraManager : MonoBehaviour
             lastXMoveDirChangeTime = Time.time;
         lastMainXMoveDir = newMainXMoveDir;
 
-        if (Time.time > lastXMoveDirChangeTime + 0.2f)
+        if (Time.time > lastXMoveDirChangeTime + 0f)
         {
             return newMainXMoveDir;
         }
@@ -138,7 +193,7 @@ public class CameraManager : MonoBehaviour
             lastYMoveDirChangeTime = Time.time;
         lastMainYMoveDir = newMainYMoveDir;
 
-        if (Time.time > lastYMoveDirChangeTime + .5f)
+        if (Time.time > lastYMoveDirChangeTime + .6f)
         {
             return newMainYMoveDir;
         }

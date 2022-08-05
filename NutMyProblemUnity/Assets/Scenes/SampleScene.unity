@@ -13880,11 +13880,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7716982155159702639, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.57811
+      value: -2.1605914
       objectReference: {fileID: 0}
     - target: {fileID: 7716982155159702639, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.06447461
+      value: 3.6004014
       objectReference: {fileID: 0}
     - target: {fileID: 7716982155159702639, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14713,11 +14713,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: cameraYOffset
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: cameraSmoothing
-      value: 0.3
+      value: 0.24
       objectReference: {fileID: 0}
     - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: predictingCamera
