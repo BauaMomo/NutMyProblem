@@ -29,8 +29,12 @@ public class DrawbridgeController : MonoBehaviour
             //Debug.Log("trigger entered by " + collision.gameObject);
 
             Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
-            if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword && !isBridgeLowered) LowerBridge();
-        }
+            if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword && !isBridgeLowered)
+            {
+                LowerBridge();
+                FindObjectOfType<AudioManager>().Play("RopeCut");
+            }
+            }
     }
 
     void LowerBridge()

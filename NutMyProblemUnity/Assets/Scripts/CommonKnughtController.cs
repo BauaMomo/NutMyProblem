@@ -260,6 +260,7 @@ public class CommonKnughtController : MonoBehaviour
             attackStartTime = Time.time;
             OnAttack.Invoke();
 
+            FindObjectOfType<AudioManager>().Play("CommonKnughtAttack");
             yield return new WaitForSeconds(0.5f);
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
