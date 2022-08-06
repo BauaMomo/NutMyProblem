@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraYOffset: 0
-  cameraSmoothing: 0.25
+  cameraSpeed: 0.25
   predictingCamera: 1
 --- !u!114 &7395988492277562140
 MonoBehaviour:
