@@ -7550,7 +7550,7 @@ Transform:
   - {fileID: 1748011522}
   - {fileID: 692051479}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &830237086
 MonoBehaviour:
@@ -13892,11 +13892,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7716982155159702639, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.57811
+      value: -2.1605914
       objectReference: {fileID: 0}
     - target: {fileID: 7716982155159702639, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.06447461
+      value: 3.6004014
       objectReference: {fileID: 0}
     - target: {fileID: 7716982155159702639, guid: b4c851a2d96e49e49a57bbe732545530, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14681,7 +14681,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3117660733674253870, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3117660733674253870, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14689,7 +14689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3117660733674253870, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3117660733674253870, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14722,6 +14722,22 @@ PrefabInstance:
     - target: {fileID: 3117660733674253870, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
+      propertyPath: cameraSpeed
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
+      propertyPath: cameraYOffset
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
+      propertyPath: cameraSmoothing
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
+      propertyPath: predictingCamera
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7514707225379437874, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: m_Name
