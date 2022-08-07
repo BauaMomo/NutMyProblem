@@ -2137,11 +2137,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1211392178673090262, guid: 0f8eac02fa4812b4bb753b503514ce68, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 200
+      value: 207.45
       objectReference: {fileID: 0}
     - target: {fileID: 1211392178673090262, guid: 0f8eac02fa4812b4bb753b503514ce68, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7
+      value: 3.33
       objectReference: {fileID: 0}
     - target: {fileID: 1211392178673090262, guid: 0f8eac02fa4812b4bb753b503514ce68, type: 3}
       propertyPath: m_LocalPosition.z
@@ -19579,7 +19579,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1211392178673090262, guid: 0f8eac02fa4812b4bb753b503514ce68, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 1211392178673090262, guid: 0f8eac02fa4812b4bb753b503514ce68, type: 3}
       propertyPath: m_LocalPosition.x
@@ -23535,6 +23535,10 @@ PrefabInstance:
     - target: {fileID: 5240922825582385171, guid: 44d35f3f27efdeb42b3d8a509a51681a, type: 3}
       propertyPath: m_Name
       value: Window_Wall_Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 7295898950599411583, guid: 44d35f3f27efdeb42b3d8a509a51681a, type: 3}
+      propertyPath: m_PointLightInnerRadius
+      value: 2.072544
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44d35f3f27efdeb42b3d8a509a51681a, type: 3}
