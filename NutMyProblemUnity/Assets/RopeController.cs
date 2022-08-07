@@ -10,6 +10,8 @@ public class RopeController : MonoBehaviour
     GameObject Chandelier;
     float chandelierFallStartTime;
 
+    public ParticleSystem RopeCutParticle;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,8 +47,16 @@ public class RopeController : MonoBehaviour
         {
             //Debug.Log("trigger entered by " + collision.gameObject);
 
+            RopeCutParticle.Play();
+            StartCoroutine(StopParticle());
+
             Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
             if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword)    isRopeCut = true;
         }
+    }
+    IEnumerator StopParticle()
+    {
+        yield return new WaitForSeconds(0.5f);
+        RopeCutParticle.Stop();
     }
 }

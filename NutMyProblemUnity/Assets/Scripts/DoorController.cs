@@ -7,8 +7,8 @@ public class DoorController : MonoBehaviour
     GameObject DoorOpened;
     GameObject DoorClosed;
 
-    enum Color { red, green, blue, purple, orange }
-    [SerializeField] Color doorColor;
+    public enum Color { red, green, blue, purple, orange }
+    public Color doorColor;
 
     Color oldDoorColor;
 

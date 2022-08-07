@@ -9,6 +9,8 @@ public class DrawbridgeController : MonoBehaviour
 
     bool isBridgeLowered = false;
 
+    public ParticleSystem BridgeRopeCutParticle;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,8 @@ public class DrawbridgeController : MonoBehaviour
         {
             //Debug.Log("trigger entered by " + collision.gameObject);
 
+            BridgeRopeCutParticle.Play();
+            StartCoroutine(StopParticle());
             Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
             if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword && !isBridgeLowered) LowerBridge();
         }
@@ -39,5 +43,10 @@ public class DrawbridgeController : MonoBehaviour
 
         BridgeLowered.GetComponent<BoxCollider2D>().enabled = true;
         BridgeRaised.GetComponent<BoxCollider2D>().enabled = false;
+    }
+    IEnumerator StopParticle()
+    {
+        yield return new WaitForSeconds(0.5f);
+        BridgeRopeCutParticle.Stop();
     }
 }

@@ -8,6 +8,9 @@ public class BreakableWallController : MonoBehaviour
 
     GameObject WallCracked;
 
+    public ParticleSystem WallBrickParticle;
+    public ParticleSystem WallSmokeParticle;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +27,9 @@ public class BreakableWallController : MonoBehaviour
     {
         isWallBroken = true;
 
+        WallBrickParticle.Play();
+        WallSmokeParticle.Play();
+
         WallCracked.GetComponent<SpriteRenderer>().enabled = false;
         WallCracked.GetComponent<BoxCollider2D>().enabled = false;
     }
@@ -31,6 +37,16 @@ public class BreakableWallController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
-        if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves && !isWallBroken) BreakWall();
+        if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves && !isWallBroken)
+        {
+            BreakWall();
+            StartCoroutine(StopParticle());
+        }
+    }
+    IEnumerator StopParticle()
+    {
+        yield return new WaitForSeconds(0.5f);
+        WallBrickParticle.Stop();
+        WallSmokeParticle.Stop();
     }
 }

@@ -47,6 +47,12 @@ public class playerController : MonoBehaviour
     public enum direction { right, left };
     public direction playerDirection { get; protected set; }
 
+    public ParticleSystem PlayerDashParticle;
+    ParticleSystem.ShapeModule ShapeModuleDash;
+
+    public ParticleSystem PlayerLandingParticle;
+    public bool PlayedLandingParticle;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -68,6 +74,9 @@ public class playerController : MonoBehaviour
         iJumpSpeed = 16;
         iFallSpeed = 30;
         iFallAcceleration = 70;
+
+        ShapeModuleDash = PlayerDashParticle.shape;
+        PlayedLandingParticle = false;
     }
 
     private void Update()
@@ -77,26 +86,59 @@ public class playerController : MonoBehaviour
         MovePlayer();
         UpdateShadow();
         MoveDeathBarrier();
+        DashParticleDirection();
+        PlayLandingParicle();
     }
 
+    void DashParticleDirection()
+    {
+        switch(playerDirection)
+        {
+            case direction.left:
+                ShapeModuleDash.rotation = new Vector3(180, 0, 0);
+                break;
+                case direction.right:
+                ShapeModuleDash.rotation = new Vector3(0,0,0);
+                break;
+        }
+
+    }
+    void PlayLandingParicle()
+    {
+        if (PlayedLandingParticle == false && isGrounded == true)
+        {
+            PlayerLandingParticle.Play();
+            PlayedLandingParticle = true;
+        }
+        if (isGrounded == false)
+            PlayedLandingParticle = false;
+
+    }
     void MovePlayer()
     {
         rb.gravityScale = defaultGravity;
 
         IsDashAvailable();
-        if (Time.time > lastDashTime + fDashLength) isDashing = false;
+        if (Time.time > lastDashTime + fDashLength)
+        {
+            isDashing = false;
+            PlayerDashParticle.Stop();
+        }
         if (isDashing) rb.gravityScale = dashGravity;
 
         if (!noMovement)
         {
             if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
         }
-        else if(Time.time > noMovementEndTime) noMovement = false;
+        else if (Time.time > noMovementEndTime) noMovement = false;
 
         if (!isDashing)
         {
             if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                   //higher than standard fall speed
+            {
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
+
+            }
 
             if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)                                  //higher jump if jump button is held down
             {
@@ -104,7 +146,7 @@ public class playerController : MonoBehaviour
             }
         }
 
-        
+
     }
 
     void UpdateShadow()
@@ -218,6 +260,7 @@ public class playerController : MonoBehaviour
     {
         if (context.started && IsDashAvailable())
         {
+            PlayerDashParticle.Play();
             isDashing = true;
             lastDashTime = Time.time;
 
@@ -234,8 +277,8 @@ public class playerController : MonoBehaviour
 
     public bool IsDashAvailable()
     {
-        if(!hasDash) return false;
-        if(moveDir == 0) return false;
+        if (!hasDash) return false;
+        if (moveDir == 0) return false;
         return Time.time > lastDashTime + fDashCooldown;
     }
 

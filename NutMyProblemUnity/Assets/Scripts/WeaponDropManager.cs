@@ -7,10 +7,13 @@ public class WeaponDropManager : MonoBehaviour
     public Weapons.Weapon.Type WeaponType;
     SpriteRenderer spriteRenderer;
 
+    public ParticleSystem EnemyDeathParticle;
+
     // Start is called before the first frame update
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        EnemyDeathParticle.Play();
     }
 
     public void SetType(Weapons.Weapon.Type _weaponType)
