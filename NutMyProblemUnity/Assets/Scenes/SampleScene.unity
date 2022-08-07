@@ -6254,19 +6254,19 @@ MonoBehaviour:
   sounds:
   - name: PlayerAttack
     clip: {fileID: 8300000, guid: 2ac205a43b4c58544a145bafcf501a82, type: 3}
-    volume: 0.634
+    volume: 0.098
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: PlayerDamage
     clip: {fileID: 8300000, guid: 8d9b99a8b207d4a4782457f62b14b46b, type: 3}
-    volume: 0.634
+    volume: 0.087
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: PlayerFootstep
     clip: {fileID: 8300000, guid: d79c4de8a9d50c249b27451bd6672dc5, type: 3}
-    volume: 1
+    volume: 0.62
     pitch: 1
     source: {fileID: 0}
     loop: 0
