@@ -49,6 +49,9 @@ public class playerController : MonoBehaviour
     public enum direction { right, left };
     public direction playerDirection { get; protected set; }
 
+    Vector2 oldPos;
+    public Vector2 moveVector;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -78,6 +81,10 @@ public class playerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector2 newPos = transform.position;
+        moveVector = (newPos - oldPos).normalized;
+        //Debug.Log(moveVector);
+        oldPos = transform.position;
         MovePlayer();
 
     }
@@ -142,7 +149,7 @@ public class playerController : MonoBehaviour
     {
         noMovement = false;
     }
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut")

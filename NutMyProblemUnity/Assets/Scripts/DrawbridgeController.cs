@@ -7,19 +7,26 @@ public class DrawbridgeController : MonoBehaviour
     GameObject BridgeRaised;
     GameObject BridgeLowered;
 
-    bool isBridgeLowered = false;
+    public bool isBridgeLowered = false;
 
     // Start is called before the first frame update
     void Start()
     {
         BridgeRaised = transform.Find("Drawbridge_Raised").gameObject;
         BridgeLowered = transform.Find("Drawbridge_Lowered").gameObject;
+
+        BridgeLowered.SetActive(false);
+        BridgeRaised.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (!isBridgeLowered)
+        {
+            BridgeRaised.SetActive(true);
+            BridgeLowered.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -41,7 +48,10 @@ public class DrawbridgeController : MonoBehaviour
     {
         isBridgeLowered = true;
 
-        BridgeLowered.GetComponent<BoxCollider2D>().enabled = true;
-        BridgeRaised.GetComponent<BoxCollider2D>().enabled = false;
+        //BridgeLowered.GetComponent<BoxCollider2D>().enabled = true;
+        // BridgeRaised.GetComponent<BoxCollider2D>().enabled = false;
+
+        BridgeRaised.SetActive(false);
+        BridgeLowered.SetActive(true);
     }
 }
