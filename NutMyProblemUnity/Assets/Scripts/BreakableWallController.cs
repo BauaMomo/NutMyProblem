@@ -31,6 +31,10 @@ public class BreakableWallController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
-        if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves && !isWallBroken) BreakWall();
+        if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves && !isWallBroken)
+        {
+            BreakWall();
+            FindObjectOfType<AudioManager>().Play("WallBreak");
+        }
     }
 }

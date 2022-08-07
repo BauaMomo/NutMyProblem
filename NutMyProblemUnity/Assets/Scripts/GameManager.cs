@@ -18,8 +18,6 @@ public class GameManager : MonoBehaviour
         player = transform.Find("Player").gameObject;
         player.transform.parent = null;
         //player.transform.position = new Vector2(0, 0);
-
-
     }
 
     public void ReloadScene()

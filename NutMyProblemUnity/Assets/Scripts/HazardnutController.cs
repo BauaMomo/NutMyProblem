@@ -223,7 +223,9 @@ public class HazardnutController : MonoBehaviour
                         Target = hit.collider.transform;
 
                         if (Vector3.Distance(transform.position, TPlayer.position) < 10)
+                        {
                             StartCoroutine(GlovesAttack(HazardnutDirection));
+                        }
                         return true;
                     }
 
@@ -338,10 +340,12 @@ public class HazardnutController : MonoBehaviour
 
     public IEnumerator GlovesAttack(directions _directions)
     {
-        if(noMovement) yield break;
+        
+        if (noMovement) yield break;
 
         if (Time.time > lastAttackTime + attackCooldown)
         {
+            FindObjectOfType<AudioManager>().Play("HazardnutAttack");
             OnAttack.Invoke();
             lastAttackTime = Time.time;
 

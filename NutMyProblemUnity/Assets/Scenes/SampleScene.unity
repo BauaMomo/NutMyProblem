@@ -6222,6 +6222,141 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9083409033938954351, guid: f93e03294d59907418709908f452f60d, type: 3}
   m_PrefabInstance: {fileID: 249316143}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &712412223
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 712412225}
+  - component: {fileID: 712412224}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &712412224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712412223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70667cb048dc457469847269f7a7c1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: PlayerAttack
+    clip: {fileID: 8300000, guid: 2ac205a43b4c58544a145bafcf501a82, type: 3}
+    volume: 0.098
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerDamage
+    clip: {fileID: 8300000, guid: 8d9b99a8b207d4a4782457f62b14b46b, type: 3}
+    volume: 0.087
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerFootstep
+    clip: {fileID: 8300000, guid: d79c4de8a9d50c249b27451bd6672dc5, type: 3}
+    volume: 0.62
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerJump
+    clip: {fileID: 8300000, guid: 350d6cad3f4707b48b6673cb0a4e6127, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerDash
+    clip: {fileID: 8300000, guid: 8187cab7509bc044ca9afdc3b81b1cb5, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage
+    clip: {fileID: 8300000, guid: 4840a46857f1a63438d56ed038bc60f1, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: CommonKnughtAttack
+    clip: {fileID: 8300000, guid: d5493a5dfc272a84db48bf6c90a3496e, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: HazardnutAttack
+    clip: {fileID: 8300000, guid: 24c8a74ebfa99294daf9f128325c9ac9, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PickUpDrop
+    clip: {fileID: 8300000, guid: 29455913f74ebf5449f97c44db25338b, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: WeaponChange
+    clip: {fileID: 8300000, guid: 89c13a562242bfc4da077b4873514ea3, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: WallBreak
+    clip: {fileID: 8300000, guid: 3d1271344f1f19849811ade3e42c1c2d, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: RopeCut
+    clip: {fileID: 8300000, guid: 2ab3e500af83d254a8802a8bbfb8601e, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Lever
+    clip: {fileID: 8300000, guid: 58c3872bdebb3f24ca73eedbd9b11a34, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Kronleuchter
+    clip: {fileID: 8300000, guid: 42fba7000674dbc47b62e0121b14b33c, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Fanfare
+    clip: {fileID: 8300000, guid: d98ae8d75ddc725499d3252bd0ead105, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+--- !u!4 &712412225
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712412223}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &720428585
 PrefabInstance:
   m_ObjectHideFlags: 0

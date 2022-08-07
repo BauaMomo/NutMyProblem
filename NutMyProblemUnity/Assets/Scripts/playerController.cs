@@ -172,8 +172,26 @@ public class playerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<float>();
-        if (moveDir > 0) playerDirection = direction.right;
-        if (moveDir < 0) playerDirection = direction.left;
+        if (moveDir > 0)
+        {
+            playerDirection = direction.right;
+            if (isGrounded == true)
+            {
+                FindObjectOfType<AudioManager>().Play("PlayerFootstep");
+                if (isGrounded == false)
+                { FindObjectOfType<AudioManager>().Stop("PlayerFootstep"); }
+            }
+        }
+        if (moveDir < 0)
+        {
+            playerDirection = direction.left;
+            if (isGrounded == true)
+            { FindObjectOfType<AudioManager>().Play("PlayerFootstep"); }
+            if (isGrounded == false)
+            { FindObjectOfType<AudioManager>().Stop("PlayerFootstep"); }
+        }
+        if (moveDir == 0)
+            FindObjectOfType<AudioManager>().Stop("PlayerFootstep");
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -185,6 +203,7 @@ public class playerController : MonoBehaviour
             isHoldingJump = true;
             fJumpStartTime = Time.fixedUnscaledTime;
             rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
+            FindObjectOfType<AudioManager>().Play("PlayerJump");
         }
 
         if (context.canceled) isHoldingJump = false;
@@ -196,6 +215,7 @@ public class playerController : MonoBehaviour
         {
             //Debug.Log("mouse left pressed");
             StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
+            FindObjectOfType<AudioManager>().Play("PlayerAttack");
         }
     }
 
@@ -206,7 +226,10 @@ public class playerController : MonoBehaviour
 
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
-        if (context.started) weapons.SwitchWeapon();
+        if (context.started)
+        { weapons.SwitchWeapon();
+            FindObjectOfType<AudioManager>().Play("WeaponChange");
+        }
     }
 
     public void OnInteract(InputAction.CallbackContext context)
@@ -243,6 +266,7 @@ public class playerController : MonoBehaviour
     {
         weapons.AddWeaponFromDrop(_drop);
 
+        FindObjectOfType<AudioManager>().Play("PickUpDrop");
         Destroy(_drop);
     }
 
@@ -277,6 +301,7 @@ public class playerController : MonoBehaviour
 
             rb.AddForce(new Vector2(1000, 0) * moveDir);
             rb.velocity = new Vector2(rb.velocity.x, 0);
+            FindObjectOfType<AudioManager>().Play("PlayerDash");
         }
 
         if (!isGrounded) hasDash = false;
