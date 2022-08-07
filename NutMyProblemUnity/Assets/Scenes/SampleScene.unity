@@ -6288,6 +6288,30 @@ MonoBehaviour:
     pitch: 1
     source: {fileID: 0}
     loop: 0
+  - name: CommonKnughtAttack
+    clip: {fileID: 8300000, guid: d5493a5dfc272a84db48bf6c90a3496e, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: HazardnutAttack
+    clip: {fileID: 8300000, guid: 24c8a74ebfa99294daf9f128325c9ac9, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PickUpDrop
+    clip: {fileID: 8300000, guid: 29455913f74ebf5449f97c44db25338b, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: WeaponChange
+    clip: {fileID: 8300000, guid: 89c13a562242bfc4da077b4873514ea3, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
   - name: WallBreak
     clip: {fileID: 8300000, guid: 3d1271344f1f19849811ade3e42c1c2d, type: 3}
     volume: 0.1
@@ -6312,32 +6336,8 @@ MonoBehaviour:
     pitch: 1
     source: {fileID: 0}
     loop: 0
-  - name: PickUpDrop
-    clip: {fileID: 8300000, guid: 29455913f74ebf5449f97c44db25338b, type: 3}
-    volume: 0.1
-    pitch: 1
-    source: {fileID: 0}
-    loop: 0
   - name: Fanfare
     clip: {fileID: 8300000, guid: d98ae8d75ddc725499d3252bd0ead105, type: 3}
-    volume: 0.1
-    pitch: 1
-    source: {fileID: 0}
-    loop: 0
-  - name: HazardnutAttack
-    clip: {fileID: 8300000, guid: 24c8a74ebfa99294daf9f128325c9ac9, type: 3}
-    volume: 0.1
-    pitch: 1
-    source: {fileID: 0}
-    loop: 0
-  - name: CommonKnughtAttack
-    clip: {fileID: 8300000, guid: d5493a5dfc272a84db48bf6c90a3496e, type: 3}
-    volume: 0.1
-    pitch: 1
-    source: {fileID: 0}
-    loop: 0
-  - name: WeaponChange
-    clip: {fileID: 8300000, guid: 89c13a562242bfc4da077b4873514ea3, type: 3}
     volume: 0.1
     pitch: 1
     source: {fileID: 0}
