@@ -9,9 +9,15 @@ public class CameraManager : MonoBehaviour
     GameManager gameManager;
     GameObject CameraPushBox;
 
-    [SerializeField] float cameraYOffset;
+    GameObject DebuggingGoal;
+    GameObject DebuggingCam;
+
     [SerializeField] float cameraSpeed;
+    [SerializeField] float cameraSmoothing;
     [SerializeField] bool predictingCamera;
+
+    [Header("Debug")]
+    [SerializeField] bool camMoveVisualisation;
 
     Vector2 oldMoveDir;
     bool isInFallState;
@@ -41,6 +47,12 @@ public class CameraManager : MonoBehaviour
         CameraPushBox = Instantiate(Resources.Load("Prefabs/CameraPushBox") as GameObject);
         CameraPushBox.transform.position = player.transform.position;
 
+        DebuggingGoal = transform.Find("DebuggingGoal").gameObject;
+        DebuggingCam = transform.Find("DebuggingCam").gameObject;
+
+        DebuggingGoal.transform.parent = null;
+        DebuggingCam.transform.parent = null;
+
         camLocalPos = transform.position - player.transform.position;
     }
 
@@ -50,7 +62,7 @@ public class CameraManager : MonoBehaviour
         if (predictingCamera) PredictedMovement();
         else
         {
-            Vector3 newCamPosition = new Vector3(CameraPushBox.transform.position.x, CameraPushBox.transform.position.y + cameraYOffset, -10);  //Moves the camera towards the CameraPushBox
+            Vector3 newCamPosition = new Vector3(CameraPushBox.transform.position.x, CameraPushBox.transform.position.y + 3, -10);  //Moves the camera towards the CameraPushBox
             float moveSpeed = Mathf.Pow(Vector3.Distance(transform.position, newCamPosition), 2) / cameraSpeed;
             transform.position = Vector3.MoveTowards(transform.position, newCamPosition, moveSpeed);         //CameraPushBox is a box of colliders, gets pushed around by the player
             if (Vector2.Distance(player.transform.position, transform.position) > 10f) CameraPushBox.transform.position = player.transform.position;
@@ -59,70 +71,74 @@ public class CameraManager : MonoBehaviour
 
     void PredictedMovement()
     {
-        Vector2 mainMoveDir = new Vector3(XMoveDir(), YMoveDir());
-        Vector3 camPosOffset = new Vector3(XMoveDir() * 3, YMoveDir() * 3, -10);
-        Vector3 goal = camPosOffset;
+        Vector2 mainMoveDir = new Vector3(XDefaultTaget(), YDefaultTarget());   //Set the direction the player is mainly moving in, depending on how long the player has been moving in the direction
+        
+        Vector3 localTargetPos = FindTargetPos();   //adjust target pos for different cases
 
-        camLocalPos = transform.position - player.transform.position;
-
-
-        if (XMoveDir() == 0)
-        {
-            goal.x = Mathf.Clamp(camLocalPos.x, -3, 3);
-            camStartPos.x = camLocalPos.x;
-        }
-        if (YMoveDir() == 0)
-        {
-            if (pCon.isGrounded)
-                goal.y = Mathf.Clamp(camLocalPos.y, 0f, 3f);
-            else goal.y = Mathf.Clamp(camLocalPos.y, -3f, 3f);
-            camStartPos.y =camLocalPos.y;
-        }
-        isInFallState = !pCon.isGrounded && pCon.GetComponent<Rigidbody2D>().velocity.y < -2f && Time.time > lastYMoveDirChangeTime + .2f;
-        if (isInFallState)
-        {
-            //Debug.Log("falling");
-            goal.y = -2;
-            camStartPos.y = camLocalPos.y;
-        }
-        //if(HasChangedState(ref isInFallState, ref oldIsInFallState)) Debug.Log("isInFallState Changed");
-        //if(HasChangedState(ref pCon.isGrounded, ref oldIsGrounded)) Debug.Log("isGroundedState changed");
-
-        if (HasMoveDirXChanged(mainMoveDir)) RestartCamMove(ref camStartPos.x, camLocalPos.x, ref camMoveXStarted, ref lerpPosX);
+        if (HasMoveDirXChanged(mainMoveDir)) RestartCamMove(ref camStartPos.x, camLocalPos.x, ref camMoveXStarted, ref lerpPosX);  //start moving the camera from the current position if the target changed
         if (HasMoveDirYChanged(mainMoveDir)) RestartCamMove(ref camStartPos.y, camLocalPos.y, ref camMoveYStarted, ref lerpPosY);
 
         Vector3 newLocalCamPos = new Vector3();
-        newLocalCamPos.x = MoveCamOnAxis(goal.x, ref camMoveXStarted, camLocalPos.x, camStartPos.x, ref lerpPosX);
-        newLocalCamPos.y = MoveCamOnAxis(goal.y, ref camMoveYStarted, camLocalPos.y, camStartPos.y, ref lerpPosY);
+        newLocalCamPos.x = MoveCamOnAxis(localTargetPos.x, ref camMoveXStarted, camLocalPos.x, camStartPos.x, ref lerpPosX);    //move camera to target
+        newLocalCamPos.y = MoveCamOnAxis(localTargetPos.y, ref camMoveYStarted, camLocalPos.y, camStartPos.y, ref lerpPosY);
 
-        newLocalCamPos = new Vector3(Mathf.Clamp(newLocalCamPos.x, -3, 3), Mathf.Clamp(newLocalCamPos.y, -3f, 3f), -10);
+        newLocalCamPos = new Vector3(Mathf.Clamp(newLocalCamPos.x, -3, 3), Mathf.Clamp(newLocalCamPos.y, -3f, 3f), -10);        //limit the camera position to a area around the player
 
-        Vector3 newGlobalCamPos = newLocalCamPos + player.transform.position;
+        Vector3 newGlobalCamPos = newLocalCamPos + player.transform.position;   
         camLocalPos = newGlobalCamPos - player.transform.position;
 
-        transform.position = Vector3.MoveTowards(transform.position, newGlobalCamPos, Mathf.Pow(Vector3.Distance(transform.position, newGlobalCamPos), 2) / 4);
+        DebuggingGoal.SetActive(camMoveVisualisation);      //Visualisation for debugging
+        DebuggingCam.SetActive(camMoveVisualisation);       //DebuggingCam is the position of the camera before smoothing, DebuggingGoal is the target
+        if(camMoveVisualisation)
+        {
+            DebuggingGoal.transform.position = Vector3.Scale((localTargetPos + player.transform.position), new Vector3(1,1,0));
+            DebuggingCam.transform.position = Vector3.Scale(newGlobalCamPos, new Vector3(1,1,0));
+        }
+
+        //Smooth out the camera motion. Camera move faster the further it is away from the target
+        transform.position = Vector3.MoveTowards(transform.position, newGlobalCamPos, Mathf.Pow(Vector3.Distance(transform.position, newGlobalCamPos), 2) / cameraSmoothing);
     }
 
-    float MoveCamOnAxis(float _goal, ref bool _camMoveStarted, float _camLocalPos, float _camStartPos, ref float _lerpPos)
+    Vector3 FindTargetPos()
     {
-        _lerpPos = Mathf.Clamp(_lerpPos + 0.05f * cameraSpeed /* / Vector3.Distance(camStartPos, _goal) */, 0, 1);
-        float easedLerpPos = _lerpPos * _lerpPos * (3 - 2 * _lerpPos);
-        float newCamPos = Mathf.Lerp(_camStartPos, _goal, easedLerpPos);
+        Vector3 targetPos = new Vector3(XDefaultTaget() * 3, YDefaultTarget() * 3, -10);     //the default target position        
 
-        if (Mathf.Abs(_goal - _camLocalPos) <= 0.1f)
+        camLocalPos = (transform.position - player.transform.position);     //set the local position of the camera for local movement
+
+        if (XDefaultTaget() == 0)
+            targetPos.x = Mathf.Clamp(camLocalPos.x, -3, 3);    //if player isn't moving on x, stop the camera
+
+        if (YDefaultTarget() == 0)      //if player isn't moving on y (yet), clamp the camera around the player
         {
-            CancelCamMove(ref _camMoveStarted, ref _lerpPos);
-            //Debug.Log("reached goal " + _goal + " whith current pos " + _camLocalPos);
+            if (pCon.isGrounded)
+                targetPos.y = Mathf.Clamp(camLocalPos.y, 0f, 3f);       //if the player is grounded, move the camera higher
+            else targetPos.y = Mathf.Clamp(camLocalPos.y, -3f, 3f);
         }
-        if (!_camMoveStarted) newCamPos = _goal;
 
+        isInFallState = !pCon.isGrounded && pCon.GetComponent<Rigidbody2D>().velocity.y < -2f && Time.time > lastYMoveDirChangeTime + .35f;
+        if (isInFallState)          //if the player has been falling, lower the camera
+            targetPos.y = -2;
+
+        return targetPos;
+    }
+
+    float MoveCamOnAxis(float _target, ref bool _camMoveStarted, float _camLocalPos, float _camStartPos, ref float _lerpPos)
+    {
+        //camera moves on the two axis independantly, otherwise the would be stuttering if the player jumps or otherwise changes the target
+
+        _lerpPos = Mathf.Clamp(_lerpPos + 0.05f * cameraSpeed, 0, 1);
+        float easedLerpPos = _lerpPos * _lerpPos * (3 - 2 * _lerpPos);      //eased lerp position for smooth acceleration
+        float newCamPos = Mathf.Lerp(_camStartPos, _target, easedLerpPos);
+
+        if (Mathf.Abs(_target - _camLocalPos) <= 0.1f)
+            CancelCamMove(ref _camMoveStarted, ref _lerpPos);       //if the camera is close to the target, cancel the move
+        
+        if (!_camMoveStarted) newCamPos = _target;      //if the camera isn't moving, snap it to the target
         return newCamPos;
     }
 
     void RestartCamMove(ref float _camStartPos, float _camLocalPos, ref bool _camMoveStarted, ref float _lerpPos)
     {
-        //if(_camMoveStarted) return;
-
         _camStartPos = _camLocalPos;
         _camMoveStarted = true;
         _lerpPos = 0;
@@ -130,6 +146,8 @@ public class CameraManager : MonoBehaviour
 
     void CancelCamMove(ref bool _camMoveStarted, ref float _lerpPos)
     {
+        if(!_camMoveStarted) return;
+
         _camMoveStarted = false;
         _lerpPos = 0;
     }
@@ -138,7 +156,6 @@ public class CameraManager : MonoBehaviour
     {
         bool hasMoveDirChanged = _newMoveDir.x != oldMoveDir.x;
         if (hasMoveDirChanged) oldMoveDir.x = _newMoveDir.x;
-        //if (hasMoveDirChanged) Debug.Log("move dir changed");
         return hasMoveDirChanged;
     }
 
@@ -146,7 +163,6 @@ public class CameraManager : MonoBehaviour
     {
         bool hasMoveDirChanged = _newMoveDir.y != oldMoveDir.y || HasChangedState(ref isInFallState, ref oldIsInFallState) || (HasChangedState(ref pCon.isGrounded, ref oldIsGrounded) && pCon.isGrounded);
         if (hasMoveDirChanged) oldMoveDir.y = _newMoveDir.y;
-        //if (hasMoveDirChanged) Debug.Log("move dir changed");
         return hasMoveDirChanged;
     }
 
@@ -154,14 +170,15 @@ public class CameraManager : MonoBehaviour
     {
         bool hasChangedState = _currentState != _oldState;
         if (hasChangedState) _oldState = _currentState;
-        //if(hasChangedState && isInFallState) Debug.Log("Switched to isInFallState");
         return hasChangedState;
     }
 
-    float XMoveDir()
+    float XDefaultTaget()
     {
+        //returns 1, 0 or -1 depending on how long and in which direction the player has been moving in
+
         float newMainXMoveDir;
-        if (Mathf.Abs(pCon.moveVector.x) < 0.2f)
+        if (Mathf.Abs(pCon.moveVector.x) <= 0f)
             newMainXMoveDir = 0;
         else newMainXMoveDir = Mathf.Sign(pCon.moveVector.x);
 
@@ -170,16 +187,14 @@ public class CameraManager : MonoBehaviour
         lastMainXMoveDir = newMainXMoveDir;
 
         if (Time.time > lastXMoveDirChangeTime + 0f)
-        {
-            return newMainXMoveDir;
-        }
+            return newMainXMoveDir;            
         else return 0;
     }
 
-    float YMoveDir()
+    float YDefaultTarget()
     {
         float newMainYMoveDir;
-        if (Mathf.Abs(pCon.moveVector.y) < 0.2f)
+        if (Mathf.Abs(pCon.moveVector.y) <= 0.1f)
             newMainYMoveDir = 0;
         else newMainYMoveDir = Mathf.Sign(pCon.moveVector.y);
 
@@ -188,9 +203,7 @@ public class CameraManager : MonoBehaviour
         lastMainYMoveDir = newMainYMoveDir;
 
         if (Time.time > lastYMoveDirChangeTime + .6f)
-        {
             return newMainYMoveDir;
-        }
         else return 0;
     }
 }

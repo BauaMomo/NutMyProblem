@@ -14724,20 +14724,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
-      propertyPath: cameraSpeed
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
-      propertyPath: cameraYOffset
+      propertyPath: camMoveVisualisation
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
-      propertyPath: cameraSmoothing
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7227183984246873236, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
-      propertyPath: predictingCamera
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7514707225379437874, guid: 864ccc00474fc7947b92fde1f88529f1, type: 3}
       propertyPath: m_Name
