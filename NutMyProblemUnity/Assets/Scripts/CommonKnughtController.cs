@@ -15,8 +15,8 @@ public class CommonKnughtController : MonoBehaviour
     public enum Type { commonKnught, hazardnut }
     public Type EnemyType;
 
-    enum AIMode { follow, patrol };
-    AIMode mode;
+    public enum AIMode { follow, patrol };
+    public AIMode mode;
     public enum MoveState { step, stand };
     public MoveState MoveStatus;
 
@@ -33,8 +33,8 @@ public class CommonKnughtController : MonoBehaviour
     public Transform TPlayer;
 
     public Vector2 goal;
-    Vector2 endPosition;
-    Vector2 startPosition;
+    public Vector2 endPosition;
+    public Vector2 startPosition;
     Vector2 WeaponDropPosition;
     Vector3 RayCastVector;
     Vector3 CommonKnughtMoveDirection;
@@ -53,7 +53,7 @@ public class CommonKnughtController : MonoBehaviour
     float fStandingBeginningTime;
 
     public int iSwordDamage;
-    bool noMovement;
+    public bool noMovement;
 
 
     // Start is called before the first frame update
@@ -90,6 +90,7 @@ public class CommonKnughtController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(Mathf.Abs(startPosition.x - transform.position.x));
 
         UpdateShadow();
         EnemyMovement();
@@ -104,15 +105,11 @@ public class CommonKnughtController : MonoBehaviour
 
     void EnemyMovement()
     {
-        if (noMovement) return;
-
-        //if (rb.velocity.y < 0 && rb.velocity.y > -30) rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 1.05f);
-
         switch (mode)
         {
             case AIMode.patrol:
-                if (Vector2.Distance(transform.position, startPosition) < 1) goal = endPosition;        //CommonKnught decides which point is its goal and will move towards it
-                if (Vector2.Distance(transform.position, endPosition) < 1) goal = startPosition;
+                if (Mathf.Abs(startPosition.x - transform.position.x) < 1)  goal = endPosition;      //CommonKnught decides which point is its goal and will move towards it
+                if (Mathf.Abs(endPosition.x - transform.position.x) < 1)    goal = startPosition;
                 fStandingTime = patrolStandingTime;     //standingTime is adjusted for faster movement when following player
                 break;
 
@@ -121,6 +118,8 @@ public class CommonKnughtController : MonoBehaviour
                 fStandingTime = followStandingTime;
                 break;
         }
+
+        if (noMovement) return;
 
         if (transform.position.x < goal.x)
         {
@@ -198,8 +197,11 @@ public class CommonKnughtController : MonoBehaviour
         if (TarggetPlayer())
         { mode = AIMode.follow; }
 
-        if (Vector3.Distance(transform.position, TPlayer.transform.position) > 20)
-        { mode = AIMode.patrol; }
+        if (Vector3.Distance(transform.position, TPlayer.transform.position) > 20 && mode == AIMode.follow)
+        {
+            mode = AIMode.patrol;
+            goal = startPosition;
+        }
 
         if (MoveStatus == MoveState.step && Time.time > fStepBeginningTime + fStepTime)
         {
@@ -259,6 +261,7 @@ public class CommonKnughtController : MonoBehaviour
             OnAttack.Invoke();
 
             yield return new WaitForSeconds(0.5f);
+            FindObjectOfType<AudioManager>().Play("CommonKnughtAttack");
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
             weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(7, 1);

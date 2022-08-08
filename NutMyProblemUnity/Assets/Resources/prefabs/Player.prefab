@@ -338,9 +338,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c82f186c6ffeb03418aba945ca9a7bbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iJumpSpeed: 0
-  iFallSpeed: 0
-  iFallAcceleration: 0
+  iPlayerSpeed: 12
+  iJumpSpeed: 16
+  iFallSpeed: 30
+  iFallAcceleration: 70
   noMovement: 0
   isGrounded: 1
 --- !u!114 &2778803986105360812
@@ -370,6 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e11d2050195f89469d9ffa969b076b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  knockbackFactor: 1
   <iHealth>k__BackingField: 100
 --- !u!114 &6457930957619613973
 MonoBehaviour:
@@ -383,6 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59422d35b2b21234b8728a3c0acda09e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rangeFactor: 1
   onAttack:
     m_PersistentCalls:
       m_Calls:

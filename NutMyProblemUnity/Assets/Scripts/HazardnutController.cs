@@ -7,6 +7,9 @@ public class HazardnutController : MonoBehaviour
 {
     GameObject shadow;
 
+    [SerializeField] float afterAttackSpeed;    
+    [SerializeField] float fHazardnutChargeSpeed;
+
     public enum directions { right, left };
     public directions HazardnutDirection;
 
@@ -42,7 +45,6 @@ public class HazardnutController : MonoBehaviour
     [SerializeField] float fHazardnutPathEndPoint;
     float originalSpeed;
     float fHazardnutSpeed;
-    float fHazardnutChargeSpeed;
     float fColliderSpawnTime;
 
     public int iGlovesDamage;
@@ -64,7 +66,6 @@ public class HazardnutController : MonoBehaviour
 
         originalSpeed = 6;
         fHazardnutSpeed = originalSpeed;
-        fHazardnutChargeSpeed = 25;
 
         gm = Object.FindObjectOfType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
@@ -222,7 +223,9 @@ public class HazardnutController : MonoBehaviour
                         Target = hit.collider.transform;
 
                         if (Vector3.Distance(transform.position, TPlayer.position) < 10)
+                        {
                             StartCoroutine(GlovesAttack(HazardnutDirection));
+                        }
                         return true;
                     }
 
@@ -337,10 +340,12 @@ public class HazardnutController : MonoBehaviour
 
     public IEnumerator GlovesAttack(directions _directions)
     {
-        if(noMovement) yield break;
+        
+        if (noMovement) yield break;
 
         if (Time.time > lastAttackTime + attackCooldown)
         {
+            FindObjectOfType<AudioManager>().Play("HazardnutAttack");
             OnAttack.Invoke();
             lastAttackTime = Time.time;
 
@@ -363,7 +368,7 @@ public class HazardnutController : MonoBehaviour
             weaponTrigger.transform.position = Hazardnut.transform.position + new Vector3(fColliderXOffset, -0.1f, 0);
             Destroy(weaponTrigger, 0.5f);
 
-            fHazardnutSpeed = originalSpeed / 2;
+            fHazardnutSpeed = afterAttackSpeed;
             Invoke(nameof(ResetSpeed), 1.5f);
         }
     }

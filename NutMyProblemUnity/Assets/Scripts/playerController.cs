@@ -16,7 +16,7 @@ public class playerController : MonoBehaviour
     GameObject DeathBarrier;
     Camera PlayerCamera;
 
-    int iPlayerSpeed;
+    [SerializeField] int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
     [SerializeField] int iFallSpeed;
     [SerializeField] int iFallAcceleration;
@@ -49,6 +49,9 @@ public class playerController : MonoBehaviour
     public enum direction { right, left };
     public direction playerDirection { get; protected set; }
 
+    Vector2 oldPos;
+    public Vector2 moveVector;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -66,11 +69,6 @@ public class playerController : MonoBehaviour
 
         PlayerCamera = Camera.main;
         PlayerCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
-
-        iPlayerSpeed = 12;
-        iJumpSpeed = 16;
-        iFallSpeed = 30;
-        iFallAcceleration = 70;
     }
 
     private void Update()
@@ -83,6 +81,10 @@ public class playerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector2 newPos = transform.position;
+        moveVector = (newPos - oldPos).normalized;
+        //Debug.Log(moveVector);
+        oldPos = transform.position;
         MovePlayer();
 
     }
@@ -147,7 +149,7 @@ public class playerController : MonoBehaviour
     {
         noMovement = false;
     }
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut")
@@ -170,8 +172,26 @@ public class playerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<float>();
-        if (moveDir > 0) playerDirection = direction.right;
-        if (moveDir < 0) playerDirection = direction.left;
+        if (moveDir > 0)
+        {
+            playerDirection = direction.right;
+            if (isGrounded == true)
+            {
+                FindObjectOfType<AudioManager>().Play("PlayerFootstep");
+                if (isGrounded == false)
+                { FindObjectOfType<AudioManager>().Stop("PlayerFootstep"); }
+            }
+        }
+        if (moveDir < 0)
+        {
+            playerDirection = direction.left;
+            if (isGrounded == true)
+            { FindObjectOfType<AudioManager>().Play("PlayerFootstep"); }
+            if (isGrounded == false)
+            { FindObjectOfType<AudioManager>().Stop("PlayerFootstep"); }
+        }
+        if (moveDir == 0)
+            FindObjectOfType<AudioManager>().Stop("PlayerFootstep");
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -183,6 +203,7 @@ public class playerController : MonoBehaviour
             isHoldingJump = true;
             fJumpStartTime = Time.fixedUnscaledTime;
             rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
+            FindObjectOfType<AudioManager>().Play("PlayerJump");
         }
 
         if (context.canceled) isHoldingJump = false;
@@ -194,6 +215,7 @@ public class playerController : MonoBehaviour
         {
             //Debug.Log("mouse left pressed");
             StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
+            FindObjectOfType<AudioManager>().Play("PlayerAttack");
         }
     }
 
@@ -204,7 +226,10 @@ public class playerController : MonoBehaviour
 
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
-        if (context.started) weapons.SwitchWeapon();
+        if (context.started)
+        { weapons.SwitchWeapon();
+            FindObjectOfType<AudioManager>().Play("WeaponChange");
+        }
     }
 
     public void OnInteract(InputAction.CallbackContext context)
@@ -241,6 +266,7 @@ public class playerController : MonoBehaviour
     {
         weapons.AddWeaponFromDrop(_drop);
 
+        FindObjectOfType<AudioManager>().Play("PickUpDrop");
         Destroy(_drop);
     }
 
@@ -275,6 +301,7 @@ public class playerController : MonoBehaviour
 
             rb.AddForce(new Vector2(1000, 0) * moveDir);
             rb.velocity = new Vector2(rb.velocity.x, 0);
+            FindObjectOfType<AudioManager>().Play("PlayerDash");
         }
 
         if (!isGrounded) hasDash = false;

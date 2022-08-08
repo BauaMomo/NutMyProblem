@@ -41,6 +41,7 @@ public class LeverController : MonoBehaviour
                 break;
         }
 
+        FindObjectOfType<AudioManager>().Play("Lever");
         OnSwitch.Invoke(isActive);
     }
 

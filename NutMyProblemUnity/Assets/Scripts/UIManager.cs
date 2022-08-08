@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     TMPro.TextMeshProUGUI weaponTypeText;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         player = FindObjectOfType<GameManager>().GetComponent<GameManager>().player;
         damageHandler = player.GetComponent<DamageHandler>();
