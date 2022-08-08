@@ -19,18 +19,18 @@ public class reactionsCotroller : MonoBehaviour
     {
         if (collision.tag == "WeaponTrigger")
         {
-            GameObject reaction = Instantiate(Resources.Load<GameObject>("Reactions/reaction"));
+            GameObject reaction = Instantiate(Resources.Load<GameObject>("prefabs/Reactions/reaction"));
             reaction.transform.position = transform.position;
         }
 
         if (collision.tag == "WeaponTrigger")
         {
-            GameObject reaction = Instantiate(Resources.Load<GameObject>("Reactions/reaction"));
+            GameObject reaction = Instantiate(Resources.Load<GameObject>("prefabs/Reactions/reaction"));
             reaction.transform.position = transform.position;
         }
         if (collision.tag == "WeaponTrigger")
         {
-            GameObject reaction = Instantiate(Resources.Load<GameObject>("Reactions/reaction"));
+            GameObject reaction = Instantiate(Resources.Load<GameObject>("prefabs/Reactions/reaction"));
             reaction.transform.position = transform.position;
         }
     }

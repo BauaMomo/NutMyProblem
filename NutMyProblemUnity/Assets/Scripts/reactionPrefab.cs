@@ -14,10 +14,10 @@ public class reactionPrefab : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Hundred = Resources.Load<Sprite>("Reactions/100");
-        Flex = Resources.Load<Sprite>("Reactions/Flex");
-        Heart = Resources.Load<Sprite>("Reactions/Heart");
-        Spark = Resources.Load<Sprite>("Reactions/Spark");
+        Hundred = Resources.Load<Sprite>("prefabs/Reactions/100");
+        Flex = Resources.Load<Sprite>("prefabs/Reactions/Flex");
+        Heart = Resources.Load<Sprite>("prefabs/Reactions/Heart");
+        Spark = Resources.Load<Sprite>("prefabs/Reactions/Spark");
 
         sprites = new List<Sprite>() { Hundred, Flex, Heart, Spark};
 
