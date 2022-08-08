@@ -32,7 +32,7 @@ public class AudioManager : MonoBehaviour
         if (s.source.isPlaying == false)
             s.source.pitch = defaultPitch + UnityEngine.Random.Range(-0.1f, 0.1f);
             s.source.PlayOneShot(s.clip);
-            StartCoroutine(ResetPitch(s, defaultPitch, 2));
+            StartCoroutine(ResetPitch(s, defaultPitch, s.source.clip.length/s.source.pitch));
     }
 
     IEnumerator ResetPitch(Sound _sound, float _defaultPitch, float _delay)
