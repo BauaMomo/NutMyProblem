@@ -154,8 +154,8 @@ public class playerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut")
         {
-            //GetComponent<DamageHandler>().HandleDamage(20, collision.gameObject);
-            DisableMovementFor(0.4f);
+            GetComponent<DamageHandler>().HandleDamage(20);
+            DisableMovementFor(0.3f);
             Vector2 dirToOther = collision.transform.position - transform.position;
             if (isGrounded) rb.AddForce(-dirToOther * 1000 + new Vector2(0, 200));
             else rb.AddForce(-dirToOther * 400 + new Vector2(Random.Range(-400, 400), 0));
@@ -215,7 +215,6 @@ public class playerController : MonoBehaviour
         {
             //Debug.Log("mouse left pressed");
             StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
-            FindObjectOfType<AudioManager>().Play("PlayerAttack");
         }
     }
 
@@ -252,8 +251,11 @@ public class playerController : MonoBehaviour
                 {
                     case "WeaponDrop":
                         PickUpDrop(go);
-                        GetComponent<DamageHandler>().HandleHealing(20);
                         return;
+                    case "HealthDrop":
+                        Destroy(go);
+                        GetComponent<DamageHandler>().HandleHealing(20);
+                        break;
                     case "Lever":
                         go.GetComponent<LeverController>().SwitchLever();
                         return;
