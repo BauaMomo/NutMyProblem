@@ -15,7 +15,7 @@ public class ColliderScript : MonoBehaviour
         gm = Object.FindObjectOfType<GameManager>();
 
         parent = this.transform.parent;
-        if(tag == "GroundedTrigger") GroundedTrigger = GetComponent<BoxCollider2D>();
+        if (tag == "GroundedTrigger") GroundedTrigger = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
@@ -85,6 +85,13 @@ public class ColliderScript : MonoBehaviour
                 {
                     case "Player":
                         parent.GetComponent<HazardnutController>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutController>().iGlovesDamage, parent.gameObject);
+                        parent.GetComponent<HazardnutController>().StopAttackOnCollision();
+                        break;
+                    case "CommonKnught":
+                        parent.GetComponent<HazardnutController>().StopAttackOnCollision();
+                        break;
+                    case "Hazardnut":
+                        parent.GetComponent<HazardnutController>().StopAttackOnCollision();
                         break;
                 }
                 break;
