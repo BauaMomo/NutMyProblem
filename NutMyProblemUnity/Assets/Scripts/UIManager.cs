@@ -28,7 +28,7 @@ public class UIManager : MonoBehaviour
     List<GameObject> WeaponGOs = new List<GameObject>();
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         player = FindObjectOfType<GameManager>().GetComponent<GameManager>().player;
         damageHandler = player.GetComponent<DamageHandler>();
