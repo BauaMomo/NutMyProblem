@@ -29,9 +29,12 @@ public class DrawbridgeController : MonoBehaviour
         if (collision.gameObject.tag == "WeaponTrigger")
         {
             //Debug.Log("trigger entered by " + collision.gameObject);
+            if(isBridgeLowered == false)
+            {
+                BridgeRopeCutParticle.Play();
+                StartCoroutine(StopParticle());
+            }
 
-            BridgeRopeCutParticle.Play();
-            StartCoroutine(StopParticle());
             Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
             if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword && !isBridgeLowered) LowerBridge();
         }

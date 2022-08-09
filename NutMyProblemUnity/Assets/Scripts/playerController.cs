@@ -53,6 +53,11 @@ public class playerController : MonoBehaviour
     public ParticleSystem PlayerLandingParticle;
     public bool PlayedLandingParticle;
 
+    public ParticleSystem PlayerWalkingParticle;
+    ParticleSystem.ShapeModule ShapeModuleWalking;
+    ParticleSystem.VelocityOverLifetimeModule VelocityOverLifetimeModuleWalking;
+    bool WalkingParticleStarted;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -77,6 +82,9 @@ public class playerController : MonoBehaviour
 
         ShapeModuleDash = PlayerDashParticle.shape;
         PlayedLandingParticle = false;
+        ShapeModuleWalking = PlayerWalkingParticle.shape;
+        VelocityOverLifetimeModuleWalking = PlayerWalkingParticle.velocityOverLifetime;
+        WalkingParticleStarted = false;
     }
 
     private void Update()
@@ -86,22 +94,39 @@ public class playerController : MonoBehaviour
         MovePlayer();
         UpdateShadow();
         MoveDeathBarrier();
-        DashParticleDirection();
+        ParticleDirection();
         PlayLandingParicle();
     }
 
-    void DashParticleDirection()
+    void ParticleDirection()
     {
-        switch(playerDirection)
+        switch (playerDirection)
         {
             case direction.left:
                 ShapeModuleDash.rotation = new Vector3(180, 0, 0);
+
+                ShapeModuleWalking.rotation = new Vector3(180, 0, 0);
+                ShapeModuleWalking.position = new Vector3(0.5f,0,0);
+                VelocityOverLifetimeModuleWalking.x = 2.5f;
                 break;
-                case direction.right:
-                ShapeModuleDash.rotation = new Vector3(0,0,0);
+            case direction.right:
+                ShapeModuleDash.rotation = new Vector3(0, 0, 0);
+
+                ShapeModuleWalking.rotation = new Vector3(0, 0, 0);
+                ShapeModuleWalking.position = new Vector3(-0.5f, 0, 0);
+                VelocityOverLifetimeModuleWalking.x = -2.5f;
                 break;
         }
 
+            if (moveDir != 0 && WalkingParticleStarted == false)
+            { PlayerWalkingParticle.Play();
+            WalkingParticleStarted = true;
+        }
+
+            if (moveDir == 0 || isGrounded == false)
+            { PlayerWalkingParticle.Stop();
+            WalkingParticleStarted = false;
+        }
     }
     void PlayLandingParicle()
     {
@@ -169,8 +194,16 @@ public class playerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<float>();
-        if (moveDir > 0) playerDirection = direction.right;
-        if (moveDir < 0) playerDirection = direction.left;
+
+            if (moveDir > 0)
+            {
+                playerDirection = direction.right;
+            }
+            if (moveDir < 0)
+            {
+                playerDirection = direction.left;
+            }
+
     }
 
     public void OnJump(InputAction.CallbackContext context)

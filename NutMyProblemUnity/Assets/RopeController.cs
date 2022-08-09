@@ -46,12 +46,14 @@ public class RopeController : MonoBehaviour
         if (collision.gameObject.tag == "WeaponTrigger")
         {
             //Debug.Log("trigger entered by " + collision.gameObject);
-
-            RopeCutParticle.Play();
-            StartCoroutine(StopParticle());
+            if (isRopeCut == false)
+            {
+                RopeCutParticle.Play();
+                StartCoroutine(StopParticle());
+            }
 
             Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
-            if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword)    isRopeCut = true;
+            if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword) isRopeCut = true;
         }
     }
     IEnumerator StopParticle()

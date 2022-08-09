@@ -16,6 +16,7 @@ public class CommonKnughtController : MonoBehaviour
     [SerializeField] GameObject Player;
     [SerializeField] GameObject CommonKnught;
     public GameObject WeaponDrop;
+    public GameObject EnemyDeatParticle;
     GameObject weaponTrigger;
 
     GameManager gm;
@@ -30,6 +31,7 @@ public class CommonKnughtController : MonoBehaviour
     Vector2 startPosition;
     Vector3 CastPointDirection;
     Vector2 WeaponDropPosition;
+    Vector2 EnemyDeatParticlePosition;
 
     public float iAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
@@ -188,13 +190,20 @@ public class CommonKnughtController : MonoBehaviour
     {
         if (!gm.changingScene)
         {
+            EnemyDeatParticlePosition = new Vector2(transform.position.x, transform.position.y);
+            EnemyDeatParticle = Instantiate(Resources.Load("prefabs/EnemyDeathParticle") as GameObject);
+            EnemyDeatParticle.transform.position = EnemyDeatParticlePosition;
+
             WeaponDropPosition = new Vector2(transform.position.x, transform.position.y + 0.1f);
             WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
             WeaponDrop.transform.position = WeaponDropPosition;
 
+
             WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
             Destroy(this.gameObject);
+
+
         }
     }
 

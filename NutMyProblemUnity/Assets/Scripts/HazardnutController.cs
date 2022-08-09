@@ -17,6 +17,7 @@ public class HazardnutController : MonoBehaviour
     [SerializeField] GameObject Player;
     [SerializeField] GameObject Hazardnut;
     public GameObject WeaponDrop;
+    public GameObject EnemyDeatParticle;
     GameObject weaponTrigger;
 
     GameManager gm;
@@ -32,6 +33,7 @@ public class HazardnutController : MonoBehaviour
     Vector2 startPosition;
     Vector3 CastPointDirection;
     Vector2 WeaponDropPosition;
+    Vector2 EnemyDeatParticlePosition;
 
     public float fGlovesAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
@@ -192,6 +194,10 @@ public class HazardnutController : MonoBehaviour
     {
         if (!gm.changingScene)
         {
+            EnemyDeatParticlePosition = new Vector2(transform.position.x, transform.position.y);
+            EnemyDeatParticle = Instantiate(Resources.Load("prefabs/EnemyDeathParticle") as GameObject);
+            EnemyDeatParticle.transform.position = EnemyDeatParticlePosition;
+
             WeaponDropPosition = new Vector2(transform.position.x, transform.position.y + 0.1f);
             WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
             WeaponDrop.transform.position = WeaponDropPosition;

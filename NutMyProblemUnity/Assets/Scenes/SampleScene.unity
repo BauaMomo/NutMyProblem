@@ -7034,6 +7034,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6302345894097048392, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
+      propertyPath: doorColor
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6302345894097048394, guid: 379d4b036f866fa47afe78cfd452e24a, type: 3}
       propertyPath: m_RootOrder
       value: 1
