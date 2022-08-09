@@ -15,6 +15,7 @@ TagManager:
   - DeathBarrier
   - Lever
   - Spikes
+  - HealthDrop
   layers:
   - Default
   - TransparentFX
