@@ -152,7 +152,6 @@ public class HazardnutController : MonoBehaviour
                     if (transform.position.x > Target.position.x)
                         rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector2(Target.position.x + 7, Target.position.y), fHazardnutSpeed * Time.deltaTime));
                 }
-
                 break;
 
             case AIMode.waiting:
@@ -170,14 +169,19 @@ public class HazardnutController : MonoBehaviour
                     rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime));
                 }
 
-
                 yield return new WaitForSeconds(0.6f);
                 battack = false;
                 mode = AIMode.follow;
                 break;
         }
     }
-
+    public void StopAttackOnCollision()
+    {
+        mode = AIMode.waiting;
+        battack = false;
+        mode = AIMode.follow;
+        Debug.Log("stop Attack");
+    }
     void FlipEnemy()
     {
         // Spriteflip im patrol mode
