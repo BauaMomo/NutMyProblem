@@ -59,10 +59,10 @@ public class DamageHandler : MonoBehaviour
         iHealth = Mathf.Clamp(iHealth + _ammount, 0, 100);
     }
 
-    public void HandleDamage(int _damage, GameObject _other)
+    public void HandleDamage(int _amount, GameObject _other)
     {
         if (isInvincible) return;
-        iHealth -= _damage;
+        iHealth -= _amount;
         if (this.tag == "Player")
         {
             FindObjectOfType<AudioManager>().Play("PlayerDamage");
@@ -95,7 +95,7 @@ public class DamageHandler : MonoBehaviour
             GetComponent<CommonKnughtController>().DisableMovementFor(0.5f);
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
-            rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 20); 
+            rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 20);
             FindObjectOfType<AudioManager>().Play("EnemyGetDamage");
         }
 
@@ -106,8 +106,20 @@ public class DamageHandler : MonoBehaviour
             GetComponent<HazardnutController>().DisableMovementFor(0.5f);
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
-            rb.AddForce(-directionToOther * 5000);
+            rb.AddForce(Vector2.Scale(-directionToOther * 5000, new Vector2(1, 0.2f)));
             FindObjectOfType<AudioManager>().Play("EnemyGetDamage");
+
+        }
+    }
+    public void HandleDamage(int _amount)
+    {
+        if (isInvincible) return;
+        iHealth -= _amount;
+
+        if (this.tag == "Player")
+        {
+            StartInvincibility(0.5f);
+            FindObjectOfType<AudioManager>().Play("PlayerDamage");
 
         }
     }

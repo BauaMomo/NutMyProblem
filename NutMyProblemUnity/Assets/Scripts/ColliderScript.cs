@@ -89,7 +89,7 @@ public class ColliderScript : MonoBehaviour
                 }
                 break;
             case "Spikes":
-                if(collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(40, parent.gameObject);
+                if(collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(20, parent.gameObject);
                 if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut") collision.GetComponent<DamageHandler>().HandleDamage(1000, parent.gameObject);
                 break;
 
