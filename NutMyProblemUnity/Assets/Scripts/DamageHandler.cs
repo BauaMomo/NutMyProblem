@@ -83,7 +83,7 @@ public class DamageHandler : MonoBehaviour
                     StartInvincibility(0.5f);
                     GetComponent<playerController>().DisableMovementFor(0.6f);
                     rb.velocity = new Vector2(0, rb.velocity.y);
-                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.3f) * 3000 * knockbackFactor);
+                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.5f) * 1700 * knockbackFactor);
                     break;
             }
 
