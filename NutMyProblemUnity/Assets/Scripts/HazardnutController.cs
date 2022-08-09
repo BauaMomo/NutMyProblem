@@ -7,7 +7,7 @@ public class HazardnutController : MonoBehaviour
 {
     GameObject shadow;
 
-    [SerializeField] float afterAttackSpeed;    
+    [SerializeField] float afterAttackSpeed;
     [SerializeField] float fHazardnutChargeSpeed;
 
     public enum directions { right, left };
@@ -21,7 +21,6 @@ public class HazardnutController : MonoBehaviour
 
     [SerializeField] GameObject Player;
     [SerializeField] GameObject Hazardnut;
-    public GameObject WeaponDrop;
     GameObject weaponTrigger;
 
     GameManager gm;
@@ -35,7 +34,6 @@ public class HazardnutController : MonoBehaviour
     Vector2 endPosition;
     Vector2 startPosition;
     Vector3 RayCastVector;
-    Vector2 WeaponDropPosition;
 
     public float fGlovesAttackSpeed { get; protected set; }
     public float fRange { get; protected set; }
@@ -327,12 +325,19 @@ public class HazardnutController : MonoBehaviour
     {
         if (!gm.changingScene)
         {
-            WeaponDropPosition = new Vector2(transform.position.x, transform.position.y + 0.1f);
-            WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
-            WeaponDrop.transform.position = WeaponDropPosition;
+            GameObject drop = null;
+            if (gm.player.GetComponent<Weapons>().availableWeapons.Find(weapon => weapon.WeaponType == Weapons.Weapon.Type.Gloves) == null)
+            {
+                drop = Instantiate(Resources.Load<GameObject>("prefabs/WeaponDrop"));
+                drop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Gloves);
+            }
+            else
+            {
+                drop = Instantiate(Resources.Load<GameObject>("prefabs/HealthDrop"));
+            }
 
-            WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
-            WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Gloves);
+            drop.transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);            
+            drop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             Destroy(this.gameObject);
         }
     }
@@ -344,7 +349,7 @@ public class HazardnutController : MonoBehaviour
 
     public IEnumerator GlovesAttack(directions _directions)
     {
-        
+
         if (noMovement) yield break;
 
         if (Time.time > lastAttackTime + attackCooldown)
