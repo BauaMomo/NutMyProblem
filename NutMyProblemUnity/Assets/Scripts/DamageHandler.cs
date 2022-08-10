@@ -96,7 +96,20 @@ public class DamageHandler : MonoBehaviour
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
             rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 20);
-            FindObjectOfType<AudioManager>().Play("EnemyGetDamage");
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Sword)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Sword");
+            }
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Gloves");
+            }
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Fists)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Fists");
+            }
         }
 
         if (this.tag == "Hazardnut")
@@ -107,7 +120,16 @@ public class DamageHandler : MonoBehaviour
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
             rb.AddForce(Vector2.Scale(-directionToOther * 5000, new Vector2(1, 0.2f)));
-            FindObjectOfType<AudioManager>().Play("EnemyGetDamage");
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Sword)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Sword");
+            }
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Gloves");
+            }
 
         }
     }

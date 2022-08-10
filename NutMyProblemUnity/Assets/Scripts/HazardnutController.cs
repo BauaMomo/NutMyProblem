@@ -178,7 +178,6 @@ public class HazardnutController : MonoBehaviour
         mode = AIMode.waiting;
         battack = false;
         mode = AIMode.follow;
-        Debug.Log("stop Attack");
     }
     void FlipEnemy()
     {
