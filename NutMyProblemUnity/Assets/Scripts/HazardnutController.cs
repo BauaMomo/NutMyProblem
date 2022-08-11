@@ -336,7 +336,7 @@ public class HazardnutController : MonoBehaviour
                 drop = Instantiate(Resources.Load<GameObject>("prefabs/HealthDrop"));
             }
 
-            drop.transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);            
+            drop.transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);
             drop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             Destroy(this.gameObject);
         }
@@ -381,5 +381,11 @@ public class HazardnutController : MonoBehaviour
             Invoke(nameof(ResetSpeed), 1.5f);
         }
     }
+    public void CheckpointSpawn()
+    {
+        Debug.Log("CheckpointSpawn");
+        mode = AIMode.waiting;
+        bHazardnutAwake = false;
 
+    }
 }
