@@ -46,8 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: PlayerAttack
-    clip: {fileID: 8300000, guid: 2ac205a43b4c58544a145bafcf501a82, type: 3}
-    volume: 0.098
+    clip: {fileID: 8300000, guid: b0f767a3c7ae352458a70fe250b28c80, type: 3}
+    volume: 0.089
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerAttackGloves
+    clip: {fileID: 8300000, guid: feb613e5c97455a42afe58c1b6438a94, type: 3}
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     loop: 0
@@ -64,8 +70,14 @@ MonoBehaviour:
     source: {fileID: 0}
     loop: 0
   - name: PlayerJump
-    clip: {fileID: 8300000, guid: 350d6cad3f4707b48b6673cb0a4e6127, type: 3}
+    clip: {fileID: 8300000, guid: bcceebe3f7bc3934ba2f439d62724744, type: 3}
     volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerLanding
+    clip: {fileID: 8300000, guid: f2f0344da97ca2a40b4f67f0fc8238b7, type: 3}
+    volume: 0.11
     pitch: 1
     source: {fileID: 0}
     loop: 0
@@ -76,25 +88,31 @@ MonoBehaviour:
     source: {fileID: 0}
     loop: 0
   - name: EnemyGetDamage
-    clip: {fileID: 8300000, guid: 4840a46857f1a63438d56ed038bc60f1, type: 3}
+    clip: {fileID: 8300000, guid: 1d149886567a6fd4294d6874b0f4a5f4, type: 3}
     volume: 0.1
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: CommonKnughtAttack
     clip: {fileID: 8300000, guid: d5493a5dfc272a84db48bf6c90a3496e, type: 3}
-    volume: 0.1
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: HazardnutAttack
     clip: {fileID: 8300000, guid: 24c8a74ebfa99294daf9f128325c9ac9, type: 3}
-    volume: 0.1
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: PickUpDrop
-    clip: {fileID: 8300000, guid: 29455913f74ebf5449f97c44db25338b, type: 3}
+    clip: {fileID: 8300000, guid: 1b478dd7f11e5c14ea77a117352a2260, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PickUpHealthDrop
+    clip: {fileID: 8300000, guid: abb28bf193aa7354daa6db8f43334e9b, type: 3}
     volume: 0.1
     pitch: 1
     source: {fileID: 0}
@@ -107,7 +125,7 @@ MonoBehaviour:
     loop: 0
   - name: WallBreak
     clip: {fileID: 8300000, guid: 3d1271344f1f19849811ade3e42c1c2d, type: 3}
-    volume: 0.1
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     loop: 0
@@ -125,13 +143,31 @@ MonoBehaviour:
     loop: 0
   - name: Kronleuchter
     clip: {fileID: 8300000, guid: 42fba7000674dbc47b62e0121b14b33c, type: 3}
-    volume: 0.1
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     loop: 0
   - name: Fanfare
     clip: {fileID: 8300000, guid: d98ae8d75ddc725499d3252bd0ead105, type: 3}
-    volume: 0.1
+    volume: 0.08
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage_Sword
+    clip: {fileID: 8300000, guid: 2ab3e500af83d254a8802a8bbfb8601e, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage_Gloves
+    clip: {fileID: 8300000, guid: 1d149886567a6fd4294d6874b0f4a5f4, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage_Fists
+    clip: {fileID: 8300000, guid: 5b691acc393bc264c85aada67c87ba74, type: 3}
+    volume: 0.05
     pitch: 1
     source: {fileID: 0}
     loop: 0

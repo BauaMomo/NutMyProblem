@@ -186,6 +186,7 @@ public class Weapons : MonoBehaviour
         {
             if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fAttackSpeed))
             {
+                FindObjectOfType<AudioManager>().Play("PlayerAttackGloves");
                 GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
@@ -193,7 +194,6 @@ public class Weapons : MonoBehaviour
                 playerController.DisableMovementFor(0.8f);
                 yield return new WaitForSeconds(0.3f);
 
-            FindObjectOfType<AudioManager>().Play("PlayerAttack");
                 weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
                 weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 1.5f);
 
