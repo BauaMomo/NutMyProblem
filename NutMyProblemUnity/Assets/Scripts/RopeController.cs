@@ -12,18 +12,34 @@ public class RopeController : MonoBehaviour
     public bool isdown;
     bool playedSound;
 
+    Animator animator;
+    public GameObject Rope;
+
+    public enum State { _default, cut };
+    public State enemyState;
+
+    Dictionary<State, string> RopeAnimations = new Dictionary<State, string>();
+
     // Start is called before the first frame update
     void Start()
     {
         Chandelier = transform.parent.Find("Chandelier").gameObject;
         playedSound = false;
+
+
+        animator = GetComponent<Animator>();
+
+        RopeAnimations.Add(State._default, "Rope_default_Animation");
+        RopeAnimations.Add(State.cut, "Rope_Rip_Animation");
     }
 
     // Update is called once per frame
     void Update()
     {
         if (isRopeCut) StartFall();
+
     }
+
 
     void StartFall()
     {
@@ -42,6 +58,7 @@ public class RopeController : MonoBehaviour
         }
         if (isdown == true && playedSound == false)
         {
+            Chandelier.GetComponent<ChandelierManager>().ChangeSprite();
             FindObjectOfType<AudioManager>().Play("Kronleuchter");
             playedSound = true;
 
@@ -58,7 +75,7 @@ public class RopeController : MonoBehaviour
             Weapons weapons = collision.transform.parent.GetComponent<Weapons>();
             if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Sword)
             {
-                
+                animator.Play(RopeAnimations[State.cut]);
                 if (isRopeCut == false)
                 {
                     FindObjectOfType<AudioManager>().Play("RopeCut");
@@ -67,4 +84,7 @@ public class RopeController : MonoBehaviour
             }
         }
     }
+
+
+
 }
