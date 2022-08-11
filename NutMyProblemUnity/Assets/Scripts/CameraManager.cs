@@ -115,7 +115,7 @@ public class CameraManager : MonoBehaviour
             else targetPos.y = Mathf.Clamp(camLocalPos.y, -3f, 3f);
         }
 
-        isInFallState = !pCon.isGrounded && pCon.GetComponent<Rigidbody2D>().velocity.y < -2f && Time.time > lastYMoveDirChangeTime + .35f;
+        isInFallState = !pCon.isGrounded && pCon.GetComponent<Rigidbody2D>().velocity.y < -20f && Time.time > lastYMoveDirChangeTime + .45f;
         if (isInFallState)          //if the player has been falling, lower the camera
             targetPos.y = -2;
 
@@ -202,7 +202,7 @@ public class CameraManager : MonoBehaviour
             lastYMoveDirChangeTime = Time.time;
         lastMainYMoveDir = newMainYMoveDir;
 
-        if (Time.time > lastYMoveDirChangeTime + .6f)
+        if (Time.time > lastYMoveDirChangeTime + .7f)
             return newMainYMoveDir;
         else return 0;
     }
