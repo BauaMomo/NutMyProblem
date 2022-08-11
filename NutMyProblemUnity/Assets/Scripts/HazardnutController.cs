@@ -7,7 +7,7 @@ public class HazardnutController : MonoBehaviour
 {
     GameObject shadow;
 
-    [SerializeField] float afterAttackSpeed;    
+    [SerializeField] float afterAttackSpeed;
     [SerializeField] float fHazardnutChargeSpeed;
 
     public enum directions { right, left };
@@ -21,7 +21,6 @@ public class HazardnutController : MonoBehaviour
 
     [SerializeField] GameObject Player;
     [SerializeField] GameObject Hazardnut;
-    public GameObject WeaponDrop;
     GameObject weaponTrigger;
 
     GameManager gm;
@@ -35,7 +34,7 @@ public class HazardnutController : MonoBehaviour
     Vector2 endPosition;
     Vector2 startPosition;
     Vector3 RayCastVector;
-    Vector2 WeaponDropPosition;
+    Vector2 Spawnpoint;
 
     public float fGlovesAttackSpeed { get; protected set; }
     public float fRange { get; protected set; }
@@ -80,6 +79,7 @@ public class HazardnutController : MonoBehaviour
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         Hazardnut = this.gameObject;
+        Spawnpoint = transform.position;
 
     }
 
@@ -152,7 +152,6 @@ public class HazardnutController : MonoBehaviour
                     if (transform.position.x > Target.position.x)
                         rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector2(Target.position.x + 7, Target.position.y), fHazardnutSpeed * Time.deltaTime));
                 }
-
                 break;
 
             case AIMode.waiting:
@@ -170,14 +169,18 @@ public class HazardnutController : MonoBehaviour
                     rb.MovePosition(Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + 5, transform.position.y), (fHazardnutChargeSpeed) * Time.deltaTime));
                 }
 
-
                 yield return new WaitForSeconds(0.6f);
                 battack = false;
                 mode = AIMode.follow;
                 break;
         }
     }
-
+    public void StopAttackOnCollision()
+    {
+        mode = AIMode.waiting;
+        battack = false;
+        mode = AIMode.follow;
+    }
     void FlipEnemy()
     {
         // Spriteflip im patrol mode
@@ -323,12 +326,19 @@ public class HazardnutController : MonoBehaviour
     {
         if (!gm.changingScene)
         {
-            WeaponDropPosition = new Vector2(transform.position.x, transform.position.y + 0.1f);
-            WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
-            WeaponDrop.transform.position = WeaponDropPosition;
+            GameObject drop = null;
+            if (gm.player.GetComponent<Weapons>().availableWeapons.Find(weapon => weapon.WeaponType == Weapons.Weapon.Type.Gloves) == null)
+            {
+                drop = Instantiate(Resources.Load<GameObject>("prefabs/WeaponDrop"));
+                drop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Gloves);
+            }
+            else
+            {
+                drop = Instantiate(Resources.Load<GameObject>("prefabs/HealthDrop"));
+            }
 
-            WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
-            WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Gloves);
+            drop.transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);
+            drop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             Destroy(this.gameObject);
         }
     }
@@ -340,7 +350,7 @@ public class HazardnutController : MonoBehaviour
 
     public IEnumerator GlovesAttack(directions _directions)
     {
-        
+
         if (noMovement) yield break;
 
         if (Time.time > lastAttackTime + attackCooldown)
@@ -372,5 +382,11 @@ public class HazardnutController : MonoBehaviour
             Invoke(nameof(ResetSpeed), 1.5f);
         }
     }
+    public void CheckpointSpawn()
+    {
+        mode = AIMode.waiting;
+        bHazardnutAwake = false;
+        transform.position = Spawnpoint;
 
+    }
 }

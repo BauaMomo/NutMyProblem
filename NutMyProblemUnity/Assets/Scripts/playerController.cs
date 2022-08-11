@@ -6,7 +6,7 @@ using System.Linq;
 
 public class playerController : MonoBehaviour
 {
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     GameManager gm;
     Weapons weapons;
     playerAnimationController playerAnimationController;
@@ -52,6 +52,11 @@ public class playerController : MonoBehaviour
     Vector2 oldPos;
     public Vector2 moveVector;
 
+    public static Vector2 lastCheckpointPosition;
+    public static bool CheckpointAktive;
+    public bool PlayedLandingSound;
+    public bool WalkingSoundStarted;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -69,6 +74,9 @@ public class playerController : MonoBehaviour
 
         PlayerCamera = Camera.main;
         PlayerCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+
+        PlayedLandingSound = false;
+        WalkingSoundStarted = false;
     }
 
     private void Update()
@@ -77,6 +85,7 @@ public class playerController : MonoBehaviour
 
         UpdateShadow();
         MoveDeathBarrier();
+        PlayAudio();
     }
 
     private void FixedUpdate()
@@ -87,6 +96,31 @@ public class playerController : MonoBehaviour
         oldPos = transform.position;
         MovePlayer();
 
+    }
+
+    void PlayAudio()
+    {
+        // ---Landing-Sound---
+        if (PlayedLandingSound == false && isGrounded == true)
+        {
+            FindObjectOfType<AudioManager>().Play("PlayerLanding");
+            PlayedLandingSound = true;
+        }
+        if (isGrounded == false)
+            PlayedLandingSound = false;
+
+        // ---Walking-Sound---
+
+        if(moveDir!= 0 && WalkingSoundStarted == false)
+        {
+            FindObjectOfType<AudioManager>().Play("PlayerFootstep");
+            WalkingSoundStarted = true;
+        }
+        if(moveDir == 0 || isGrounded == false)
+        {
+            FindObjectOfType<AudioManager>().Stop("PlayerFootstep");
+            WalkingSoundStarted = false;
+        }
     }
 
     void MovePlayer()
@@ -154,8 +188,12 @@ public class playerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut")
         {
-            //GetComponent<DamageHandler>().HandleDamage(20, collision.gameObject);
-            DisableMovementFor(0.4f);
+            GetComponent<DamageHandler>().HandleDamage(20);
+            if ( GetComponent<DamageHandler>().iHealth <= 0)
+            {
+                return;
+            }
+            DisableMovementFor(0.3f);
             Vector2 dirToOther = collision.transform.position - transform.position;
             if (isGrounded) rb.AddForce(-dirToOther * 1000 + new Vector2(0, 200));
             else rb.AddForce(-dirToOther * 400 + new Vector2(Random.Range(-400, 400), 0));
@@ -175,23 +213,11 @@ public class playerController : MonoBehaviour
         if (moveDir > 0)
         {
             playerDirection = direction.right;
-            if (isGrounded == true)
-            {
-                FindObjectOfType<AudioManager>().Play("PlayerFootstep");
-                if (isGrounded == false)
-                { FindObjectOfType<AudioManager>().Stop("PlayerFootstep"); }
-            }
         }
         if (moveDir < 0)
         {
             playerDirection = direction.left;
-            if (isGrounded == true)
-            { FindObjectOfType<AudioManager>().Play("PlayerFootstep"); }
-            if (isGrounded == false)
-            { FindObjectOfType<AudioManager>().Stop("PlayerFootstep"); }
         }
-        if (moveDir == 0)
-            FindObjectOfType<AudioManager>().Stop("PlayerFootstep");
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -215,7 +241,6 @@ public class playerController : MonoBehaviour
         {
             //Debug.Log("mouse left pressed");
             StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
-            FindObjectOfType<AudioManager>().Play("PlayerAttack");
         }
     }
 
@@ -228,6 +253,7 @@ public class playerController : MonoBehaviour
     {
         if (context.started)
         { weapons.SwitchWeapon();
+            if(GetComponent<Weapons>().availableWeapons.Count >= 2)
             FindObjectOfType<AudioManager>().Play("WeaponChange");
         }
     }
@@ -252,8 +278,13 @@ public class playerController : MonoBehaviour
                 {
                     case "WeaponDrop":
                         PickUpDrop(go);
-                        GetComponent<DamageHandler>().HandleHealing(20);
+                        FindObjectOfType<AudioManager>().Play("PickUpDrop");
                         return;
+                    case "HealthDrop":
+                        FindObjectOfType<AudioManager>().Play("PickUpHealthDrop");
+                        Destroy(go);
+                        GetComponent<DamageHandler>().HandleHealing(20);
+                        break;
                     case "Lever":
                         go.GetComponent<LeverController>().SwitchLever();
                         return;
@@ -266,7 +297,6 @@ public class playerController : MonoBehaviour
     {
         weapons.AddWeaponFromDrop(_drop);
 
-        FindObjectOfType<AudioManager>().Play("PickUpDrop");
         Destroy(_drop);
     }
 

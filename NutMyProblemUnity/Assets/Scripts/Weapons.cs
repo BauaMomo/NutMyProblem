@@ -13,7 +13,7 @@ public class Weapons : MonoBehaviour
     public Weapon fists { get; protected set; }
     public Weapon currentWeapon { get; protected set; }
     List<Weapon> allWeapons;
-    List<Weapon> availableWeapons;
+    public List<Weapon> availableWeapons {get; protected set;}
 
     public UnityEvent onAttack = new UnityEvent();
 
@@ -127,6 +127,7 @@ public class Weapons : MonoBehaviour
             if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fAttackSpeed))
             {
                 GetComponent<Weapons>().onAttack.Invoke();
+            FindObjectOfType<AudioManager>().Play("PlayerAttack");
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
@@ -176,7 +177,7 @@ public class Weapons : MonoBehaviour
             iDamage = 60;
             fAttackSpeed = 0.8f;
             fRange = 3f;
-            attackMoveStrength = 1000;
+            attackMoveStrength = 1300;
             KnockbackVector = new Vector2(100, 50);
             SetUniversalVars(this);
         }
@@ -185,6 +186,7 @@ public class Weapons : MonoBehaviour
         {
             if (fColliderSpawnTime < Time.fixedUnscaledTime - (1 / fAttackSpeed))
             {
+                FindObjectOfType<AudioManager>().Play("PlayerAttackGloves");
                 GetComponent<Weapons>().onAttack.Invoke();
                 //spawns the collider to damage enemies
                 fColliderSpawnTime = Time.fixedUnscaledTime;
@@ -225,7 +227,7 @@ public class Weapons : MonoBehaviour
             WeaponType = Type.Fists;
             iDamage = 25;
             fAttackSpeed = 1.5f;
-            fRange = 1.5f;
+            fRange = 2f;
             attackMoveStrength = 300;
             KnockbackVector = new Vector2(30, 60);
             SetUniversalVars(this);
@@ -241,6 +243,7 @@ public class Weapons : MonoBehaviour
                 fColliderSpawnTime = Time.fixedUnscaledTime;
 
                 yield return new WaitForSeconds(0.1f);
+            FindObjectOfType<AudioManager>().Play("PlayerAttack");
                 weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, player.transform);
                 weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(fRange, 2);
 
@@ -262,7 +265,7 @@ public class Weapons : MonoBehaviour
 
                 weaponTrigger.transform.position = playerController.transform.position + (Vector3)ColliderOffset;
 
-                Destroy(weaponTrigger, 0.1f);       //Destroy the collider after x seconds
+                Destroy(weaponTrigger, 0.3f);       //Destroy the collider after x seconds
             }
             yield return new WaitForSeconds(0f);
         }

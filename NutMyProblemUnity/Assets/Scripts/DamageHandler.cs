@@ -7,7 +7,7 @@ public class DamageHandler : MonoBehaviour
     [SerializeField] float knockbackFactor;
 
     [field: SerializeField] public int iHealth { get; private set; } = 100;
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     public bool isInvincible { get; protected set; } = false;
 
     HazardnutAnimationController hAnimationController;
@@ -29,7 +29,6 @@ public class DamageHandler : MonoBehaviour
             switch (this.tag)
             {
                 case "Player":
-                    Destroy(this.gameObject);
                     break;
 
                 case "CommonKnught":
@@ -43,7 +42,7 @@ public class DamageHandler : MonoBehaviour
         }
     }
 
-    void StartInvincibility(float _time)
+    public void StartInvincibility(float _time)
     {
         isInvincible = true;
         Invoke(nameof(EndInvincibility), _time);
@@ -59,10 +58,14 @@ public class DamageHandler : MonoBehaviour
         iHealth = Mathf.Clamp(iHealth + _ammount, 0, 100);
     }
 
-    public void HandleDamage(int _damage, GameObject _other)
+    public void HandleDamage(int _amount, GameObject _other)
     {
         if (isInvincible) return;
-        iHealth -= _damage;
+        iHealth -= _amount;
+        if(iHealth<=0)
+        {
+            return;
+        }
         if (this.tag == "Player")
         {
             FindObjectOfType<AudioManager>().Play("PlayerDamage");
@@ -83,7 +86,7 @@ public class DamageHandler : MonoBehaviour
                     StartInvincibility(0.5f);
                     GetComponent<playerController>().DisableMovementFor(0.6f);
                     rb.velocity = new Vector2(0, rb.velocity.y);
-                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.3f) * 3000 * knockbackFactor);
+                    rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.5f) * 1700 * knockbackFactor);
                     break;
             }
 
@@ -95,8 +98,21 @@ public class DamageHandler : MonoBehaviour
             GetComponent<CommonKnughtController>().DisableMovementFor(0.5f);
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
-            rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 20); 
-            FindObjectOfType<AudioManager>().Play("EnemyGetDamage");
+            rb.AddForce(new Vector2((-directionToOther.x * playerForceVector.x), playerForceVector.y) * 20);
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Sword)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Sword");
+            }
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Gloves");
+            }
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Fists)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Fists");
+            }
         }
 
         if (this.tag == "Hazardnut")
@@ -106,9 +122,32 @@ public class DamageHandler : MonoBehaviour
             GetComponent<HazardnutController>().DisableMovementFor(0.5f);
             Vector2 directionToOther = (_other.transform.position - this.transform.position).normalized;
             Vector2 playerForceVector = _other.GetComponent<Weapons>().currentWeapon.KnockbackVector;
-            rb.AddForce(-directionToOther * 5000);
-            FindObjectOfType<AudioManager>().Play("EnemyGetDamage");
+            rb.AddForce(Vector2.Scale(-directionToOther * 5000, new Vector2(1, 0.2f)));
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Sword)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Sword");
+            }
+
+            if (_other.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves)
+            {
+                FindObjectOfType<AudioManager>().Play("EnemyGetDamage_Gloves");
+            }
 
         }
     }
+    public void HandleDamage(int _amount)
+    {
+        if (isInvincible) return;
+        iHealth -= _amount;
+
+        if (this.tag == "Player")
+        {
+            StartInvincibility(0.5f);
+            FindObjectOfType<AudioManager>().Play("PlayerDamage");
+
+        }
+    }
+    public void ResetHealth()
+        { iHealth = 100; }
 }

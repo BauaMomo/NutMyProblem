@@ -22,7 +22,6 @@ public class CommonKnughtController : MonoBehaviour
 
     [SerializeField] GameObject Player;
     [SerializeField] GameObject CommonKnught;
-    public GameObject WeaponDrop;
     GameObject weaponTrigger;
 
     GameManager gm;
@@ -35,9 +34,9 @@ public class CommonKnughtController : MonoBehaviour
     public Vector2 goal;
     public Vector2 endPosition;
     public Vector2 startPosition;
-    Vector2 WeaponDropPosition;
     Vector3 RayCastVector;
     Vector3 CommonKnughtMoveDirection;
+    Vector2 Spawnpoint;
 
     public float iAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
@@ -66,7 +65,7 @@ public class CommonKnughtController : MonoBehaviour
 
         endPosition = new Vector2(fCommonKnughtPathEndPoint, transform.position.y);
         startPosition = new Vector2(fCommonKnughtPathStartPoint, transform.position.y);
-
+        Spawnpoint = startPosition;
         goal = startPosition;
 
         fCommonKnughtSpeed = 6;
@@ -108,8 +107,8 @@ public class CommonKnughtController : MonoBehaviour
         switch (mode)
         {
             case AIMode.patrol:
-                if (Mathf.Abs(startPosition.x - transform.position.x) < 1)  goal = endPosition;      //CommonKnught decides which point is its goal and will move towards it
-                if (Mathf.Abs(endPosition.x - transform.position.x) < 1)    goal = startPosition;
+                if (Mathf.Abs(startPosition.x - transform.position.x) < 1) goal = endPosition;      //CommonKnught decides which point is its goal and will move towards it
+                if (Mathf.Abs(endPosition.x - transform.position.x) < 1) goal = startPosition;
                 fStandingTime = patrolStandingTime;     //standingTime is adjusted for faster movement when following player
                 break;
 
@@ -241,12 +240,16 @@ public class CommonKnughtController : MonoBehaviour
     {
         if (!gm.changingScene)
         {
-            WeaponDropPosition = new Vector2(transform.position.x, transform.position.y + 0.1f);
-            WeaponDrop = Instantiate(Resources.Load("prefabs/WeaponDrop") as GameObject);
-            WeaponDrop.transform.position = WeaponDropPosition;
+            GameObject drop = null;
+            if (gm.player.GetComponent<Weapons>().availableWeapons.Find(weapon => weapon.WeaponType == Weapons.Weapon.Type.Sword) == null)
+            {
+                drop = Instantiate(Resources.Load<GameObject>("prefabs/WeaponDrop"));
+                drop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
+            }
+            else drop = Instantiate(Resources.Load<GameObject>("prefabs/HealthDrop"));
 
-            WeaponDrop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
-            WeaponDrop.GetComponent<WeaponDropManager>().SetType(Weapons.Weapon.Type.Sword);
+            drop.transform.position = new Vector2(transform.position.x, transform.position.y + 0.1f);
+            drop.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-50f, 50f), 200));
             Destroy(this.gameObject);
         }
     }
@@ -258,10 +261,10 @@ public class CommonKnughtController : MonoBehaviour
         {
 
             attackStartTime = Time.time;
+            FindObjectOfType<AudioManager>().Play("CommonKnughtAttack");
             OnAttack.Invoke();
 
             yield return new WaitForSeconds(0.5f);
-            FindObjectOfType<AudioManager>().Play("CommonKnughtAttack");
 
             weaponTrigger = Instantiate(Resources.Load("prefabs/WeaponTrigger") as GameObject, CommonKnught.transform);
             weaponTrigger.GetComponent<BoxCollider2D>().size = new Vector2(7, 1);
@@ -280,6 +283,12 @@ public class CommonKnughtController : MonoBehaviour
             weaponTrigger.transform.position = CommonKnught.transform.position + new Vector3(0, -0.1f, 0);
             Destroy(weaponTrigger, 0.2f);
         }
+    }
+    public void CheckpointSpawn()
+    {
+        mode = AIMode.patrol;
+        transform.position = Spawnpoint;
+
     }
 }
 
