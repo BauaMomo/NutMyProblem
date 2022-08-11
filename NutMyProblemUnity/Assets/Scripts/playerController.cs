@@ -240,6 +240,7 @@ public class playerController : MonoBehaviour
         if (context.started)
         {
             //Debug.Log("mouse left pressed");
+            transform.Find("Canvas/AttackTutorial").gameObject.SetActive(false);
             StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
         }
     }
@@ -252,7 +253,9 @@ public class playerController : MonoBehaviour
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
         if (context.started)
-        { weapons.SwitchWeapon();
+        { 
+            if(weapons.availableWeapons.Count > 1) GameObject.Find("UI").transform.Find("Canvas/WeaponSwitchTutorial").gameObject.SetActive(false);
+            weapons.SwitchWeapon();
             if(GetComponent<Weapons>().availableWeapons.Count >= 2)
             FindObjectOfType<AudioManager>().Play("WeaponChange");
         }
@@ -323,6 +326,8 @@ public class playerController : MonoBehaviour
     {
         if (context.started && IsDashAvailable())
         {
+            transform.Find("Canvas/DashTutorial").gameObject.SetActive(false);
+
             isDashing = true;
             lastDashTime = Time.time;
 
