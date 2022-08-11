@@ -7,7 +7,7 @@ public class DamageHandler : MonoBehaviour
     [SerializeField] float knockbackFactor;
 
     [field: SerializeField] public int iHealth { get; private set; } = 100;
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     public bool isInvincible { get; protected set; } = false;
 
     HazardnutAnimationController hAnimationController;
@@ -29,7 +29,6 @@ public class DamageHandler : MonoBehaviour
             switch (this.tag)
             {
                 case "Player":
-                    Destroy(this.gameObject);
                     break;
 
                 case "CommonKnught":
@@ -43,7 +42,7 @@ public class DamageHandler : MonoBehaviour
         }
     }
 
-    void StartInvincibility(float _time)
+    public void StartInvincibility(float _time)
     {
         isInvincible = true;
         Invoke(nameof(EndInvincibility), _time);
@@ -63,6 +62,10 @@ public class DamageHandler : MonoBehaviour
     {
         if (isInvincible) return;
         iHealth -= _amount;
+        if(iHealth<=0)
+        {
+            return;
+        }
         if (this.tag == "Player")
         {
             FindObjectOfType<AudioManager>().Play("PlayerDamage");
@@ -145,4 +148,6 @@ public class DamageHandler : MonoBehaviour
 
         }
     }
+    public void ResetHealth()
+        { iHealth = 100; }
 }

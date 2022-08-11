@@ -6,7 +6,7 @@ using System.Linq;
 
 public class playerController : MonoBehaviour
 {
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     GameManager gm;
     Weapons weapons;
     playerAnimationController playerAnimationController;
@@ -52,6 +52,8 @@ public class playerController : MonoBehaviour
     Vector2 oldPos;
     public Vector2 moveVector;
 
+    public static Vector2 lastCheckpointPosition;
+    public static bool CheckpointAktive;
     public bool PlayedLandingSound;
     public bool WalkingSoundStarted;
 
@@ -187,6 +189,10 @@ public class playerController : MonoBehaviour
         if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut")
         {
             GetComponent<DamageHandler>().HandleDamage(20);
+            if ( GetComponent<DamageHandler>().iHealth <= 0)
+            {
+                return;
+            }
             DisableMovementFor(0.3f);
             Vector2 dirToOther = collision.transform.position - transform.position;
             if (isGrounded) rb.AddForce(-dirToOther * 1000 + new Vector2(0, 200));
@@ -247,6 +253,7 @@ public class playerController : MonoBehaviour
     {
         if (context.started)
         { weapons.SwitchWeapon();
+            if(GetComponent<Weapons>().availableWeapons.Count >= 2)
             FindObjectOfType<AudioManager>().Play("WeaponChange");
         }
     }
