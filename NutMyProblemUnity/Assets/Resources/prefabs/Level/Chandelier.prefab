@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 1662141196}
   - component: {fileID: 1662141199}
   - component: {fileID: 1662141198}
+  - component: {fileID: 5839722443226160529}
   m_Layer: 13
   m_Name: Rope
   m_TagString: Untagged
@@ -236,7 +237,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 10, y: 14}
+    oldSize: {x: 10, y: 16}
     newSize: {x: 10, y: 14}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -258,6 +259,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isRopeCut: 0
+  isdown: 0
+--- !u!95 &5839722443226160529
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662141195}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5a98d2d45e2eee14abdcf5d71f27342d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2598719888666905499
 GameObject:
   m_ObjectHideFlags: 0
