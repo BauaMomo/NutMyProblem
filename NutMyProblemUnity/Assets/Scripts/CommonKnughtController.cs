@@ -36,6 +36,7 @@ public class CommonKnughtController : MonoBehaviour
     public Vector2 startPosition;
     Vector3 RayCastVector;
     Vector3 CommonKnughtMoveDirection;
+    Vector2 Spawnpoint;
 
     public float iAttackSpeed { get; protected set; }
     public float iRange { get; protected set; }
@@ -64,7 +65,7 @@ public class CommonKnughtController : MonoBehaviour
 
         endPosition = new Vector2(fCommonKnughtPathEndPoint, transform.position.y);
         startPosition = new Vector2(fCommonKnughtPathStartPoint, transform.position.y);
-
+        Spawnpoint = startPosition;
         goal = startPosition;
 
         fCommonKnughtSpeed = 6;
@@ -282,6 +283,12 @@ public class CommonKnughtController : MonoBehaviour
             weaponTrigger.transform.position = CommonKnught.transform.position + new Vector3(0, -0.1f, 0);
             Destroy(weaponTrigger, 0.2f);
         }
+    }
+    public void CheckpointSpawn()
+    {
+        mode = AIMode.patrol;
+        transform.position = Spawnpoint;
+
     }
 }
 

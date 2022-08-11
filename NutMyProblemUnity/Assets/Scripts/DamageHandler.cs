@@ -29,8 +29,6 @@ public class DamageHandler : MonoBehaviour
             switch (this.tag)
             {
                 case "Player":
-                    //Destroy(this.gameObject);
-                    //transform.position = playerController.lastCheckpointPosition;
                     break;
 
                 case "CommonKnught":

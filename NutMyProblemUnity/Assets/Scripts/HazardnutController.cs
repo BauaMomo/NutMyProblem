@@ -34,6 +34,7 @@ public class HazardnutController : MonoBehaviour
     Vector2 endPosition;
     Vector2 startPosition;
     Vector3 RayCastVector;
+    Vector2 Spawnpoint;
 
     public float fGlovesAttackSpeed { get; protected set; }
     public float fRange { get; protected set; }
@@ -78,6 +79,7 @@ public class HazardnutController : MonoBehaviour
 
         TPlayer = GameObject.FindGameObjectWithTag("Player").transform;
         Hazardnut = this.gameObject;
+        Spawnpoint = transform.position;
 
     }
 
@@ -178,7 +180,6 @@ public class HazardnutController : MonoBehaviour
         mode = AIMode.waiting;
         battack = false;
         mode = AIMode.follow;
-        Debug.Log("stop Attack");
     }
     void FlipEnemy()
     {
@@ -383,9 +384,9 @@ public class HazardnutController : MonoBehaviour
     }
     public void CheckpointSpawn()
     {
-        Debug.Log("CheckpointSpawn");
         mode = AIMode.waiting;
         bHazardnutAwake = false;
+        transform.position = Spawnpoint;
 
     }
 }

@@ -234,6 +234,7 @@ public class playerController : MonoBehaviour
     {
         if (context.started)
         { weapons.SwitchWeapon();
+            if(GetComponent<Weapons>().availableWeapons.Count >= 2)
             FindObjectOfType<AudioManager>().Play("WeaponChange");
         }
     }
