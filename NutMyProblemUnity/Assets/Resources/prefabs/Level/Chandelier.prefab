@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 222231561}
   - component: {fileID: 222231560}
   - component: {fileID: 222231559}
+  - component: {fileID: 5117009102048790275}
   m_Layer: 11
   m_Name: Chandelier
   m_TagString: Floor
@@ -133,6 +134,20 @@ PlatformEffector2D:
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
+--- !u!114 &5117009102048790275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222231557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ffbb5aaa04312147bdeb8992419d411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 222231561}
+  DamagedChandalier: {fileID: 21300000, guid: bff9989d315585e46ba3890d11f449e0, type: 3}
 --- !u!1 &1662141195
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +275,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isRopeCut: 0
   isdown: 0
+  Rope: {fileID: 1662141195}
+  enemyState: 0
 --- !u!95 &5839722443226160529
 Animator:
   serializedVersion: 4
