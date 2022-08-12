@@ -65,6 +65,8 @@ public class playerController : MonoBehaviour
         weapons = GetComponent<Weapons>();
         playerAnimationController = GetComponent<playerAnimationController>();
 
+        lastCheckpointPosition = transform.position;
+
         defaultGravity = rb.gravityScale;
         defaultDrag = rb.drag;
 
