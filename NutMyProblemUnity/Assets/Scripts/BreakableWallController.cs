@@ -7,11 +7,13 @@ public class BreakableWallController : MonoBehaviour
     bool isWallBroken = false;
 
     GameObject WallCracked;
+    GameObject WallBroken;
 
     // Start is called before the first frame update
     void Start()
     {
         WallCracked = transform.Find("BreakableWall_Cracked").gameObject;
+        WallBroken = transform.Find("BreakableWall_Hole").gameObject;
     }
 
     // Update is called once per frame
@@ -24,8 +26,8 @@ public class BreakableWallController : MonoBehaviour
     {
         isWallBroken = true;
 
-        WallCracked.GetComponent<SpriteRenderer>().enabled = false;
-        WallCracked.GetComponent<BoxCollider2D>().enabled = false;
+        WallCracked.SetActive(false);
+        WallBroken.SetActive(true);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
