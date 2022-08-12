@@ -46,6 +46,8 @@ public class InteractPrompts : MonoBehaviour
         startPos = child.transform.localPosition;
         spriteStartScale = child.transform.localScale;
 
+        child.transform.localScale *= 0;
+
         rPoint1 = new Vector2(maxMoveRange/2, 0);
         GetNewRandomPoints(ref rPoint1, ref rPoint2);
     }
@@ -58,8 +60,8 @@ public class InteractPrompts : MonoBehaviour
 
         child.transform.localScale = spriteStartScale * spriteScale;
 
-        if (Vector2.Distance(transform.position, player.transform.position) <= 3f) RespawnPrompt();
-        if (Vector2.Distance(transform.position, player.transform.position) > 3f) DespawnPrompt();
+        if (Vector2.Distance(transform.position, player.transform.position) <= 2.5f) RespawnPrompt();
+        if (Vector2.Distance(transform.position, player.transform.position) > 2.5f) DespawnPrompt();
 
         MoveSprite();
     }
