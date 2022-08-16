@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6993049586569872538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6993049586569872612}
+  - component: {fileID: 6993049586569872613}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6993049586569872612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993049586569872538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6993049586569872613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993049586569872538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70667cb048dc457469847269f7a7c1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: PlayerAttack
+    clip: {fileID: 8300000, guid: b0f767a3c7ae352458a70fe250b28c80, type: 3}
+    volume: 0.089
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerAttackGloves
+    clip: {fileID: 8300000, guid: feb613e5c97455a42afe58c1b6438a94, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerDamage
+    clip: {fileID: 8300000, guid: 8d9b99a8b207d4a4782457f62b14b46b, type: 3}
+    volume: 0.087
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerFootstep
+    clip: {fileID: 8300000, guid: d79c4de8a9d50c249b27451bd6672dc5, type: 3}
+    volume: 0.62
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerJump
+    clip: {fileID: 8300000, guid: bcceebe3f7bc3934ba2f439d62724744, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerLanding
+    clip: {fileID: 8300000, guid: f2f0344da97ca2a40b4f67f0fc8238b7, type: 3}
+    volume: 0.11
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PlayerDash
+    clip: {fileID: 8300000, guid: 8187cab7509bc044ca9afdc3b81b1cb5, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage
+    clip: {fileID: 8300000, guid: 1d149886567a6fd4294d6874b0f4a5f4, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: CommonKnughtAttack
+    clip: {fileID: 8300000, guid: d5493a5dfc272a84db48bf6c90a3496e, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: HazardnutAttack
+    clip: {fileID: 8300000, guid: 24c8a74ebfa99294daf9f128325c9ac9, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PickUpDrop
+    clip: {fileID: 8300000, guid: 1b478dd7f11e5c14ea77a117352a2260, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: PickUpHealthDrop
+    clip: {fileID: 8300000, guid: abb28bf193aa7354daa6db8f43334e9b, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: WeaponChange
+    clip: {fileID: 8300000, guid: 89c13a562242bfc4da077b4873514ea3, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: WallBreak
+    clip: {fileID: 8300000, guid: 3d1271344f1f19849811ade3e42c1c2d, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: RopeCut
+    clip: {fileID: 8300000, guid: 2ab3e500af83d254a8802a8bbfb8601e, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Lever
+    clip: {fileID: 8300000, guid: 58c3872bdebb3f24ca73eedbd9b11a34, type: 3}
+    volume: 0.1
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Kronleuchter
+    clip: {fileID: 8300000, guid: 42fba7000674dbc47b62e0121b14b33c, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Fanfare
+    clip: {fileID: 8300000, guid: d98ae8d75ddc725499d3252bd0ead105, type: 3}
+    volume: 0.08
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage_Sword
+    clip: {fileID: 8300000, guid: 2ab3e500af83d254a8802a8bbfb8601e, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage_Gloves
+    clip: {fileID: 8300000, guid: 1d149886567a6fd4294d6874b0f4a5f4, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: EnemyGetDamage_Fists
+    clip: {fileID: 8300000, guid: 5b691acc393bc264c85aada67c87ba74, type: 3}
+    volume: 0.05
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0

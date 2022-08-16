@@ -62,3 +62,6 @@ sysinfo.txt
 crashlytics-build.properties
 
 NutMyProblemUnity/UserSettings/EditorUserSettings.asset
+NutMyProblemUnity/.vscode/settings.json
+NutMyProblemUnity/.vscode/tasks.json
+NutMyProblemUnity/.vscode/launch.json

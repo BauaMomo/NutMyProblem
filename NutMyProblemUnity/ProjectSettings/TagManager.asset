@@ -15,6 +15,7 @@ TagManager:
   - DeathBarrier
   - Lever
   - Spikes
+  - HealthDrop
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - 
   - Water
   - UI
-  - Enemy
+  - 
   - Player
   - CommonKnught
   - WeaponDrop

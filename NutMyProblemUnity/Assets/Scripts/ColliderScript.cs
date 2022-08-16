@@ -15,7 +15,7 @@ public class ColliderScript : MonoBehaviour
         gm = Object.FindObjectOfType<GameManager>();
 
         parent = this.transform.parent;
-        if(tag == "GroundedTrigger") GroundedTrigger = GetComponent<BoxCollider2D>();
+        if (tag == "GroundedTrigger") GroundedTrigger = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
@@ -53,12 +53,26 @@ public class ColliderScript : MonoBehaviour
                 switch (tag)
                 {
                     case "WeaponTrigger":
-                        if (collision.tag == "CommonKnught" || collision.tag == "Hazardnut") collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
+                        if (collision.tag == "CommonKnught" || collision.tag == "Hazardnut")
+                        {
+                            collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
+                            FindObjectOfType<AudioManager>().Stop("HazardnutStopAttack");
+                        }
+
+
+                        if (collision.tag == "WeaponTrigger" && collision.transform.parent.tag == "Hazardnut" && parent.GetComponent<Weapons>().currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves)
+                        {
+                            collision.transform.parent.GetComponent<HazardnutController>().StopAttackOnCollision();
+                            FindObjectOfType<AudioManager>().Stop("HazardnutAttack");
+                            FindObjectOfType<AudioManager>().Play("HazardnutStopAttack");
+                        }
+
                         break;
                     case "GroundedTrigger":
                         switch (collision.tag)
                         {
                             case "Floor":
+                                //Debug.Log(parent.GetComponent<Rigidbody2D>().velocity.y);
                                 if (parent.GetComponent<Rigidbody2D>().velocity.y <= 1) parent.GetComponent<playerController>().isGrounded = true;
                                 break;
                             case "DeathBarrier":
@@ -84,12 +98,20 @@ public class ColliderScript : MonoBehaviour
                 {
                     case "Player":
                         parent.GetComponent<HazardnutController>().TPlayer.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<HazardnutController>().iGlovesDamage, parent.gameObject);
+                        parent.GetComponent<HazardnutController>().StopAttackOnCollision();
+                        FindObjectOfType<AudioManager>().Stop("HazardnutStopAttack");
+                        break;
+                    case "CommonKnught":
+                        parent.GetComponent<HazardnutController>().StopAttackOnCollision();
+                        break;
+                    case "Hazardnut":
+                        parent.GetComponent<HazardnutController>().StopAttackOnCollision();
                         break;
                 }
                 break;
             case "Spikes":
-                if(collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(40, parent.gameObject);
-                if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) collision.GetComponent<DamageHandler>().HandleDamage(1000, parent.gameObject);
+                if (collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(20, parent.gameObject);
+                if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut") collision.GetComponent<DamageHandler>().HandleDamage(1000, parent.gameObject);
                 break;
 
 

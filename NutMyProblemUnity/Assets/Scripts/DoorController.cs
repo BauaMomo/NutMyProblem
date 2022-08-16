@@ -7,22 +7,22 @@ public class DoorController : MonoBehaviour
     GameObject DoorOpened;
     GameObject DoorClosed;
 
-    public enum Color { red, green, blue, purple, orange }
+    public enum Color { red, green, white, purple, yellow }
     public Color doorColor;
 
     Color oldDoorColor;
 
     Sprite Door_Red_Opened;
     Sprite Door_Green_Opened;
-    Sprite Door_Blue_Opened;
+    Sprite Door_White_Opened;
     Sprite Door_Purple_Opened;
-    Sprite Door_Orange_Opened;
+    Sprite Door_Yellow_Opened;
 
     Sprite Door_Red_Closed;
     Sprite Door_Green_Closed;
-    Sprite Door_Blue_Closed;
+    Sprite Door_White_Closed;
     Sprite Door_Purple_Closed;
-    Sprite Door_Orange_Closed;
+    Sprite Door_Yellow_Closed;
 
     public bool opened = false;
 
@@ -30,19 +30,19 @@ public class DoorController : MonoBehaviour
     void Start()
     {
         DoorOpened = transform.Find("Door_Open").gameObject;
-        DoorClosed = this.gameObject;
+        DoorClosed = transform.Find("Door_Closed").gameObject;
 
-        Door_Red_Opened = Resources.Load<Sprite>("Background2/doorway_broken");         //put door sprites here
-        Door_Green_Opened = Resources.Load<Sprite>("Background2/");
-        Door_Blue_Opened = Resources.Load<Sprite>("Background2/");
-        Door_Purple_Opened = Resources.Load<Sprite>("Background2/");
-        Door_Orange_Opened = Resources.Load<Sprite>("Background2/");
+        Door_Red_Opened = Resources.Load<Sprite>("Background2/GateSmall_Open_Red");         //put door sprites here
+        Door_Green_Opened = Resources.Load<Sprite>("Background2/GateSmall_Open_Green");
+        Door_White_Opened = Resources.Load<Sprite>("Background2/GateSmall_Open_White");
+        Door_Purple_Opened = Resources.Load<Sprite>("Background2/GateSmall_Open_Purple");
+        Door_Yellow_Opened = Resources.Load<Sprite>("Background2/GateSmall_Open_Yellow");
 
-        Door_Red_Closed = Resources.Load<Sprite>("Background2/door_side_red");
-        Door_Green_Closed = Resources.Load<Sprite>("Background2/");
-        Door_Blue_Closed = Resources.Load<Sprite>("Background2/");
-        Door_Purple_Closed = Resources.Load<Sprite>("Background2/");
-        Door_Orange_Closed = Resources.Load<Sprite>("Background2/");
+        Door_Red_Closed = Resources.Load<Sprite>("Background2/GateSmall_Closed_Red");
+        Door_Green_Closed = Resources.Load<Sprite>("Background2/GateSmall_Closed_Green");
+        Door_White_Closed = Resources.Load<Sprite>("Background2/GateSmall_Closed_White");
+        Door_Purple_Closed = Resources.Load<Sprite>("Background2/GateSmall_Closed_Purple");
+        Door_Yellow_Closed = Resources.Load<Sprite>("Background2/GateSmall_Closed_Yellow");
     }
 
     // Update is called once per frame
@@ -65,17 +65,17 @@ public class DoorController : MonoBehaviour
                 DoorOpened.GetComponent<SpriteRenderer>().sprite = Door_Green_Opened;
                 DoorClosed.GetComponent<SpriteRenderer>().sprite = Door_Green_Closed;
                 break;
-            case Color.blue:
-                DoorOpened.GetComponent<SpriteRenderer>().sprite = Door_Blue_Opened;
-                DoorClosed.GetComponent<SpriteRenderer>().sprite = Door_Blue_Closed;
+            case Color.white:
+                DoorOpened.GetComponent<SpriteRenderer>().sprite = Door_White_Opened;
+                DoorClosed.GetComponent<SpriteRenderer>().sprite = Door_White_Closed;
                 break;
             case Color.purple:
                 DoorOpened.GetComponent<SpriteRenderer>().sprite = Door_Purple_Opened;
                 DoorClosed.GetComponent<SpriteRenderer>().sprite = Door_Purple_Closed;
                 break;
-            case Color.orange:
-                DoorOpened.GetComponent<SpriteRenderer>().sprite = Door_Orange_Opened;
-                DoorClosed.GetComponent<SpriteRenderer>().sprite = Door_Orange_Closed;
+            case Color.yellow:
+                DoorOpened.GetComponent<SpriteRenderer>().sprite = Door_Yellow_Opened;
+                DoorClosed.GetComponent<SpriteRenderer>().sprite = Door_Yellow_Closed;
                 break;
         }
         //Debug.Log("ping");
@@ -100,8 +100,8 @@ public class DoorController : MonoBehaviour
         if (opened) return;
         opened = !opened;
 
-        DoorClosed.GetComponent<SpriteRenderer>().enabled = false;
-        DoorClosed.GetComponent<BoxCollider2D>().enabled = false;
+        DoorClosed.SetActive(false);
+        DoorOpened.SetActive(true);
     }
 
     void CloseDoor()
@@ -109,7 +109,7 @@ public class DoorController : MonoBehaviour
         if (!opened) return;
         opened = !opened;
 
-        DoorClosed.GetComponent<SpriteRenderer>().enabled = true;
-        DoorClosed.GetComponent<BoxCollider2D>().enabled = true;
+        DoorClosed.SetActive(true);
+        DoorOpened.SetActive(false);
     }
 }

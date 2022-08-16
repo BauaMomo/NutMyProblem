@@ -6,24 +6,24 @@ using System.Linq;
 
 public class playerController : MonoBehaviour
 {
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
     GameManager gm;
     Weapons weapons;
     playerAnimationController playerAnimationController;
 
     GameObject shadow;
+    Vector2 ShadowRayStartOffset = new Vector2(0, -1);
     GameObject DeathBarrier;
     Camera PlayerCamera;
 
-    int iPlayerSpeed;
+    [SerializeField] int iPlayerSpeed;
     [SerializeField] int iJumpSpeed;
     [SerializeField] int iFallSpeed;
     [SerializeField] int iFallAcceleration;
 
     public bool noMovement;
-    float noMovementEndTime;
 
-    public float lastDashTime { get; protected set; }
+    public float lastDashTime { get; protected set; } = float.MinValue;
     public float fDashLength { get; protected set; } = .4f;
     public float fDashCooldown { get; } = .8f;
     float fDashStartHeight;
@@ -32,15 +32,17 @@ public class playerController : MonoBehaviour
     bool isDashing;
     bool hasDash;
 
+    float defaultDrag;
+    float stillDrag = 10;
+
     public bool isGrounded;
     bool leftRay;
     bool rightRay;
     public bool isSprinting { get; protected set; } = false;
 
-    float fJumpStartTime;
-    float fCollExitTime;
+    float fJumpStartTime = float.MinValue;
 
-    float moveDir;
+    public float moveDir { get; protected set; }
     public bool isHoldingJump { get; protected set; } = false;
 
 
@@ -57,6 +59,13 @@ public class playerController : MonoBehaviour
     ParticleSystem.ShapeModule ShapeModuleWalking;
     ParticleSystem.VelocityOverLifetimeModule VelocityOverLifetimeModuleWalking;
     bool WalkingParticleStarted;
+    Vector2 oldPos;
+    public Vector2 moveVector;
+
+    public static Vector2 lastCheckpointPosition;
+    public static bool CheckpointAktive;
+    public bool PlayedLandingSound;
+    public bool WalkingSoundStarted;
 
     // Start is called before the first frame update
     void Awake()
@@ -66,7 +75,10 @@ public class playerController : MonoBehaviour
         weapons = GetComponent<Weapons>();
         playerAnimationController = GetComponent<playerAnimationController>();
 
+        lastCheckpointPosition = transform.position;
+
         defaultGravity = rb.gravityScale;
+        defaultDrag = rb.drag;
 
         shadow = transform.Find("BlobShadow").gameObject;
         DeathBarrier = Instantiate(Resources.Load("Prefabs/DeathBarrier") as GameObject);
@@ -75,27 +87,59 @@ public class playerController : MonoBehaviour
         PlayerCamera = Camera.main;
         PlayerCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 
-        iPlayerSpeed = 12;
-        iJumpSpeed = 16;
-        iFallSpeed = 30;
-        iFallAcceleration = 70;
-
         ShapeModuleDash = PlayerDashParticle.shape;
         PlayedLandingParticle = false;
         ShapeModuleWalking = PlayerWalkingParticle.shape;
         VelocityOverLifetimeModuleWalking = PlayerWalkingParticle.velocityOverLifetime;
         WalkingParticleStarted = false;
+        PlayedLandingSound = false;
+        WalkingSoundStarted = false;
     }
 
     private void Update()
     {
         if (isGrounded) hasDash = true;
 
-        MovePlayer();
         UpdateShadow();
         MoveDeathBarrier();
         ParticleDirection();
         PlayLandingParicle();
+        PlayAudio();
+    }
+
+    private void FixedUpdate()
+    {
+        Vector2 newPos = transform.position;
+        moveVector = (newPos - oldPos).normalized;
+        //Debug.Log(moveVector);
+        oldPos = transform.position;
+        MovePlayer();
+
+    }
+
+    void PlayAudio()
+    {
+        // ---Landing-Sound---
+        if (PlayedLandingSound == false && isGrounded == true)
+        {
+            FindObjectOfType<AudioManager>().Play("PlayerLanding");
+            PlayedLandingSound = true;
+        }
+        if (isGrounded == false)
+            PlayedLandingSound = false;
+
+        // ---Walking-Sound---
+
+        if(moveDir!= 0 && WalkingSoundStarted == false)
+        {
+            FindObjectOfType<AudioManager>().Play("PlayerFootstep");
+            WalkingSoundStarted = true;
+        }
+        if(moveDir == 0 || isGrounded == false)
+        {
+            FindObjectOfType<AudioManager>().Stop("PlayerFootstep");
+            WalkingSoundStarted = false;
+        }
     }
 
     void ParticleDirection()
@@ -142,6 +186,8 @@ public class playerController : MonoBehaviour
     void MovePlayer()
     {
         rb.gravityScale = defaultGravity;
+        if (moveDir == 0 && isGrounded && !noMovement) rb.drag = stillDrag;
+        else rb.drag = defaultDrag;
 
         IsDashAvailable();
         if (Time.time > lastDashTime + fDashLength)
@@ -150,14 +196,14 @@ public class playerController : MonoBehaviour
             PlayerDashParticle.Stop();
         }
         if (isDashing) rb.gravityScale = dashGravity;
+        if (IsAttackting()) rb.gravityScale = 3;
 
         if (!noMovement)
         {
             if (moveDir != 0) rb.velocity = new Vector2(iPlayerSpeed * moveDir, rb.velocity.y);
         }
-        else if (Time.time > noMovementEndTime) noMovement = false;
 
-        if (!isDashing)
+        if (!isDashing && !IsAttackting())
         {
             if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                   //higher than standard fall speed
             {
@@ -170,18 +216,21 @@ public class playerController : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
             }
         }
+    }
 
-
+    bool IsAttackting()
+    {
+        return playerAnimationController.playerState == playerAnimationController.State.attacking;
     }
 
     void UpdateShadow()
     {
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), new Vector2(0, -1), 10f, 1 << LayerMask.NameToLayer("Floor"));
-        Debug.DrawLine(new Vector2(transform.position.x, transform.position.y), new Vector2(transform.position.x, hit.point.y), Color.red);
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + ShadowRayStartOffset, new Vector2(0, -1), 15f, 1 << LayerMask.NameToLayer("Floor"));
+        Debug.DrawLine((Vector2)transform.position + ShadowRayStartOffset, new Vector2(transform.position.x, hit.point.y), Color.red);
 
         shadow.transform.position = new Vector2(transform.position.x, hit.point.y);                                     //Draws the shadow at the intersection of the ray and the next collider on the layer "Floor"
-        if (hit.distance > 1f) shadow.transform.localScale = new Vector3(2, 1, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
-        else shadow.transform.localScale = new Vector3(2, 1, 1) * hit.distance;
+        if (hit.distance > 1f) shadow.transform.localScale = 0.8f * new Vector3(2, .6f, 1) * (0.5f / hit.distance + 0.5f);       //scales the shadow down with increasing distance from platform
+        else shadow.transform.localScale = new Vector3(2, .6f, 1) * 0.8f;
     }
 
     void MoveDeathBarrier()
@@ -189,21 +238,51 @@ public class playerController : MonoBehaviour
         DeathBarrier.transform.position = new Vector2(transform.position.x, -20);
     }
 
+    public void DisableMovementFor(float _time)
+    {
+        noMovement = true;
+        Invoke(nameof(EnableMovement), _time);
+    }
+
+    void EnableMovement()
+    {
+        noMovement = false;
+    }
+    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut")
+        {
+            GetComponent<DamageHandler>().HandleDamage(20);
+            if ( GetComponent<DamageHandler>().iHealth <= 0)
+            {
+                return;
+            }
+            DisableMovementFor(0.3f);
+            Vector2 dirToOther = collision.transform.position - transform.position;
+            if (isGrounded) rb.AddForce(-dirToOther * 1000 + new Vector2(0, 200));
+            else rb.AddForce(-dirToOther * 400 + new Vector2(Random.Range(-400, 400), 0));
+        }
+    }
+
     // v Unity InputSystem Stuff v
+
+    public void OnExit(InputAction.CallbackContext context)
+    {
+        if (context.started) GameObject.Find("Menus").GetComponent<MenuManager>().OnEsc(context);
+    }
 
     public void OnMove(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<float>();
-
-            if (moveDir > 0)
-            {
-                playerDirection = direction.right;
-            }
-            if (moveDir < 0)
-            {
-                playerDirection = direction.left;
-            }
-
+        if (moveDir > 0)
+        {
+            playerDirection = direction.right;
+        }
+        if (moveDir < 0)
+        {
+            playerDirection = direction.left;
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -215,6 +294,7 @@ public class playerController : MonoBehaviour
             isHoldingJump = true;
             fJumpStartTime = Time.fixedUnscaledTime;
             rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
+            FindObjectOfType<AudioManager>().Play("PlayerJump");
         }
 
         if (context.canceled) isHoldingJump = false;
@@ -225,20 +305,32 @@ public class playerController : MonoBehaviour
         if (context.started)
         {
             //Debug.Log("mouse left pressed");
-            weapons.currentWeapon.Attack(playerDirection);
+            transform.Find("Canvas/AttackTutorial").gameObject.SetActive(false);
+            StartCoroutine(weapons.currentWeapon.Attack(playerDirection));
         }
+    }
+
+    public void OnWeaponAttack()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0);
     }
 
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
-        if (context.started) weapons.SwitchWeapon();
+        if (context.started)
+        { 
+            if(weapons.availableWeapons.Count > 1) GameObject.Find("UI").transform.Find("Canvas/WeaponSwitchTutorial").gameObject.SetActive(false);
+            weapons.SwitchWeapon();
+            if(GetComponent<Weapons>().availableWeapons.Count >= 2)
+            FindObjectOfType<AudioManager>().Play("WeaponChange");
+        }
     }
 
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            Collider2D[] searchColliders = Physics2D.OverlapCircleAll(this.transform.position, 2);      //creates an array of colliders within a certain radius
+            Collider2D[] searchColliders = Physics2D.OverlapCircleAll(this.transform.position, 2.1f);      //creates an array of colliders within a certain radius
             List<GameObject> AllGO = new List<GameObject>();
 
             foreach (Collider2D c in searchColliders)
@@ -254,7 +346,13 @@ public class playerController : MonoBehaviour
                 {
                     case "WeaponDrop":
                         PickUpDrop(go);
+                        FindObjectOfType<AudioManager>().Play("PickUpDrop");
                         return;
+                    case "HealthDrop":
+                        FindObjectOfType<AudioManager>().Play("PickUpHealthDrop");
+                        Destroy(go);
+                        GetComponent<DamageHandler>().HandleHealing(20);
+                        break;
                     case "Lever":
                         go.GetComponent<LeverController>().SwitchLever();
                         return;
@@ -294,15 +392,17 @@ public class playerController : MonoBehaviour
         if (context.started && IsDashAvailable())
         {
             PlayerDashParticle.Play();
+            transform.Find("Canvas/DashTutorial").gameObject.SetActive(false);
+
             isDashing = true;
             lastDashTime = Time.time;
 
-            noMovementEndTime = Time.time + fDashLength;
-            noMovement = true;
+            DisableMovementFor(fDashLength);
 
 
             rb.AddForce(new Vector2(1000, 0) * moveDir);
             rb.velocity = new Vector2(rb.velocity.x, 0);
+            FindObjectOfType<AudioManager>().Play("PlayerDash");
         }
 
         if (!isGrounded) hasDash = false;
