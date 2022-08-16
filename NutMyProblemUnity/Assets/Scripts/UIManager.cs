@@ -27,6 +27,10 @@ public class UIManager : MonoBehaviour
     GameObject WeaponEmpty;
     List<GameObject> WeaponGOs = new List<GameObject>();
 
+    GameObject WeaponSwitchTutorial;
+
+    bool WeaponSwitchTutorialGate = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,6 +59,9 @@ public class UIManager : MonoBehaviour
         {
             WeaponGOs.Add(WeaponEmpty.transform.Find("Weapon " + i).gameObject);
         }
+
+        WeaponSwitchTutorial = transform.Find("Canvas/WeaponSwitchTutorial").gameObject;
+        WeaponSwitchTutorial.SetActive(false);
     }
 
     // Update is called once per frame
@@ -62,6 +69,12 @@ public class UIManager : MonoBehaviour
     {
         SetHealthUI();
         SetWeaponUI();
+
+        if(!WeaponSwitchTutorialGate && weapons.availableWeapons.Count > 1)
+        {
+            WeaponSwitchTutorialGate = true;
+            WeaponSwitchTutorial.SetActive(weapons.availableWeapons.Count > 1);
+        }
     }
     void SetWeaponUI()
     {
