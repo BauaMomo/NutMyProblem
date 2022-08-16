@@ -37,6 +37,7 @@ public class DamageHandler : MonoBehaviour
 
                 case "Hazardnut":
                     GetComponent<HazardnutController>().HazardnutDeath();
+                    FindObjectOfType<AudioManager>().Stop("HazardnutStopAttack");
                     break;
             }
         }
@@ -60,8 +61,7 @@ public class DamageHandler : MonoBehaviour
 
     public void HandleDamage(int _amount, GameObject _other)
     {
-        if (isInvincible) return;
-        iHealth -= _amount;
+        if (!isInvincible) iHealth-= _amount;
         if(iHealth<=0)
         {
             return;
@@ -72,18 +72,18 @@ public class DamageHandler : MonoBehaviour
             switch (_other.tag)
             {
                 case "Spikes":
-                    StartInvincibility(0.5f);
+                    StartInvincibility(1f);
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(0, 1000));
                     break;
                 case "CommonKnught":
-                    StartInvincibility(0.5f);
+                    StartInvincibility(1f);
                     GetComponent<playerController>().DisableMovementFor(0.3f);
                     rb.velocity = new Vector2(0, rb.velocity.y);
                     rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.5f) * 700);
                     break;
                 case "Hazardnut":
-                    StartInvincibility(0.5f);
+                    StartInvincibility(1f);
                     GetComponent<playerController>().DisableMovementFor(0.6f);
                     rb.velocity = new Vector2(0, rb.velocity.y);
                     rb.AddForce(new Vector2(-Mathf.Sign(_other.transform.position.x - transform.position.x), 0.5f) * 1700 * knockbackFactor);

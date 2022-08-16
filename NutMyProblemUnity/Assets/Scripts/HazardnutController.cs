@@ -356,6 +356,7 @@ public class HazardnutController : MonoBehaviour
         if (Time.time > lastAttackTime + attackCooldown)
         {
             FindObjectOfType<AudioManager>().Play("HazardnutAttack");
+            FindObjectOfType<AudioManager>().Stop("HazardnutStopAttack");
             OnAttack.Invoke();
             lastAttackTime = Time.time;
 
