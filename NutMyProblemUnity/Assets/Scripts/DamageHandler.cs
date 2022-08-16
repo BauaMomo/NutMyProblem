@@ -37,6 +37,7 @@ public class DamageHandler : MonoBehaviour
 
                 case "Hazardnut":
                     GetComponent<HazardnutController>().HazardnutDeath();
+                    FindObjectOfType<AudioManager>().Stop("HazardnutStopAttack");
                     break;
             }
         }
