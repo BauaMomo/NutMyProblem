@@ -53,6 +53,12 @@ public class ColliderScript : MonoBehaviour
                 switch (tag)
                 {
                     case "WeaponTrigger":
+
+                        if (collision.tag == "WeaponTrigger" && collision.transform.parent.tag == "Hazardnut")
+                        {
+                            collision.transform.parent.GetComponent<HazardnutController>().StopAttackOnCollision();
+                        }
+
                         if (collision.tag == "CommonKnught" || collision.tag == "Hazardnut") collision.gameObject.GetComponent<DamageHandler>().HandleDamage(parent.GetComponent<Weapons>().currentWeapon.iDamage, parent.gameObject);
                         break;
                     case "GroundedTrigger":
@@ -96,7 +102,7 @@ public class ColliderScript : MonoBehaviour
                 }
                 break;
             case "Spikes":
-                if(collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(20, parent.gameObject);
+                if (collision.tag == "Player") collision.GetComponent<DamageHandler>().HandleDamage(20, parent.gameObject);
                 if (collision.gameObject.tag == "CommonKnught" || collision.gameObject.tag == "Hazardnut") collision.GetComponent<DamageHandler>().HandleDamage(1000, parent.gameObject);
                 break;
 

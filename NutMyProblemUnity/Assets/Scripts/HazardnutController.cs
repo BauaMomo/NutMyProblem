@@ -53,6 +53,7 @@ public class HazardnutController : MonoBehaviour
     RaycastHit2D[] raycastArray = new RaycastHit2D[3];
 
     public bool battack;
+    public bool AttackAndCharge;
     private bool noMovement;
 
     // Start is called before the first frame update
@@ -171,6 +172,7 @@ public class HazardnutController : MonoBehaviour
 
                 yield return new WaitForSeconds(0.6f);
                 battack = false;
+                AttackAndCharge = false;
                 mode = AIMode.follow;
                 break;
         }
@@ -179,6 +181,7 @@ public class HazardnutController : MonoBehaviour
     {
         mode = AIMode.waiting;
         battack = false;
+        AttackAndCharge = false;
         mode = AIMode.follow;
     }
     void FlipEnemy()
@@ -359,6 +362,7 @@ public class HazardnutController : MonoBehaviour
             OnAttack.Invoke();
             lastAttackTime = Time.time;
 
+            AttackAndCharge = true;
             yield return new WaitForSeconds(.5f);
 
             battack = true;
