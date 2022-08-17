@@ -17,21 +17,13 @@ public class reactionsCotroller : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "WeaponTrigger")
+        for (int i = 0; i < 3; i++)
         {
-            GameObject reaction = Instantiate(Resources.Load<GameObject>("prefabs/Reactions/reaction"));
-            reaction.transform.position = transform.position;
-        }
-
-        if (collision.tag == "WeaponTrigger")
-        {
-            GameObject reaction = Instantiate(Resources.Load<GameObject>("prefabs/Reactions/reaction"));
-            reaction.transform.position = transform.position;
-        }
-        if (collision.tag == "WeaponTrigger")
-        {
-            GameObject reaction = Instantiate(Resources.Load<GameObject>("prefabs/Reactions/reaction"));
-            reaction.transform.position = transform.position;
+            if (collision.tag == "WeaponTrigger")
+            {
+                GameObject reaction = Instantiate(Resources.Load<GameObject>("prefabs/Reactions/reaction"));
+                reaction.transform.position = transform.position;
+            }
         }
     }
 }

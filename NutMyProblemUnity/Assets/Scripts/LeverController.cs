@@ -19,6 +19,13 @@ public class LeverController : MonoBehaviour
 
     public OnSwitchEvent OnSwitch;
 
+    Transform parent;
+    public ParticleSystem LeverParticleRed;
+    public ParticleSystem LeverParticleBlue;
+    public ParticleSystem LeverParticleGreen;
+    public ParticleSystem LeverParticleYellow;
+    public ParticleSystem LeverParticlePurple;
+    public ParticleSystem LeverParticleWhite;
     Sprite LeverRedOn;
     Sprite LeverGreenOn;
     Sprite LeverWhiteOn;
@@ -33,6 +40,7 @@ public class LeverController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        parent = this.transform.parent;
         Door = transform.parent.gameObject;
         doorController = Door.GetComponent<DoorController>();
 
@@ -58,9 +66,11 @@ public class LeverController : MonoBehaviour
         switch (isActive)
         {
             case true:
+                StopParticle();
                 if (canBeDeactivated) isActive = false;
                 break;
             case false:
+                StartParticle();
                 isActive = true;
                 break;
         }
@@ -82,6 +92,62 @@ public class LeverController : MonoBehaviour
             case true:
                 spriteRenderer.sprite = LeverActive;
                 break;
+        }
+    }
+    void StartParticle()
+    {
+        if(parent.tag != "MovingPlatform")
+        {
+            switch (parent.GetComponent<DoorController>().doorColor)
+            {
+                case DoorController.Color.red:
+                    LeverParticleRed.Play();
+                    break;
+                case DoorController.Color.white:
+                    LeverParticleWhite.Play();
+                    break;
+                case DoorController.Color.green:
+                    LeverParticleGreen.Play();
+                    break;
+                case DoorController.Color.purple:
+                    LeverParticlePurple.Play();
+                    break;
+                case DoorController.Color.yellow:
+                    LeverParticleYellow.Play();
+                    break;
+                    /*case DoorController.Color.white:
+                        LeverParticleWhite.Play();
+                        break;*/
+            }
+        }
+        else
+        {
+            LeverParticleRed.Play();
+        }
+
+    }
+    void StopParticle()
+    {
+        switch (parent.GetComponent<DoorController>().doorColor)
+        {
+            case DoorController.Color.red:
+                LeverParticleRed.Stop();
+                break;
+            case DoorController.Color.white:
+                LeverParticleWhite.Stop();
+                break;
+            case DoorController.Color.green:
+                LeverParticleGreen.Stop();
+                break;
+            case DoorController.Color.purple:
+                LeverParticlePurple.Stop();
+                break;
+            case DoorController.Color.yellow:
+                LeverParticleYellow.Stop();
+                break;
+                /*case DoorController.Color.white:
+                    LeverParticleWhite.Stop();
+                    break;*/
         }
     }
     void ChangeLeverColor()
