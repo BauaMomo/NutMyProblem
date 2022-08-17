@@ -16,6 +16,7 @@ TagManager:
   - Lever
   - Spikes
   - HealthDrop
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX
