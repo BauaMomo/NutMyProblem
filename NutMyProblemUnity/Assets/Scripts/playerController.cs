@@ -148,6 +148,7 @@ public class playerController : MonoBehaviour
         {
             case direction.left:
                 ShapeModuleDash.rotation = new Vector3(180, 0, 0);
+                ShapeModuleDash.position = new Vector3(0, 0, -1);
 
                 ShapeModuleWalking.rotation = new Vector3(180, 0, 0);
                 ShapeModuleWalking.position = new Vector3(0.5f,0,0);
@@ -155,6 +156,7 @@ public class playerController : MonoBehaviour
                 break;
             case direction.right:
                 ShapeModuleDash.rotation = new Vector3(0, 0, 0);
+                ShapeModuleDash.position = new Vector3(0, 0, 0);
 
                 ShapeModuleWalking.rotation = new Vector3(0, 0, 0);
                 ShapeModuleWalking.position = new Vector3(-0.5f, 0, 0);
