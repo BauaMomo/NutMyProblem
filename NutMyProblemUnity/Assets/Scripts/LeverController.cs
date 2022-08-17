@@ -96,27 +96,35 @@ public class LeverController : MonoBehaviour
     }
     void StartParticle()
     {
-        switch(parent.GetComponent<DoorController>().doorColor)
+        if(parent.tag != "MovingPlatform")
         {
-            case DoorController.Color.red:
-                LeverParticleRed.Play();
-                break;            
-            case DoorController.Color.white:
-                LeverParticleWhite.Play();
-                break;            
-            case DoorController.Color.green:
-                LeverParticleGreen.Play();
-                break;            
-            case DoorController.Color.purple:
-                LeverParticlePurple.Play();
-                break;            
-            case DoorController.Color.yellow:
-                LeverParticleYellow.Play();
-                break;
-                /*case DoorController.Color.white:
+            switch (parent.GetComponent<DoorController>().doorColor)
+            {
+                case DoorController.Color.red:
+                    LeverParticleRed.Play();
+                    break;
+                case DoorController.Color.white:
                     LeverParticleWhite.Play();
-                    break;*/
+                    break;
+                case DoorController.Color.green:
+                    LeverParticleGreen.Play();
+                    break;
+                case DoorController.Color.purple:
+                    LeverParticlePurple.Play();
+                    break;
+                case DoorController.Color.yellow:
+                    LeverParticleYellow.Play();
+                    break;
+                    /*case DoorController.Color.white:
+                        LeverParticleWhite.Play();
+                        break;*/
+            }
         }
+        else
+        {
+            LeverParticleRed.Play();
+        }
+
     }
     void StopParticle()
     {

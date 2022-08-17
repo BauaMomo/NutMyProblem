@@ -20,7 +20,9 @@ public class RopeController : MonoBehaviour
 
     Dictionary<State, string> RopeAnimations = new Dictionary<State, string>();
 
-    public ParticleSystem RopeCutParticle;
+    public ParticleSystem RopeCutParticleL;
+    public ParticleSystem RopeCutParticleR;
+    public SpriteRenderer RopeSpriteRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +35,7 @@ public class RopeController : MonoBehaviour
 
         RopeAnimations.Add(State._default, "Rope_default_Animation");
         RopeAnimations.Add(State.cut, "Rope_Rip_Animation");
+        RopeSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -75,7 +78,14 @@ public class RopeController : MonoBehaviour
             //Debug.Log("trigger entered by " + collision.gameObject);
             if (isRopeCut == false)
             {
-                RopeCutParticle.Play();
+                if (RopeSpriteRenderer.flipX == true)
+                {
+                    RopeCutParticleR.Play();
+                }
+                else
+                {
+                    RopeCutParticleL.Play();
+                }
                 StartCoroutine(StopParticle());
             }
 
@@ -92,9 +102,10 @@ public class RopeController : MonoBehaviour
         }
     }
 
-IEnumerator StopParticle()
+    IEnumerator StopParticle()
     {
         yield return new WaitForSeconds(0.5f);
-        RopeCutParticle.Stop();
+        RopeCutParticleL.Stop();
+        RopeCutParticleR.Stop();
     }
 }

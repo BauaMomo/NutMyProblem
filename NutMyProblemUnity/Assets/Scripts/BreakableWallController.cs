@@ -31,6 +31,7 @@ public class BreakableWallController : MonoBehaviour
 
         WallBrickParticle.Play();
         WallSmokeParticle.Play();
+        FindObjectOfType<AudioManager>().Play("WallBreak");
 
         WallCracked.SetActive(false);
         WallBroken.SetActive(true);
@@ -50,7 +51,6 @@ public class BreakableWallController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         WallBrickParticle.Stop();
         WallSmokeParticle.Stop();
-        FindObjectOfType<AudioManager>().Play("WallBreak");
     }
 }
 
