@@ -11,8 +11,13 @@ public class MenuManager : MonoBehaviour
 {
     GameObject MainMenuPanel;
     GameObject SettingsMenuPanel;
+    GameObject CreditsMenuPanel;
     GameObject PauseMenuPanel;
     GameObject LastMenuPanel;
+    GameObject BetreuerScreen;
+    GameObject EntwicklerScreen;
+    [SerializeField] GameObject Background_Tree;
+    [SerializeField] GameObject Background_Prince;
 
     Scene MainMenu;
     Scene SampleScene;
@@ -32,7 +37,10 @@ public class MenuManager : MonoBehaviour
 
         MainMenuPanel = transform.Find("MainMenu").gameObject;
         SettingsMenuPanel = transform.Find("SettingsMenu").gameObject;
+        CreditsMenuPanel = transform.Find("Credits").gameObject;
         PauseMenuPanel = transform.Find("PauseMenu").gameObject;
+        BetreuerScreen = transform.Find("Betreuer").gameObject;
+        EntwicklerScreen = transform.Find("Entwickler").gameObject;
         LastMenuPanel = MainMenuPanel;
 
         MenuList = new List<GameObject>();
@@ -71,6 +79,15 @@ public class MenuManager : MonoBehaviour
             TMPro.TextMeshProUGUI toggleFullscreenText = transform.Find("SettingsMenu/ToggleFullscreen/Text (TMP)").GetComponent<TMPro.TextMeshProUGUI>();
             if (Screen.fullScreen) toggleFullscreenText.SetText("Fullscreen");
             else toggleFullscreenText.SetText("Windowed");
+
+            Background_Prince.SetActive(true);
+            Background_Tree.SetActive(true);
+        }
+
+        if(CreditsMenuPanel.activeSelf)
+        {
+            Background_Prince.SetActive(false);
+            Background_Tree.SetActive(false);
         }
     }
 
@@ -86,6 +103,10 @@ public class MenuManager : MonoBehaviour
         ChangeMenuPanel(SettingsMenuPanel);
     }
 
+    public void OnCreditsButton()
+    {
+        ChangeMenuPanel(CreditsMenuPanel);
+    }
     public void OnExitButton()
     {
         Application.Quit();
@@ -158,5 +179,16 @@ public class MenuManager : MonoBehaviour
 
         gamePaused = false;
         foreach (GameObject menu in MenuList) menu.SetActive(false);
+    }
+
+    //---- Credits ----
+    public void OnButton_DozentenButton()
+    {
+        ChangeMenuPanel(BetreuerScreen);
+
+    }
+    public void OnButton_EntwicklerButton()
+    {
+        ChangeMenuPanel(EntwicklerScreen);
     }
 }
