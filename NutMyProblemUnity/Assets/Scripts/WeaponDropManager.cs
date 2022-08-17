@@ -7,6 +7,7 @@ public class WeaponDropManager : MonoBehaviour
     public Weapons.Weapon.Type WeaponType;
     SpriteRenderer spriteRenderer;
 
+
     // Start is called before the first frame update
     void Awake()
     {

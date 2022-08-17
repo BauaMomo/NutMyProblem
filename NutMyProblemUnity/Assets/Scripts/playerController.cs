@@ -49,6 +49,16 @@ public class playerController : MonoBehaviour
     public enum direction { right, left };
     public direction playerDirection { get; protected set; }
 
+    public ParticleSystem PlayerDashParticle;
+    ParticleSystem.ShapeModule ShapeModuleDash;
+
+    public ParticleSystem PlayerLandingParticle;
+    public bool PlayedLandingParticle;
+
+    public ParticleSystem PlayerWalkingParticle;
+    ParticleSystem.ShapeModule ShapeModuleWalking;
+    ParticleSystem.VelocityOverLifetimeModule VelocityOverLifetimeModuleWalking;
+    bool WalkingParticleStarted;
     Vector2 oldPos;
     public Vector2 moveVector;
 
@@ -77,6 +87,11 @@ public class playerController : MonoBehaviour
         PlayerCamera = Camera.main;
         PlayerCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 
+        ShapeModuleDash = PlayerDashParticle.shape;
+        PlayedLandingParticle = false;
+        ShapeModuleWalking = PlayerWalkingParticle.shape;
+        VelocityOverLifetimeModuleWalking = PlayerWalkingParticle.velocityOverLifetime;
+        WalkingParticleStarted = false;
         PlayedLandingSound = false;
         WalkingSoundStarted = false;
     }
@@ -87,6 +102,8 @@ public class playerController : MonoBehaviour
 
         UpdateShadow();
         MoveDeathBarrier();
+        ParticleDirection();
+        PlayLandingParicle();
         PlayAudio();
     }
 
@@ -125,6 +142,49 @@ public class playerController : MonoBehaviour
         }
     }
 
+    void ParticleDirection()
+    {
+        switch (playerDirection)
+        {
+            case direction.left:
+                ShapeModuleDash.rotation = new Vector3(180, 0, 0);
+                ShapeModuleDash.position = new Vector3(0, 0, -1);
+
+                ShapeModuleWalking.rotation = new Vector3(180, 0, 0);
+                ShapeModuleWalking.position = new Vector3(0.5f,0,0);
+                VelocityOverLifetimeModuleWalking.x = 2.5f;
+                break;
+            case direction.right:
+                ShapeModuleDash.rotation = new Vector3(0, 0, 0);
+                ShapeModuleDash.position = new Vector3(0, 0, 0);
+
+                ShapeModuleWalking.rotation = new Vector3(0, 0, 0);
+                ShapeModuleWalking.position = new Vector3(-0.5f, 0, 0);
+                VelocityOverLifetimeModuleWalking.x = -2.5f;
+                break;
+        }
+
+            if (moveDir != 0 && WalkingParticleStarted == false)
+            { PlayerWalkingParticle.Play();
+            WalkingParticleStarted = true;
+        }
+
+            if (moveDir == 0 || isGrounded == false)
+            { PlayerWalkingParticle.Stop();
+            WalkingParticleStarted = false;
+        }
+    }
+    void PlayLandingParicle()
+    {
+        if (PlayedLandingParticle == false && isGrounded == true)
+        {
+            PlayerLandingParticle.Play();
+            PlayedLandingParticle = true;
+        }
+        if (isGrounded == false)
+            PlayedLandingParticle = false;
+
+    }
     void MovePlayer()
     {
         rb.gravityScale = defaultGravity;
@@ -132,7 +192,11 @@ public class playerController : MonoBehaviour
         else rb.drag = defaultDrag;
 
         IsDashAvailable();
-        if (Time.time > lastDashTime + fDashLength) isDashing = false;
+        if (Time.time > lastDashTime + fDashLength)
+        {
+            isDashing = false;
+            PlayerDashParticle.Stop();
+        }
         if (isDashing) rb.gravityScale = dashGravity;
         if (IsAttackting()) rb.gravityScale = 3;
 
@@ -144,15 +208,16 @@ public class playerController : MonoBehaviour
         if (!isDashing && !IsAttackting())
         {
             if (rb.velocity.y < 0 && rb.velocity.y > -iFallSpeed)                                                   //higher than standard fall speed
+            {
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - iFallAcceleration * Time.deltaTime);
+
+            }
 
             if (isHoldingJump && (Time.fixedUnscaledTime - fJumpStartTime) < 0.25)                                  //higher jump if jump button is held down
             {
                 rb.velocity = new Vector2(rb.velocity.x, iJumpSpeed);
             }
         }
-
-
     }
 
     bool IsAttackting()
@@ -328,6 +393,7 @@ public class playerController : MonoBehaviour
     {
         if (context.started && IsDashAvailable())
         {
+            PlayerDashParticle.Play();
             transform.Find("Canvas/DashTutorial").gameObject.SetActive(false);
 
             isDashing = true;
