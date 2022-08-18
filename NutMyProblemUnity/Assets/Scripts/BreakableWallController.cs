@@ -9,6 +9,9 @@ public class BreakableWallController : MonoBehaviour
     GameObject WallCracked;
     GameObject WallBroken;
 
+    public ParticleSystem WallBrickParticle;
+    public ParticleSystem WallSmokeParticle;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,12 +22,16 @@ public class BreakableWallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void BreakWall()
     {
         isWallBroken = true;
+
+        WallBrickParticle.Play();
+        WallSmokeParticle.Play();
+        FindObjectOfType<AudioManager>().Play("WallBreak");
 
         WallCracked.SetActive(false);
         WallBroken.SetActive(true);
@@ -36,7 +43,14 @@ public class BreakableWallController : MonoBehaviour
         if (collision.transform.parent.tag == "Player" && weapons.currentWeapon.WeaponType == Weapons.Weapon.Type.Gloves && !isWallBroken)
         {
             BreakWall();
-            FindObjectOfType<AudioManager>().Play("WallBreak");
+            StartCoroutine(StopParticle());
         }
     }
+    IEnumerator StopParticle()
+    {
+        yield return new WaitForSeconds(0.5f);
+        WallBrickParticle.Stop();
+        WallSmokeParticle.Stop();
+    }
 }
+
