@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    MusicManager musicManager;
+
     public GameObject player;
     GameObject allEnemys;
     List<GameObject> EnemyList = new List<GameObject>();
@@ -18,6 +20,9 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         player = transform.Find("Player").gameObject;
+        musicManager = FindObjectOfType<MusicManager>();
+
+        
 
         player.transform.parent = null;
         //player.transform.position = new Vector2(0, 0);
@@ -34,7 +39,18 @@ public class GameManager : MonoBehaviour
     {
         allEnemys = transform.Find("/Level/Enemies").gameObject;
 
+        Invoke(nameof(PlayIntro), 1f);
+        Invoke(nameof(PlayTheme), 5.57f);
+    }
 
+    void PlayIntro()
+    {
+        musicManager.Play("Theme Intro");
+    }
+
+    void PlayTheme()
+    {
+        musicManager.Play("Main Theme");
     }
     void ResetEnemyList()
     {

@@ -52,9 +52,4 @@ public class AudioManager : MonoBehaviour
         }
         s.source.Stop();
     }
-    private void Start()
-    {
-
-        FindObjectOfType<AudioManager>().Play("Fanfare");
-    }
 }
