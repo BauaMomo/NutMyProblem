@@ -76,9 +76,9 @@ public class MenuManager : MonoBehaviour
 
         if (SettingsMenuPanel.activeSelf)
         {
-            TMPro.TextMeshProUGUI toggleFullscreenText = transform.Find("SettingsMenu/ToggleFullscreen/Text (TMP)").GetComponent<TMPro.TextMeshProUGUI>();
+            /* TMPro.TextMeshProUGUI toggleFullscreenText = transform.Find("SettingsMenu/ToggleFullscreen/Label").GetComponent<TMPro.TextMeshProUGUI>();
             if (Screen.fullScreen) toggleFullscreenText.SetText("Fullscreen");
-            else toggleFullscreenText.SetText("Windowed");
+            else toggleFullscreenText.SetText("Windowed"); */
 
         }
 
@@ -151,7 +151,7 @@ public class MenuManager : MonoBehaviour
     public void ChangeMenuPanel(GameObject _newPanel)
     {
         GameObject currentPanel = MenuList.Find(x => x.activeSelf);
-        Debug.Log(currentPanel.name);
+        //Debug.Log(currentPanel.name);
 
         LastMenuPanel = currentPanel;
 
