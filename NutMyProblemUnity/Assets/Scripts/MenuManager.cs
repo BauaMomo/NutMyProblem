@@ -80,15 +80,8 @@ public class MenuManager : MonoBehaviour
             if (Screen.fullScreen) toggleFullscreenText.SetText("Fullscreen");
             else toggleFullscreenText.SetText("Windowed");
 
-            Background_Prince.SetActive(true);
-            Background_Tree.SetActive(true);
         }
 
-        if(CreditsMenuPanel.activeSelf)
-        {
-            Background_Prince.SetActive(false);
-            Background_Tree.SetActive(false);
-        }
     }
 
     //---- Main Menu ----
