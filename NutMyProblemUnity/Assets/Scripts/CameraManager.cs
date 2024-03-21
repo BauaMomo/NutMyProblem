@@ -62,7 +62,7 @@ public class CameraManager : MonoBehaviour
         if (predictingCamera) PredictedMovement();
         else
         {
-            Vector3 newCamPosition = new Vector3(CameraPushBox.transform.position.x, CameraPushBox.transform.position.y + 3, -10);  //Moves the camera towards the CameraPushBox
+            Vector3 newCamPosition = new Vector3(CameraPushBox.transform.position.x, CameraPushBox.transform.position.y - 3, -10);  //Moves the camera towards the CameraPushBox
             float moveSpeed = Mathf.Pow(Vector3.Distance(transform.position, newCamPosition), 2) / cameraSpeed;
             transform.position = Vector3.MoveTowards(transform.position, newCamPosition, moveSpeed);         //CameraPushBox is a box of colliders, gets pushed around by the player
             if (Vector2.Distance(player.transform.position, transform.position) > 10f) CameraPushBox.transform.position = player.transform.position;
